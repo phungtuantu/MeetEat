@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
-  <persistence-unit name="TP-DASI-PU" transaction-type="RESOURCE_LOCAL">
+  <persistence-unit name="MEETEAT-PU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>com.meeteat.modele.User</class>
+    <class>com.meeteat.controller.ActionServlet</class>
+    <class>com.meeteat.model.User.Cook</class>
+    <class>com.meeteat.model.User.User</class>
+    <class>com.meeteat.model.Offer.Reservation</class>
+    <class>com.meeteat.model.Offer.Review</class>
+    <class>com.meeteat.model.Offer.Offer</class>
+    <class>com.meeteat.model.Offer.Message</class>
     <properties>
-      <property name="eclipselink.jdbc.url" value="jdbc:derby://localhost:1527/TP-DASI"/>
-      <property name="eclipselink.jdbc.user" value="admin"/>
-      <property name="eclipselink.jdbc.password" value="0000"/>
-      <property name="eclipselink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
       <property name="persistence.schema-generation.database.action" value="create"/>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+      <property name="javax.persistence.jdbc.url" value=""/>
+      <property name="javax.persistence.jdbc.user" value=""/>
+      <property name="javax.persistence.jdbc.driver" value=""/>
+      <property name="javax.persistence.jdbc.password" value=""/>
     </properties>
   </persistence-unit>
 </persistence>
