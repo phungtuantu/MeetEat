@@ -30,7 +30,6 @@ public class Review implements Serializable {
     private User reviewedUser;
     @ManyToOne
     private User reviewingUser;
-    @ManyToOne
     private int nbOfStars;
     private String comment;
 

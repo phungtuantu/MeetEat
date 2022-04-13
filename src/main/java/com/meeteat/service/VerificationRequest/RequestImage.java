@@ -5,6 +5,8 @@
  */
 package com.meeteat.service.VerificationRequest;
 
+import javax.persistence.Id;
+
 /**
  *
  * @author Ihssane
