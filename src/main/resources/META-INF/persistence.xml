@@ -2,8 +2,10 @@
 <persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
   <persistence-unit name="MEETEAT-PU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>com.meeteat.modele.User</class>
-    <class>com.meeteat.modele.Cook</class>
+    <class>com.meeteat.controller.ActionServlet</class>
+    <class>com.meeteat.model.Cook</class>
+    <class>com.meeteat.model.User</class>
+    <class>com.meeteat.model.Reservation</class>
     <properties>
       <property name="persistence.schema-generation.database.action" value="create"/>
       <property name="javax.persistence.jdbc.url" value=""/>
