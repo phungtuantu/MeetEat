@@ -57,7 +57,7 @@ public class Diet extends PreferenceTag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meeteat.model.Preference.Diet[ id=" + id + " ]";
+        return "com.meeteat.model.Preference.Diet[ id=" + getId() + " ]";
     }
     
 }
