@@ -5,6 +5,7 @@
     <artifactId>PLD-SMART</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <name>PLD-SMART-Common</name>
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>

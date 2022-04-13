@@ -18,17 +18,17 @@ import javax.persistence.Temporal;
  * @author gvnge
  */
 @Entity
-public class Reservation implements Serializable {
+public class CookRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date reservationDate;
-    //convert to enum later
-    private int state;
-    private int nbOfPortion;
+    private Date requestDate;
+    private int level;
+    private String education;
+    private String training;
 
     public Long getId() {
         return id;
@@ -40,7 +40,7 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "Reservation (id=" + id + ")";
+        return "com.meeteat.model.CookRequest[ id=" + id + " ]";
     }
     
 }
