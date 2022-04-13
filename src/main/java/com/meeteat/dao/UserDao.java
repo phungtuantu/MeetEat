@@ -9,7 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import com.meeteat.model.User;
+import com.meeteat.modele.User;
 
 /**
  *
