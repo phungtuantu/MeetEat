@@ -3,14 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.meeteat.model;
+package com.meeteat.model.Offer;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -29,6 +33,8 @@ public class Reservation implements Serializable {
     //convert to enum later
     private int state;
     private int nbOfPortion;
+    @OneToMany(mappedBy="reservation",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    private List<Review> reviews;
 
     public Long getId() {
         return id;
