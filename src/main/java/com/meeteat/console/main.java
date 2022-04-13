@@ -5,7 +5,7 @@
  */
 package com.meeteat.console;
 
-import com.meeteat.dao.JpaUtil;
+import com.meeteat.dao.JpaTool;
 
 /**
  *
@@ -18,8 +18,8 @@ public class main {
      */
     public static void main(String[] args) {
         
-        JpaUtil.init();
-        JpaUtil.destroy();
+        JpaTool.init();
+        JpaTool.destroy();
     }
     
 //    public static void afficherClient(Client client) {

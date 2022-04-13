@@ -16,8 +16,8 @@ import javax.persistence.RollbackException;
  *
  * @author gvnge
  */
-public class JpaUtil {
-    public static final String PERSISTENCE_UNIT_NAME = "TP-DASI-PU";
+public class JpaTool {
+    public static final String PERSISTENCE_UNIT_NAME = "MEETEAT-PU";
 
     private static EntityManagerFactory entityManagerFactory = null;
 
@@ -34,7 +34,7 @@ public class JpaUtil {
     }
 
     public static synchronized void init() {
-        log("Initialisation de la factory de contexte de persistance");
+        log("Initialize the persistence factory");
         if (entityManagerFactory != null) {
             entityManagerFactory.close();
         }
@@ -42,64 +42,64 @@ public class JpaUtil {
     }
 
     public static synchronized void destroy() {
-        log("Libération de la factory de contexte de persistance");
+        log("Free the persistence factory");
         if (entityManagerFactory != null) {
             entityManagerFactory.close();
             entityManagerFactory = null;
         }
     }
 
-    public static void creerContextePersistance() {
-        log("Création du contexte de persistance");
+    public static void createPersistenceContext() {
+        log("Create the persistence context");
         threadLocalEntityManager.set(entityManagerFactory.createEntityManager());
     }
 
-    public static void fermerContextePersistance() {
-        log("Fermeture du contexte de persistance");
+    public static void closePersistenceContext() {
+        log("Close the persistence context");
         EntityManager em = threadLocalEntityManager.get();
         em.close();
         threadLocalEntityManager.set(null);
     }
 
-    public static void ouvrirTransaction() throws Exception {
-        log("Ouverture de la transaction (begin)");
+    public static void openTransaction() throws Exception {
+        log("Begin opening transaction");
         try {
             EntityManager em = threadLocalEntityManager.get();
             em.getTransaction().begin();
         } catch (Exception ex) {
-            log("Erreur lors de l'ouverture de la transaction");
+            log("Error in opening transaction");
             throw ex;
         }
     }
 
-    public static void validerTransaction() throws RollbackException, Exception {
-        log("Validation de la transaction (commit)");
+    public static void validateTransaction() throws RollbackException, Exception {
+        log("Commit transaction");
         try {
             EntityManager em = threadLocalEntityManager.get();
             em.getTransaction().commit();
         } catch (Exception ex) {
-            log("Erreur lors de la validation (commit) de la transaction");
+            log("Error in commit");
             throw ex;
         }
     }
 
-    public static void annulerTransaction() {
+    public static void cancelTransaction() {
         try {
-            log("Annulation de la transaction (rollback)");
+            log("Begin rollback of the transaction");
 
             EntityManager em = threadLocalEntityManager.get();
             if (em.getTransaction().isActive()) {
-                log("Annulation effective de la transaction (rollback d'une transaction active)");
+                log("Rollback of the transaction");
                 em.getTransaction().rollback();
             }
 
         } catch (Exception ex) {
-            log("Erreur lors de l'annulation (rollback) de la transaction");
+            log("Error in rolling back the transaction");
         }
     }
 
-    protected static EntityManager obtenirContextePersistance() {
-        log("Obtention du contexte de persistance");
+    protected static EntityManager obtainPersistenceContext() {
+        log("Obtain the persistence context");
         return threadLocalEntityManager.get();
     }
 }

@@ -16,48 +16,30 @@ import com.meeteat.modele.User;
  * @author gvnge
  */
 public class UserDao {
-    public void creer(User employe) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        em.persist(employe);
+    public void create(User user) {
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        em.persist(user);
     }
     
-    public void merge(User employe){
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        em.merge(employe);
+    public void merge(User user){
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        em.merge(user);
     }
     
-    public User chercherParId(Long employeId) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        return em.find(User.class, employeId); // renvoie null si l'identifiant n'existe pas
+    public User searchById(Long userId) {
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        return em.find(User.class, userId); // renvoie null si l'identifiant n'existe pas
     }
     
-    public User chercherParMail(String employeMail) {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        TypedQuery<User> query = em.createQuery("SELECT e FROM Employe e WHERE e.mail = :mail", User.class);
-        query.setParameter("mail", employeMail); // correspond au paramètre ":mail" dans la requête
-        List<User> employes = query.getResultList();
+    public User SearchByMail(String userMail) {
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.mail = :mail", User.class);
+        query.setParameter("mail", userMail); // correspond au paramètre ":mail" dans la requête
+        List<User> users = query.getResultList();
         User result = null;
-        if (!employes.isEmpty()) {
-            result = employes.get(0); // premier de la liste
+        if (!users.isEmpty()) {
+            result = users.get(0); // premier de la liste
         }
         return result;
-    }
-    
-    public User employeSouhaite(String genre){
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        TypedQuery<User> query = em.createQuery("SELECT e FROM Employe e WHERE e.genre = :genre AND e.disponible = 1 ORDER BY e.count ASC", User.class);
-        query.setParameter("genre", genre);
-        List<User> employes = query.getResultList();
-        User result = null;
-        if (!employes.isEmpty()) {
-            result = employes.get(0); // premier de la liste
-        }
-        return result;
-    }
-    
-    public List<User> listerEmployes() {
-        EntityManager em = JpaUtil.obtenirContextePersistance();
-        TypedQuery<User> query = em.createQuery("SELECT e FROM Employe e ORDER BY e.count DESC", User.class);
-        return query.getResultList();
     }
 }

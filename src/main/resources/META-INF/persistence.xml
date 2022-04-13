@@ -3,6 +3,7 @@
   <persistence-unit name="MEETEAT-PU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.meeteat.modele.User</class>
+    <class>com.meeteat.modele.Cook</class>
     <properties>
       <property name="persistence.schema-generation.database.action" value="create"/>
       <property name="javax.persistence.jdbc.url" value=""/>
