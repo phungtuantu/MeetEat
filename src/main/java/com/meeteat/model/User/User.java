@@ -31,11 +31,11 @@ public class User implements Serializable, Loginable {
     private String mail;
     private String address;
     private String noTelephone;
-//    @OneToMany(mappedBy="employe",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-//    private LinkedList<Consultation> histoire;
-//    
+   @OneToMany(mappedBy="user",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    private List<PreferenceTag> preferences;
+    
     protected User(){}
-//    
+    
     public User(String firstName, String lastName, String address, String noTelephone, String mail, String motDePasse){
         this.firstName = firstName;
         this.lastName = lastName;
