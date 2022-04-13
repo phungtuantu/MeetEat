@@ -24,8 +24,7 @@ public class PreferenceTag implements Serializable {
     private Long id;
     private String name;
 
-    public PreferenceTag(Long id, String name) {
-        this.id = id;
+    public PreferenceTag( String name) {
         this.name = name;
     }
 
