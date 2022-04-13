@@ -1,9 +1,10 @@
+package com.meeteat.model.user;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.meateat.model.offer;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -16,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author ithan
  */
-public class ReviewTest {
+public class UserTest {
     
-    public ReviewTest() {
+    public UserTest() {
     }
     
     @BeforeAll

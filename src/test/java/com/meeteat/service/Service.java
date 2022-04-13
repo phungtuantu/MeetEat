@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.meateat.model.user;
+package com.meeteat.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -16,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author ithan
  */
-public class CookTest {
+public class Service {
     
-    public CookTest() {
+    public Service() {
     }
     
     @BeforeAll
