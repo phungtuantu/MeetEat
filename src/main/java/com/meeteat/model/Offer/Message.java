@@ -7,32 +7,34 @@ package com.meeteat.model.Offer;
 
 import com.meeteat.model.User.User;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 /**
  *
  * @author gvnge
  */
 @Entity
-public class Review implements Serializable {
+public class Message implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String content;
     @ManyToOne
-    private Reservation source;
+    private User sender;
     @ManyToOne
-    private User reviewedUser;
+    private User receiver;
     @ManyToOne
-    private User reviewingUser;
-    @ManyToOne
-    private int nbOfStars;
-    private String comment;
+    private Offer associatedOffer;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date sentDate;
 
     public Long getId() {
         return id;
@@ -41,10 +43,11 @@ public class Review implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    
 
     @Override
     public String toString() {
-        return "com.meeteat.model.Offer.Review[ id=" + id + " ]";
+        return "com.meeteat.model.Offer.Message[ id=" + id + " ]";
     }
-
+    
 }
