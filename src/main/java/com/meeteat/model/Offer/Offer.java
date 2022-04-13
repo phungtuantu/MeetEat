@@ -5,6 +5,8 @@
  */
 package com.meeteat.model.Offer;
 
+import com.meeteat.model.Preference.Ingredient;
+import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +17,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -44,6 +47,10 @@ public class Offer implements Serializable {
     //create enum for state
     private int state;
     private String details;
+    @ManyToMany
+    private List<PreferenceTag> classifications;
+    @ManyToMany
+    private List<Ingredient> ingredients;
     private String specifications;
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Reservation> reversations;

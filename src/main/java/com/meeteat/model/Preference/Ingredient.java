@@ -22,7 +22,7 @@ public class Ingredient extends PreferenceTag implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     public Long getId() {
         return id;
     }
@@ -55,5 +55,5 @@ public class Ingredient extends PreferenceTag implements Serializable {
     public String toString() {
         return "com.meeteat.model.Preference.Ingredient[ id=" + id + " ]";
     }
-    
+
 }

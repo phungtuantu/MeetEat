@@ -22,18 +22,18 @@ public class PreferenceTag implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private string name;
+    private String name;
 
-    public PreferenceTag(Long id, string name) {
+    public PreferenceTag(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public void setName(string name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public string getName() {
+    public String getName() {
         return name;
     }
 

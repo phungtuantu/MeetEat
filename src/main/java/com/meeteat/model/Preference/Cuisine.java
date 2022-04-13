@@ -55,5 +55,5 @@ public class Cuisine extends PreferenceTag implements Serializable {
     public String toString() {
         return "com.meeteat.model.Preference.Cuisine[ id=" + id + " ]";
     }
-    
+
 }
