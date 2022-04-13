@@ -23,6 +23,10 @@ public class Cuisine extends PreferenceTag implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public Cuisine(String name) {
+        super(name);
+    }
+
     public Long getId() {
         return id;
     }

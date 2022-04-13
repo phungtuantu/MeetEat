@@ -5,12 +5,17 @@
  */
 package com.meeteat.service.VerificationRequest;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  *
  * @author Ihssane
  */
 public class RequestImage {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String imageReference;
 

@@ -9,6 +9,10 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -18,6 +22,7 @@ import javax.persistence.Temporal;
 public class CookRequest {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCookRequest;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date requestDate; 

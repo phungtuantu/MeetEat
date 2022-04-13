@@ -23,6 +23,10 @@ public class Diet extends PreferenceTag implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public Diet(String name) {
+        super(name);
+    }
+
     public Long getId() {
         return id;
     }
