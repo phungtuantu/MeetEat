@@ -7,7 +7,6 @@ package com.meeteat.model.User;
 
 import com.meeteat.model.Preference.PreferenceTag;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;

@@ -11,31 +11,14 @@ package com.meeteat.dao;
 
 
 import com.meeteat.model.User.Cook;
-import javax.persistence.EntityManager;
 
 /**
  *
  * @author gvnge
  */
-public class CookDao {
-    public void create(Cook cook) {
-        EntityManager em = JpaTool.obtainPersistenceContext();
-        em.persist(cook);
-    }
-    
-    public void merge(Cook cook){
-        EntityManager em = JpaTool.obtainPersistenceContext();
-        em.merge(cook);
-    }
-    
-    public void delete(Cook cook){
-        EntityManager em = JpaTool.obtainPersistenceContext();
-        em.remove(cook);
-    }
-    
-    public Cook searchById(Long cookId) {
-        EntityManager em = JpaTool.obtainPersistenceContext();
-        return em.find(Cook.class, cookId); // renvoie null si l'identifiant n'existe pas
+public class CookDao extends AbstractDao{
+    public CookDao() {
+        super(Cook.class);
     }
 }
 
