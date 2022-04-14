@@ -1,20 +1,21 @@
 <template>
-  <div class="home">
-    <Navbar></Navbar>
+  <div>
+    <NavbarLogin></NavbarLogin>
     <br/>
     <Login/>
     <br/>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import NavbarLogin from "@/components/SmartComponents/NavbarLogin.vue";
 import Login from '@/components/SmartComponents/Login.vue'
 export default {
-  name: 'Home',
+  name: 'LoginPage',
   components: {
-    Login
+    Login,
+    NavbarLogin,
   }
 }
 </script>
