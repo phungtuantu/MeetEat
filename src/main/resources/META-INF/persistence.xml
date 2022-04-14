@@ -2,8 +2,18 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="meeteatPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.meeteat.model.Preference.Cuisine</class>
+    <class>com.meeteat.model.Preference.Diet</class>
+    <class>com.meeteat.model.Preference.Ingredient</class>
+    <class>com.meeteat.model.Preference.PreferenceTag</class>
+    <class>com.meeteat.model.Offer.Message</class>
+    <class>com.meeteat.model.Offer.Offer</class>
+    <class>com.meeteat.model.Offer.Reservation</class>
+    <class>com.meeteat.model.Offer.Review</class>
+    <class>com.meeteat.model.User.Cook</class>
+    <class>com.meeteat.model.User.User</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://remotemysql.com:3306/"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://remotemysql.com:3306/9Pn3TykmSB"/>
       <property name="javax.persistence.jdbc.user" value="9Pn3TykmSB"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.password" value="O2VvdpnqrI"/>

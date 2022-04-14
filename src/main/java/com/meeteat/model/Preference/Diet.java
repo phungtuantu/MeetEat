@@ -15,8 +15,6 @@ import javax.persistence.Entity;
 @Entity
 public class Diet extends PreferenceTag implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     public Diet() {
     }
 

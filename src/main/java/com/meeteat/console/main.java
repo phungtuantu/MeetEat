@@ -7,6 +7,7 @@ package com.meeteat.console;
 
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
@@ -28,8 +29,23 @@ public class main {
     public static void main(String[] args) {
         
         JpaTool.init();
+//        testCreatePref();
+        testCreateAccount();
 //        testMakeOffer();
         JpaTool.destroy();
+    }
+    
+    public static void testCreatePref(){
+        Service service = new Service();
+        Cuisine cuisine = new Cuisine ("Asian shit");
+        service.createCuisine(cuisine);
+    }
+    
+    public static void testCreateAccount(){
+        Service service = new Service();
+        System.out.println("make a few offers");
+        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
+        service.createAccount(user);
     }
     
     public static void testMakeOffer(){
