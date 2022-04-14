@@ -15,20 +15,10 @@ import com.meeteat.model.User.User;
  *
  * @author gvnge
  */
-public class UserDao {
-    public void create(User user) {
-        EntityManager em = JpaTool.obtainPersistenceContext();
-        em.persist(user);
-    }
-    
-    public void merge(User user){
-        EntityManager em = JpaTool.obtainPersistenceContext();
-        em.merge(user);
-    }
-    
-    public User searchById(Long userId) {
-        EntityManager em = JpaTool.obtainPersistenceContext();
-        return em.find(User.class, userId); // renvoie null si l'identifiant n'existe pas
+public class UserDao extends AbstractDao<User>{
+
+    public UserDao() {
+        super(User.class);
     }
     
     public User SearchByMail(String userMail) {
