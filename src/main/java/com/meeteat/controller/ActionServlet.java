@@ -7,6 +7,7 @@
 package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
+import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
@@ -38,6 +39,10 @@ public class ActionServlet extends HttpServlet {
         Serialisation serialisation = null;
         String todo = request.getParameter("todo");
         switch (todo){
+            case "makeOffer":{
+                action = new ActionMakeOffer();
+                break;
+            }
 //            case "demanderSynthese": {
 //                action = new ActionDemanderSynthese();
 //                serialisation = new SyntheseSerialisation();

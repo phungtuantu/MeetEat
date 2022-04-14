@@ -6,6 +6,14 @@
 package com.meeteat.console;
 
 import com.meeteat.dao.JpaTool;
+import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.PreferenceTag;
+import com.meeteat.model.User.Cook;
+import com.meeteat.model.User.User;
+import com.meeteat.service.Service;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -19,21 +27,19 @@ public class main {
     public static void main(String[] args) {
         
         JpaTool.init();
+        testMakeOffer();
         JpaTool.destroy();
     }
     
-//    public static void afficherClient(Client client) {
-//        System.out.println("-> " + client);
-//    }
-//    
-//    public static void afficherMedium(Medium medium){
-//        System.out.println("-> " + medium);
-//    }
-//    
-//    public static void afficherEmploye(Employe employe){
-//        System.out.println("-> " + employe);
-//    }
-//    
+    public static void testMakeOffer(){
+        Service service = new Service();
+        System.out.println("make a few offers");
+        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
+        Cook cook = new Cook(user, new Date(), 0, "","");
+        List<PreferenceTag> = new LinkedList<>();
+        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", );
+    }
+    
 //    public static void initialiserClients() {
 //        
 //        Service service = new Service();

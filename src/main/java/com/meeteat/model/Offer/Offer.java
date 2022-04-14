@@ -42,7 +42,7 @@ public class Offer implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date expirationDate;
     private String title;
-    private int price;
+    private double price;
     private int totalPortions;
     //create enum for state
     private int state;
@@ -56,6 +56,22 @@ public class Offer implements Serializable {
     private List<Reservation> reversations;
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
+
+    public Offer(Cook cook, Date creationDate, String title, double price, int totalPortions,
+            String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications) {
+        this.cook = cook;
+        this.creationDate = creationDate;
+        this.title = title;
+        this.price = price;
+        this.totalPortions = totalPortions;
+        this.details = details;
+        this.classifications = classifications;
+        this.ingredients = ingredients;
+        this.specifications = specifications;
+        this.state = 0;
+    }
+    
+    
     
     public Long getId() {
         return id;

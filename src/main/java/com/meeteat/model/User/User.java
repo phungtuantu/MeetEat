@@ -39,9 +39,10 @@ public class User implements Serializable, Loginable {
    @OneToMany(mappedBy="user",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<PreferenceTag> preferences;
     
-    protected User(){}
+    protected User(User user){
+    }
     
-    public User(String firstName, String lastName, String address, String noTelephone, String mail, String motDePasse){
+    public User(String firstName, String lastName, String address, String noTelephone, String mail, String password){
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;

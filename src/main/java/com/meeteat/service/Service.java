@@ -5,16 +5,39 @@
  */
 package com.meeteat.service;
 
+import com.meeteat.dao.JpaTool;
+import com.meeteat.dao.OfferDao;
+import com.meeteat.dao.UserDao;
+import com.meeteat.model.Offer.Offer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author gvnge
  */
 public class Service {
     
-//    protected ClientDao clientDao = new ClientDao();
-//    protected MediumDao mediumDao = new MediumDao();
-//    protected EmployeDao employeDao = new EmployeDao();
-//    protected ConsultationDao consultationDao = new ConsultationDao();
+    protected UserDao userDao = new UserDao();
+    protected OfferDao offerDao = new OfferDao();
+
+    public Long makeOffer(Offer offer){
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            offerDao.create(offer);
+            JpaTool.validateTransaction();
+            result = offer.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
 //
 //    public Long inscrireClient(Client client) {
 //        Long resultat = null;
