@@ -99,6 +99,23 @@ public class Service {
         }
         return result;
     }
+    
+    public Offer setPrice(Long offerId, double price){
+        JpaTool.createPersistenceContext();
+        Offer offer = null;
+        try{
+            JpaTool.openTransaction();
+            offer = offerDao.searchById(offerId);
+            JpaTool.validateTransaction();
+            offer.setPrice(price);
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return offer;
+    }
 //
 //    public Long inscrireClient(Client client) {
 //        Long resultat = null;
