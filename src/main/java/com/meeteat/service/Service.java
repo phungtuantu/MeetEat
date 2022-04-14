@@ -64,6 +64,22 @@ public class Service {
         return result;
     }
     
+    public User findUserById(Long userId){
+        User user = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            user = userDao.searchById(userId);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
+    }
+    
     public Long makeOffer(Offer offer){
         Long result = null;
         JpaTool.createPersistenceContext();
