@@ -49,9 +49,10 @@ public class ServiceTest {
         Offer offer = new Offer();
         service.makeOffer(offer);
         double price = 69.69;
-        Offer offer2 = service.setPrice(offer.getId(), price);
-        assertEquals(offer2.getId(), offer.getId());
-        assertEquals(offer2.getPrice(), price);
+        service.setPrice(offer.getId(), price);
+        Offer offer3 = service.findOfferById(offer.getId());
+        assertEquals(offer3.getId(), offer.getId());
+        assertEquals(offer3.getPrice(), price);
     }
 
     // TODO add test methods here.

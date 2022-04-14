@@ -85,8 +85,25 @@ public class Service {
         try{
             JpaTool.openTransaction();
             offer = offerDao.searchById(offerId);
-            JpaTool.validateTransaction();
             offer.setPrice(price);
+            offerDao.merge(offer);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return offer;
+    }
+    
+    public Offer findOfferById(Long offerId){
+        JpaTool.createPersistenceContext();
+        Offer offer = null;
+        try{
+            JpaTool.openTransaction();
+            offer = offerDao.searchById(offerId);
+            JpaTool.validateTransaction();
         } catch (Exception ex){
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
             JpaTool.cancelTransaction();
