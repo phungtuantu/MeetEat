@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-npm install
+npm install -g npm@8.6.0
 ```
 
 ### Compiles and hot-reloads for development
