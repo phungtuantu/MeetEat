@@ -40,7 +40,7 @@ public class ActionMakeOffer extends Action {
         List<Ingredient> ingredients = new LinkedList<>();
         String specifications = (String)session.getAttribute("specifications");
 //        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details, classifications, ingredients, specifications);
-        service.makeOffer(offer);
+//        service.makeOffer(offer);
     }
     
 }
