@@ -26,6 +26,11 @@ public class UserDao {
         em.merge(user);
     }
     
+    public void delete(User user){
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        em.remove(em.merge(user));
+    }
+    
     public User searchById(Long userId) {
         EntityManager em = JpaTool.obtainPersistenceContext();
         return em.find(User.class, userId); // renvoie null si l'identifiant n'existe pas
