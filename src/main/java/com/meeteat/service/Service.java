@@ -6,12 +6,14 @@
 package com.meeteat.service;
 
 import com.meeteat.dao.CookDao;
+import com.meeteat.dao.IngredientDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.OfferDao;
 import com.meeteat.dao.PreferenceTagDao;
 import com.meeteat.dao.UserDao;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import java.util.logging.Level;
@@ -26,6 +28,7 @@ public class Service {
     protected UserDao userDao = new UserDao();
     protected CookDao cookDao = new CookDao();
     protected OfferDao offerDao = new OfferDao();
+    protected IngredientDao ingredientDao = new IngredientDao();
     protected PreferenceTagDao preferenceTagDao = new PreferenceTagDao();
 
     public Long createCuisine(Cuisine cuisine){
@@ -54,6 +57,24 @@ public class Service {
             userDao.create(user);
             JpaTool.validateTransaction();
             result = user.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public Long createIngredient(Ingredient ingredient){
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            ingredientDao.create(ingredient);
+            JpaTool.validateTransaction();
+            result = ingredient.getId();
         } catch (Exception ex){
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
             JpaTool.cancelTransaction();

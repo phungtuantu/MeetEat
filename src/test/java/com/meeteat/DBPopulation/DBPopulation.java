@@ -8,11 +8,16 @@ import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Food;
 import com.github.javafaker.Name;
+import com.github.javafaker.DateAndTime;
+import com.meeteat.dao.JpaTool;
+import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Locale;
 /**
  *
  * @author ithan
@@ -21,8 +26,10 @@ public class DBPopulation {
     Faker faker;
     Service service;
     LinkedList<Long> userIdList = new LinkedList<>();
+    LinkedList<Long> cookIdList = new LinkedList<>();
+    Locale locale = new Locale("fr");
     public DBPopulation(){
-        faker = new Faker();
+        faker = new Faker(locale);
         service = new Service();
     }
     
@@ -40,21 +47,36 @@ public class DBPopulation {
     }
     
     public void createCooks(int nbCooks){
+        assert(nbCooks < userIdList.size());
         for(int i = 0; i<nbCooks; i++){
             User user = service.findUserById(userIdList.get(i));
-            Date date = new Date(faker.date());
-            Cook cook = new Cook(user, faker.date(), faker.university().name(), faker.job().keySkills());
-            service.approveCook(cook);
+            DateAndTime dat = faker.date();
+            Date validationDate = dat.birthday(0, 2);
+            Cook cook = new Cook(user, validationDate, faker.number().numberBetween(1, 6), faker.university().name(), faker.job().keySkills());
+            cookIdList.add(service.approveCook(cook));
+        }
+    }
+    
+    public void createIngedients(int nbIngredients){
+        for(int i =0; i<(nbIngredients/2); i++){
+            Food food = faker.food();
+            Ingredient ingredient = new Ingredient(food.ingredient());
+            service.createIngredient(ingredient);
+        }
+        for(int i =0; i<(nbIngredients/2); i++){
+            Food food = faker.food();
+            Ingredient ingredient = new Ingredient(food.spice());
+            service.createIngredient(ingredient);
         }
     }
     
     public static void main(String [] args){
-        Faker faker = new Faker();
-        Service service = new Service();
-        for(int i = 0; i<10; i++){
-            Food food = faker.food();
-            System.out.println(food.ingredient());
-        }
+        JpaTool.init();
+        DBPopulation ss = new DBPopulation();
+        ss.createUsers(5);
+        ss.createCooks(3);
+        ss.createIngedients(15);
+        JpaTool.destroy();
     }
     
 }
