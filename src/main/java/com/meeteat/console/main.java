@@ -27,18 +27,19 @@ public class main {
     public static void main(String[] args) {
         
         JpaTool.init();
-        testMakeOffer();
+//        testMakeOffer();
         JpaTool.destroy();
     }
     
-    public static void testMakeOffer(){
-        Service service = new Service();
-        System.out.println("make a few offers");
-        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
-        Cook cook = new Cook(user, new Date(), 0, "","");
-        List<PreferenceTag> = new LinkedList<>();
-        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", );
-    }
+//    public static void testMakeOffer(){
+//        Service service = new Service();
+//        System.out.println("make a few offers");
+//        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
+//        Cook cook = new Cook(user, new Date(), 0, "","");
+//        List<PreferenceTag> classifications = new LinkedList<>();
+//        Link<
+//        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", );
+//    }
     
 //    public static void initialiserClients() {
 //        
