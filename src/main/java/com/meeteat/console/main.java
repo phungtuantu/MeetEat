@@ -31,9 +31,9 @@ public class main {
         JpaTool.init();
 //        testCreatePref();
         testCreateAccount();
-        testApproveCook();
-//        testMakeOffer();
-        JpaTool.destroy();
+        //testMakeReservation();
+        testMakeOffer();
+        JpaTool.destroy(); 
     }
     
     public static void testCreatePref(){
@@ -71,6 +71,11 @@ public class main {
         List<Ingredient> ingredients = new LinkedList<>();
         Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none");
         service.makeOffer(offer);
+    }
+    
+    public static void testMakeReservation(){
+        Service service = new Service();
+        service.makeReservation(service.getOfferFromId(1l), service.getUserFromId(1l), new Date(System.currentTimeMillis()), 2);
     }
     
 //    public static void initialiserClients() {

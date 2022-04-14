@@ -36,7 +36,7 @@ public abstract class AbstractDao<T> {
     
     public void delete(T t){
         EntityManager em = JpaTool.obtainPersistenceContext();
-        em.remove(t);
+        em.remove(em.merge(t));
     }
     
     public List<T> getAll(){

@@ -5,8 +5,10 @@
  */
 package com.meeteat.model.Offer;
 
+import com.meeteat.model.User.User;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -31,13 +33,29 @@ public class Reservation implements Serializable {
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date reservationDate;
-    //convert to enum later
-    private int state;
+    
+    private ReservationState state;
     private int nbOfPortion;
     @ManyToOne
     private Offer offer;
+    @ManyToOne
+    private User user;
     @OneToMany(mappedBy="source",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Review> reviews;
+
+    public Reservation(Date reservationDate, ReservationState state, int nbOfPortion, Offer offer, User user) {
+        this.reservationDate = reservationDate;
+        this.state = state;
+        this.nbOfPortion = nbOfPortion;
+        this.offer = offer;
+        this.user = user;
+        this.reviews = new LinkedList();
+    }
+    
+    public Reservation(){
+        
+    }
+    
 
     public Long getId() {
         return id;
@@ -46,6 +64,52 @@ public class Reservation implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public void addReview(Review review){
+        for(Review r: reviews){
+            if(r.getId().equals(review.getId())){
+                reviews.remove(r);
+                reviews.add(review);
+                return;
+            }
+        }
+        this.reviews.add(review);
+    }
+
+    public Date getReservationDate() {
+        return reservationDate;
+    }
+
+    public ReservationState getState() {
+        return state;
+    }
+
+    public void setState(ReservationState state) {
+        this.state = state;
+    }
+
+    public int getNbOfPortion() {
+        return nbOfPortion;
+    }
+
+    public void setNbOfPortion(int nbOfPortion) {
+        this.nbOfPortion = nbOfPortion;
+    }
+
+    public Offer getOffer() {
+        return offer;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    
 
     @Override
     public int hashCode() {

@@ -9,11 +9,16 @@ import com.meeteat.dao.CookDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.OfferDao;
 import com.meeteat.dao.PreferenceTagDao;
+import com.meeteat.dao.ReservationDao;
 import com.meeteat.dao.UserDao;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.Reservation;
+import com.meeteat.model.Offer.ReservationState;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
+import java.util.Date;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +32,7 @@ public class Service {
     protected CookDao cookDao = new CookDao();
     protected OfferDao offerDao = new OfferDao();
     protected PreferenceTagDao preferenceTagDao = new PreferenceTagDao();
+    protected ReservationDao reservationDao = new ReservationDao();
 
     public Long createCuisine(Cuisine cuisine){
         Long result = null;
@@ -115,6 +121,14 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return offer;
+    }
+    public User getUserFromId(Long id){
+        //Might not be needed in the future, currently used for testing
+        return userDao.searchById(id);
+    }
+    public Offer getOfferFromId(Long id){
+        //Might not be needed in the future, currently used for testing
+        return offerDao.searchById(id);
     }
 //
 //    public Long inscrireClient(Client client) {
