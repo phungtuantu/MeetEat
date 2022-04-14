@@ -23,8 +23,11 @@ public class Cook extends User implements Serializable{
     private String education;
     private String training;
 
+    public Cook() {
+    }
+    
     public Cook(User user, Date verifiedDate, int level, String education, String training) {
-        super(user);
+        //copy user here somehow
         this.verifiedDate = verifiedDate;
         this.level = level;
         this.education = education;

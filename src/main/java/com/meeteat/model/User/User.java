@@ -7,6 +7,7 @@ package com.meeteat.model.User;
 
 import com.meeteat.model.Preference.PreferenceTag;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 /**
  *
@@ -62,10 +63,10 @@ public class User implements Serializable, Loginable {
         this.preferences = preferences;
     }
     private String noTelephone;
-   @OneToMany(mappedBy="user",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany
     private List<PreferenceTag> preferences;
     
-    protected User(User user){
+    protected User(){
     }
     
     public User(String firstName, String lastName, String address, String noTelephone, String mail, String password){
@@ -74,6 +75,7 @@ public class User implements Serializable, Loginable {
         this.mail = mail;
         this.address = address;
         this.noTelephone = noTelephone;
+        this.preferences = new LinkedList<>();
     }
     
     public Long getId() {

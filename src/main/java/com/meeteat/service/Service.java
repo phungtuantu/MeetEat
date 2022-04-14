@@ -7,8 +7,11 @@ package com.meeteat.service;
 
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.OfferDao;
+import com.meeteat.dao.PreferenceTagDao;
 import com.meeteat.dao.UserDao;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.User.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +23,44 @@ public class Service {
     
     protected UserDao userDao = new UserDao();
     protected OfferDao offerDao = new OfferDao();
+    protected PreferenceTagDao preferenceTagDao = new PreferenceTagDao();
 
+    public Long createCuisine(Cuisine cuisine){
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            preferenceTagDao.create(cuisine);
+            JpaTool.validateTransaction();
+            result = cuisine.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public Long createAccount(User user){
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            userDao.create(user);
+            JpaTool.validateTransaction();
+            result = user.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
     public Long makeOffer(Offer offer){
         Long result = null;
         JpaTool.createPersistenceContext();

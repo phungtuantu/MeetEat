@@ -54,7 +54,7 @@ public class Offer implements Serializable {
     private String specifications;
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Reservation> reversations;
-    @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="associatedOffer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
     private String address;
 
@@ -195,6 +195,9 @@ public class Offer implements Serializable {
     }
     private double latitude;
     private double longitude;
+
+    public Offer() {
+    }
 
     public Offer(Cook cook, Date creationDate, String title, double price, int totalPortions,
             String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications) {
