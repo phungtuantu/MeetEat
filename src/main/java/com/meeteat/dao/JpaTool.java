@@ -17,7 +17,7 @@ import javax.persistence.RollbackException;
  * @author gvnge
  */
 public class JpaTool {
-    public static final String PERSISTENCE_UNIT_NAME = "MEETEAT-PU";
+    public static final String PERSISTENCE_UNIT_NAME = "meeteatPU";
 
     private static EntityManagerFactory entityManagerFactory = null;
 

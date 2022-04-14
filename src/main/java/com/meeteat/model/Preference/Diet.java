@@ -7,9 +7,6 @@ package com.meeteat.model.Preference;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  *
@@ -19,26 +16,23 @@ import javax.persistence.Id;
 public class Diet extends PreferenceTag implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+
+    public Diet() {
+    }
 
     public Diet(String name) {
         super(name);
     }
-
+    
+    @Override
     public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        return super.getId();
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (this.getId() != null ? this.getId().hashCode() : 0);
         return hash;
     }
 
@@ -49,10 +43,8 @@ public class Diet extends PreferenceTag implements Serializable {
             return false;
         }
         Diet other = (Diet) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return ! ( (this.getId() == null && other.getId() != null) || 
+                   (this.getId() != null && !this.getId().equals(other.getId())) );
     }
 
     @Override
