@@ -16,7 +16,7 @@ import com.meeteat.model.User.Cook;
  *
  * @author gvnge
  */
-public class CookDao extends AbstractDao{
+public class CookDao extends AbstractDao<Cook>{
     public CookDao() {
         super(Cook.class);
     }

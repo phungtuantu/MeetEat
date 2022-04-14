@@ -11,7 +11,7 @@ import com.meeteat.model.Offer.Offer;
  *
  * @author gvnge
  */
-public class OfferDao extends AbstractDao{
+public class OfferDao extends AbstractDao<Offer>{
     public OfferDao(){
         super(Offer.class);
     }

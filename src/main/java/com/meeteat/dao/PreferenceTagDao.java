@@ -5,12 +5,14 @@
  */
 package com.meeteat.dao;
 
+import com.meeteat.model.Preference.PreferenceTag;
+
 /**
  *
  * @author gvnge
  */
-public class PreferenceTagDao extends AbstractDao{
+public class PreferenceTagDao extends AbstractDao<PreferenceTag>{
     public PreferenceTagDao(){
-        super(PreferenceTagDao.class);
+        super(PreferenceTag.class);
     }
 }
