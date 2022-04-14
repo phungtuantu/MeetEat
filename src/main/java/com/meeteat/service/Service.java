@@ -5,12 +5,14 @@
  */
 package com.meeteat.service;
 
+import com.meeteat.dao.CookDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.OfferDao;
 import com.meeteat.dao.PreferenceTagDao;
 import com.meeteat.dao.UserDao;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 public class Service {
     
     protected UserDao userDao = new UserDao();
+    protected CookDao cookDao = new CookDao();
     protected OfferDao offerDao = new OfferDao();
     protected PreferenceTagDao preferenceTagDao = new PreferenceTagDao();
 
@@ -34,7 +37,7 @@ public class Service {
             JpaTool.validateTransaction();
             result = cuisine.getId();
         } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createCuisine", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally{
@@ -52,7 +55,7 @@ public class Service {
             JpaTool.validateTransaction();
             result = user.getId();
         } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally{
@@ -71,6 +74,24 @@ public class Service {
             result = offer.getId();
         } catch (Exception ex){
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public Long approveCook(Cook cook){
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            cookDao.create(cook);
+            JpaTool.validateTransaction();
+            result = cook.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling approveCook", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally{
