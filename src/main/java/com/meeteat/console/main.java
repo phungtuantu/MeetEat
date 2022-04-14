@@ -7,6 +7,8 @@ package com.meeteat.console;
 
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
@@ -27,19 +29,35 @@ public class main {
     public static void main(String[] args) {
         
         JpaTool.init();
+//        testCreatePref();
+        testCreateAccount();
 //        testMakeOffer();
         JpaTool.destroy();
     }
     
-//    public static void testMakeOffer(){
-//        Service service = new Service();
-//        System.out.println("make a few offers");
-//        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
-//        Cook cook = new Cook(user, new Date(), 0, "","");
-//        List<PreferenceTag> classifications = new LinkedList<>();
-//        Link<
-//        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", );
-//    }
+    public static void testCreatePref(){
+        Service service = new Service();
+        Cuisine cuisine = new Cuisine ("Asian shit");
+        service.createCuisine(cuisine);
+    }
+    
+    public static void testCreateAccount(){
+        Service service = new Service();
+        System.out.println("make a few offers");
+        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
+        service.createAccount(user);
+    }
+    
+    public static void testMakeOffer(){
+        Service service = new Service();
+        System.out.println("make a few offers");
+        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
+        Cook cook = new Cook(user, new Date(), 0, "","");
+        List<PreferenceTag> classifications = new LinkedList<>();
+        List<Ingredient> ingredients = new LinkedList<>();
+        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none");
+        service.makeOffer(offer);
+    }
     
 //    public static void initialiserClients() {
 //        
