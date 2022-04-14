@@ -29,9 +29,10 @@ public class main {
     public static void main(String[] args) {
         
         JpaTool.init();
-//        testCreatePref();
+        testCreatePref();
         testCreateAccount();
-//        testMakeOffer();
+        testApproveCook();
+        testMakeOffer();
         JpaTool.destroy();
     }
     
@@ -43,16 +44,29 @@ public class main {
     
     public static void testCreateAccount(){
         Service service = new Service();
-        System.out.println("make a few offers");
+        System.out.println("create an account");
         User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
         service.createAccount(user);
+    }
+    
+    public static void testApproveCook(){
+        Service service = new Service();
+        System.out.println("create an account then make a cook");
+        User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password");
+        service.createAccount(user);
+        System.out.println("make him a cook");
+        Cook cook = new Cook(user, new Date(), 0, "", "none");
+        System.out.println(user);
+        System.out.println(cook);
+        service.approveCook(cook);
+        System.out.println(cook);
     }
     
     public static void testMakeOffer(){
         Service service = new Service();
         System.out.println("make a few offers");
-        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
-        Cook cook = new Cook(user, new Date(), 0, "","");
+        long cookId = 2;
+        Cook cook = service.searchCookWithID(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
         Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none");

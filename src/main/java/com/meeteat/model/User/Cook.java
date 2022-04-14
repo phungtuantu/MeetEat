@@ -8,6 +8,10 @@ package com.meeteat.model.User;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -15,19 +19,22 @@ import javax.persistence.Temporal;
  * @author gvnge
  */
 @Entity
-public class Cook extends User implements Serializable{
+public class Cook implements Serializable{
     
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date verifiedDate;
     private int level;
     private String education;
     private String training;
+    @Id
+    @OneToOne
+    private User user;
 
     public Cook() {
     }
     
     public Cook(User user, Date verifiedDate, int level, String education, String training) {
-        //copy user here somehow
+        this.user = user;
         this.verifiedDate = verifiedDate;
         this.level = level;
         this.education = education;
@@ -66,9 +73,57 @@ public class Cook extends User implements Serializable{
         this.training = training;
     }
     
+    public Long getId() {
+        return this.user.getId();
+    }
+
+    public void setId(Long id) {
+        this.user.setId(id);
+    }
+
+    public String getFirstName() {
+        return this.user.getFirstName();
+    }
+
+    public void setFirstName(String firstName) {
+        this.user.setFirstName(firstName);
+    }
+
+    public String getLastName() {
+        return user.getLastName();
+    }
+
+    public void setLastName(String lastName) {
+        this.user.setLastName(lastName);
+    }
+
+    public String getMail() {
+        return this.user.getMail();
+    }
+
+    public void setMail(String mail) {
+        this.user.setMail(mail);
+    }
+
+    public String getAddress() {
+        return this.user.getAddress();
+    }
+
+    public void setAddress(String address) {
+        this.user.setAddress(address);
+    }
+
+    public String getNoTelephone() {
+        return user.getNoTelephone();
+    }
+
+    public void setNoTelephone(String noTelephone) {
+        this.user.setNoTelephone(noTelephone);
+    }
+    
     @Override
     public String toString() {
-        return "Cook "+getFirstName()+" "+getLastName()+" (id = " + getId() + ")";
+        return "Cook "+user.getFirstName()+" "+user.getLastName()+" (id = " + user.getId() + ")";
     }
     
 }
