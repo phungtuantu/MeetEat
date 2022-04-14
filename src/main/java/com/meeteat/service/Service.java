@@ -112,8 +112,9 @@ public class Service {
         try{
             JpaTool.openTransaction();
             offer = offerDao.searchById(offerId);
-            JpaTool.validateTransaction();
             offer.setPrice(price);
+            offerDao.merge(offer);
+            JpaTool.validateTransaction();
         } catch (Exception ex){
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
             JpaTool.cancelTransaction();
@@ -129,6 +130,22 @@ public class Service {
     public Offer getOfferFromId(Long id){
         //Might not be needed in the future, currently used for testing
         return offerDao.searchById(id);
+    }
+    
+    public Cook searchCookWithID(Long cookId){
+        JpaTool.createPersistenceContext();
+        Cook cook = null;
+        try{
+            JpaTool.openTransaction();
+            cook = cookDao.searchById(cookId);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchCookWithID", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return cook;
     }
 //
 //    public Long inscrireClient(Client client) {

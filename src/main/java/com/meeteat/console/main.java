@@ -29,11 +29,11 @@ public class main {
     public static void main(String[] args) {
         
         JpaTool.init();
-//        testCreatePref();
+        testCreatePref();
         testCreateAccount();
-        //testMakeReservation();
+        testApproveCook();
         testMakeOffer();
-        JpaTool.destroy(); 
+        JpaTool.destroy();
     }
     
     public static void testCreatePref(){
@@ -65,8 +65,8 @@ public class main {
     public static void testMakeOffer(){
         Service service = new Service();
         System.out.println("make a few offers");
-        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
-        Cook cook = new Cook(user, new Date(), 0, "","");
+        long cookId = 2;
+        Cook cook = service.searchCookWithID(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
         Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none");
