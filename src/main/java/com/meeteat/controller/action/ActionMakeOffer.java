@@ -26,20 +26,20 @@ public class ActionMakeOffer extends Action {
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-        Long cookId = (Long)session.getAttribute("cookId");
-        Cook cook = new Cook();
-        Date currentTime = new Date();
-        String title = (String)session.getAttribute("title");
-        Double price = (Double)session.getAttribute("price");
-        Integer totalPortions = (Integer)session.getAttribute("totalPortions");
-        String details = (String)session.getAttribute("details");
+//        Long cookId = (Long)session.getAttribute("cookId");
+//        Cook cook = new Cook();
+//        Date currentTime = new Date();
+//        String title = (String)session.getAttribute("title");
+//        Double price = (Double)session.getAttribute("price");
+//        Integer totalPortions = (Integer)session.getAttribute("totalPortions");
+//        String details = (String)session.getAttribute("details");
 //        Cook cook = service.searchCookById(cookId);
 //        todo: make list of ingredients and shit
 //        List<Long> ingredientIds = 
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
         String specifications = (String)session.getAttribute("specifications");
-        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details, classifications, ingredients, specifications);
+//        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details, classifications, ingredients, specifications);
         service.makeOffer(offer);
     }
     
