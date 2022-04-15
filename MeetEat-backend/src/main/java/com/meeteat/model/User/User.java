@@ -5,7 +5,9 @@
  */
 package com.meeteat.model.User;
 
+import com.google.maps.model.LatLng;
 import com.meeteat.model.Preference.PreferenceTag;
+import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,24 +36,10 @@ public class User implements Serializable, Loginable {
     @Column(unique = true)
     private String mail;
     private String address;
-    private double latitude;
-    private double longitude;
+    private String city;
+    private String zipCode;
+    private LatLng location;
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
 
     public List<PreferenceTag> getPreferences() {
         return preferences;
@@ -67,13 +55,17 @@ public class User implements Serializable, Loginable {
     protected User(){
     }
     
-    public User(String firstName, String lastName, String address, String noTelephone, String mail, String password){
+    public User(String firstName, String lastName, String address, String city, String zipCode,
+            String noTelephone, String mail){
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
-        this.address = address;
         this.noTelephone = noTelephone;
         this.preferences = new LinkedList<>();
+        this.address = address;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.location = getLatLng(address + ", " + city);
     }
     
     public Long getId() {
@@ -114,6 +106,7 @@ public class User implements Serializable, Loginable {
 
     public void setAddress(String address) {
         this.address = address;
+        this.location = getLatLng(address + ", " + city);
     }
 
     public String getNoTelephone() {

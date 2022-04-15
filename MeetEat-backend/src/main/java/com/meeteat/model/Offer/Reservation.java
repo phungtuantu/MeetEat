@@ -83,9 +83,7 @@ public class Reservation implements Serializable {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
-    }
-
-    
+    } 
 
     @Override
     public String toString() {

@@ -5,9 +5,11 @@
  */
 package com.meeteat.model.Offer;
 
+import com.google.maps.model.LatLng;
 import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
+import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +46,7 @@ public class Offer implements Serializable {
     private String title;
     private double price;
     private int totalPortions;
+    private int remainingPortions;
     enum offerState {
         PENDING,
         ONGOING,
@@ -62,8 +65,25 @@ public class Offer implements Serializable {
     @OneToMany(mappedBy="associatedOffer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
     private String address;
-    private double latitude;
-    private double longitude;
+    private String city;
+    private String zipCode;
+    private LatLng location;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
 
     public Cook getCook() {
         return cook;
@@ -71,6 +91,14 @@ public class Offer implements Serializable {
 
     public void setCook(Cook cook) {
         this.cook = cook;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 
     public Date getCreationDate() {
@@ -192,29 +220,15 @@ public class Offer implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        this.location = getLatLng(address + ", " + city);
     }
     
     public Offer() {
     }
 
     public Offer(Cook cook, Date creationDate, String title, double price, int totalPortions,
-            String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications) {
+            String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications,
+            String address, String city, String zipCode) {
         this.cook = cook;
         this.creationDate = creationDate;
         this.title = title;
@@ -226,8 +240,10 @@ public class Offer implements Serializable {
         this.ingredients = ingredients;
         this.specifications = specifications;
         this.state = offerState.PENDING;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.location = getLatLng(address + ", " + city);
     }
-    
     
     
     public Long getId() {

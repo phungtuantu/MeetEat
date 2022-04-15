@@ -23,6 +23,8 @@ import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -332,5 +334,62 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return message;
+    }
+    
+     public List <Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
+        //diet --> ok
+        //cuisine -->ok
+        //preferences (ingredients)--> ok
+        //price --> ok
+        //localisation
+        List <Offer> ongoingOffers;
+        List <Offer> result = null;
+        JpaTool.createPersistenceContext(); 
+        try {
+            JpaTool.openTransaction();
+            
+            //priceRange
+            int priceLimit;
+            switch (priceRange) {
+                case 1 ->
+                    priceLimit = 5;
+                case 2 ->
+                    priceLimit = 9;
+                default ->
+                    priceLimit = 20;
+            }
+            ongoingOffers = offerDao.getOngoingOffers(priceLimit);
+            
+            //generate preferences list
+            List <Long> preferences = null; 
+            List <Long> ingredients = null;
+            preferences.addAll(requestPreferences); //cuisine and diets
+            for (PreferenceTag preference:user.getPreferences()){
+                if(!(preference instanceof Ingredient)){
+                    preferences.add(preference.getId());
+                }else{
+                    ingredients.add(preference.getId());
+                }
+            }
+            
+            //check the preferences in ongoingOffers
+            
+            for(Offer offer:ongoingOffers){
+                if(offer.getClassifications().containsAll(preferences) && Collections.disjoint(offer.getClassifications(), ingredients)){
+                    result.add(offer);
+                }
+            }
+            
+            //location
+
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchOffers", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
     }
 }
