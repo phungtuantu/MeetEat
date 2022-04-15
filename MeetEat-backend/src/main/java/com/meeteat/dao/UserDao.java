@@ -32,4 +32,8 @@ public class UserDao extends AbstractDao<User>{
         }
         return result;
     }
+    
+    public User modify(User user){ 
+        return JpaTool.obtainPersistenceContext().merge(user);
+    }
 }

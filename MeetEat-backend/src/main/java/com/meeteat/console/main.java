@@ -29,10 +29,11 @@ public class main {
     public static void main(String[] args) {
         
         JpaTool.init();
-        testCreatePref();
-        testCreateAccount();
-        testApproveCook();
-        testMakeOffer();
+//        testCreatePref();
+//        testCreateAccount();
+//        testApproveCook();
+//        testMakeOffer();
+//        testSpecifyPreferences();
         JpaTool.destroy();
     }
     
@@ -66,11 +67,30 @@ public class main {
         Service service = new Service();
         System.out.println("make a few offers");
         long cookId = 2;
-        Cook cook = service.searchCookWithID(cookId);
+        Cook cook = service.findCookById(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
         Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none");
         service.makeOffer(offer);
+    }
+    
+    public static void testSpecifyPreferences(){
+        Service service = new Service();
+        System.out.println("specify preferences");
+        User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password");
+        PreferenceTag pref1 = new PreferenceTag("viande");
+        PreferenceTag pref2 = new PreferenceTag("beurre");
+        PreferenceTag pref3 = new PreferenceTag("riz");
+        List<PreferenceTag> prefs = new LinkedList<>();
+        prefs.add(pref3);
+        List<PreferenceTag> prefsChange = new LinkedList<>();
+        prefsChange.add(pref1);
+        prefsChange.add(pref2);
+        user.setPreferences(prefs);
+        System.out.println(user.getPreferences().get(0).getName());
+        user = service.specifyPreferences(prefsChange, user);
+        System.out.println(user.getPreferences().get(0).getName());
+        System.out.println(user.getPreferences().get(1).getName());
     }
     
 //    public static void initialiserClients() {

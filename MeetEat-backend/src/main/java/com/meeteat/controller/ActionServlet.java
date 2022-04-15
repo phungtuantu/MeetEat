@@ -9,8 +9,10 @@ package com.meeteat.controller;
 import com.meeteat.controller.action.Action;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.serialisation.Serialisation;
+import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,37 +41,19 @@ public class ActionServlet extends HttpServlet {
         Serialisation serialisation = null;
         String todo = request.getParameter("todo");
         switch (todo){
-            case "makeOffer":{
+            case "makeOffer" -> {
                 action = new ActionMakeOffer();
+                serialisation = new SerialisationOffer();
                 break;
             }
-//            case "demanderSynthese": {
-//                action = new ActionDemanderSynthese();
-//                serialisation = new SyntheseSerialisation();
-//                break;
-//            }
         }
         
-//        if (action!=null&&serialisation!=null){
-//            action.executer(request);
-//            serialisation.serialiser(request, response);
-//        } else{
-//            response.sendError(400, "Bad Request (pas d'Action ou de Serialisation pour traiter cette requete)");
-//        }
-        
-//        response.setContentType("text/html;charset=UTF-8");
-//        try ( PrintWriter out = response.getWriter()) {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet ActionServlet</title>");            
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1> Contrôleur Servlet ActionServlet at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
+        if (action!=null&&serialisation!=null){
+            action.executer(request);
+            serialisation.serialiser(request, response);
+        } else{
+            response.sendError(400, "Bad Request (Action and/or Serialisation missing for request)");
+        }
     }
     
     @Override

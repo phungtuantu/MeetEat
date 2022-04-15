@@ -6,7 +6,8 @@ import axios from 'axios'
 import Home from "@/views/Home";
 import OrderPage from "@/views/OrderPage";
 import OfferPage from "@/views/OfferPage";
-import Login_page from "@/views/Login_page";
+import LoginPage from "@/views/LoginPage";
+import CreateAccountPage from "@/views/CreateAccountPage";
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("auth-token")}`;
 axios.interceptors.response.use(response => response, error => {
@@ -33,13 +34,18 @@ const routes = [
   },
   {
     path: '/orderPage/:id',
-    name: 'OfferPage', //même nom que la view
-    component: OfferPage //composant de la dossier vue
+    name: 'OfferPage',
+    component: OfferPage
   },
   {
     path: '/login',
-    name: 'Login_page', //même nom que la view
-    component: Login_page //composant de la dossier vue
+    name: 'LoginPage',
+    component: LoginPage
+  },
+  {
+    path: '/signin',
+    name: 'CreateAccountPage',
+    component: CreateAccountPage
   },
 
 ]

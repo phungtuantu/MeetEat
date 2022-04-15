@@ -31,8 +31,14 @@ public class Reservation implements Serializable {
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date reservationDate;
-    //convert to enum later
-    private int state;
+    enum reservationState {
+        REQUEST,
+        RESERVATION,
+        REJECTED,
+        CANCELLED,
+        PURCHASEDMEAL
+    }
+    private reservationState state;
     private int nbOfPortion;
     @ManyToOne
     private Offer offer;
@@ -47,25 +53,37 @@ public class Reservation implements Serializable {
         this.id = id;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    public Date getReservationDate() {
+        return reservationDate;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Reservation)) {
-            return false;
-        }
-        Reservation other = (Reservation) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public void setReservationDate(Date reservationDate) {
+        this.reservationDate = reservationDate;
     }
+
+    public int getNbOfPortion() {
+        return nbOfPortion;
+    }
+
+    public void setNbOfPortion(int nbOfPortion) {
+        this.nbOfPortion = nbOfPortion;
+    }
+
+    public Offer getOffer() {
+        return offer;
+    }
+
+    public void setOffer(Offer offer) {
+        this.offer = offer;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    } 
 
     @Override
     public String toString() {
