@@ -392,4 +392,21 @@ public class Service {
         }
         return result;
     }
+    public User specifyPreferences(List<PreferenceTag> listPref, User user){
+        JpaTool.createPersistenceContext();
+        User user1 = user;
+        user1.setPreferences(listPref);
+        try{
+            JpaTool.openTransaction();
+            user = userDao.modify(user1);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
+    }
+    
 }

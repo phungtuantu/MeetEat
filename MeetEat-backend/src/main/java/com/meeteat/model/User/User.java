@@ -39,6 +39,9 @@ public class User implements Serializable, Loginable {
     private String city;
     private String zipCode;
     private LatLng location;
+    private String noTelephone;
+    @ManyToMany
+    private List<PreferenceTag> preferences;
 
 
     public List<PreferenceTag> getPreferences() {
@@ -48,9 +51,6 @@ public class User implements Serializable, Loginable {
     public void setPreferences(List<PreferenceTag> preferences) {
         this.preferences = preferences;
     }
-    private String noTelephone;
-    @ManyToMany
-    private List<PreferenceTag> preferences;
     
     protected User(){
     }
