@@ -46,14 +46,14 @@ public class main {
     public static void testCreateAccount(){
         Service service = new Service();
         System.out.println("create an account");
-        User user = new User("Bob", "Smith","here","0611","bobsmith@here.com","password");
+        User user = new User("Bob", "Smith","here", "this city", "1010","0611","bobsmith@here.com");
         service.createAccount(user);
     }
     
     public static void testApproveCook(){
         Service service = new Service();
         System.out.println("create an account then make a cook");
-        User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password");
+        User user = new User("Bob the Second", "Smith","here","this city", "1010", "0611","bobthesecondsmith@here.com");
         service.createAccount(user);
         System.out.println("make him a cook");
         Cook cook = new Cook(user, new Date(), 0, "", "none");
@@ -70,14 +70,14 @@ public class main {
         Cook cook = service.findCookById(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
-        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none");
+        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
         service.makeOffer(offer);
     }
     
     public static void testSpecifyPreferences(){
         Service service = new Service();
         System.out.println("specify preferences");
-        User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password");
+        User user = new User("Bob the Second", "Smith","here","this city", "1010","0611","bobthesecondsmith@here.com");
         PreferenceTag pref1 = new PreferenceTag("viande");
         PreferenceTag pref2 = new PreferenceTag("beurre");
         PreferenceTag pref3 = new PreferenceTag("riz");

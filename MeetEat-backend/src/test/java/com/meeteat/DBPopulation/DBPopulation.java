@@ -32,7 +32,7 @@ public class DBPopulation {
             Address address = faker.address();
             Name name = faker.name();
             String phone = faker.phoneNumber().cellPhone();
-            User user = new User(name.firstName(), name.lastName(), address.streetAddress(), phone, email, password);
+            User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.cityName(), address.zipCode(), phone, email);
             service.createAccount(user);
         }
     }

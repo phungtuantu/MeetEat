@@ -5,55 +5,21 @@
  */
 package com.meeteat.controller.action;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.meeteat.model.Offer.Offer;
+import com.meeteat.service.Service;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author yousr
+ * @author gvnge
  */
-@Entity
-public class ActionConsultOffer implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+public class ActionConsultOffer extends Action {
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    public void executer(HttpServletRequest request){
+        Service service = new Service();
+        Long offerId = Long.parseLong(request.getParameter("offerId"));
+        Offer offer = service.findOfferById(offerId);
+        System.out.println(offer);
+        request.setAttribute("offer",offer);
     }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ActionConsultOffer)) {
-            return false;
-        }
-        ActionConsultOffer other = (ActionConsultOffer) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.meeteat.controller.action.ActionConsultOffer[ id=" + id + " ]";
-    }
-    
 }
