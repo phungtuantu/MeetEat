@@ -23,6 +23,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  *
@@ -68,6 +69,16 @@ public class Offer implements Serializable {
     private String city;
     private String zipCode;
     private LatLng location;
+    @Transient
+    private transient double distanceToUser;
+
+    public double getDistanceToUser() {
+        return distanceToUser;
+    }
+
+    public void setDistanceToUser(double distanceToUser) {
+        this.distanceToUser = distanceToUser;
+    }
 
     public String getCity() {
         return city;

@@ -5,6 +5,7 @@
  */
 package com.meeteat.model.Offer;
 
+import com.meeteat.model.User.User;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,8 @@ public class Reservation implements Serializable {
     private int nbOfPortion;
     @ManyToOne
     private Offer offer;
+    @ManyToOne
+    private User customer;
     @OneToMany(mappedBy="source",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
@@ -63,6 +66,14 @@ public class Reservation implements Serializable {
 
     public int getNbOfPortion() {
         return nbOfPortion;
+    }
+
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
+
+    public User getCustomer() {
+        return customer;
     }
 
     public void setNbOfPortion(int nbOfPortion) {

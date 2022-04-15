@@ -42,8 +42,13 @@ public class ActionMakeOffer extends Action {
             classifications.add(service.findPreferanceTagById(Long.parseLong(preferenceTagId)));
         }
         String specifications = (String)session.getAttribute("specifications");
-        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details, classifications, ingredients, specifications);
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String zipCode = request.getParameter("zipCode");
+        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details,
+                classifications, ingredients, specifications,address,city,zipCode);
         service.makeOffer(offer);
+        request.setAttribute("offer",offer);
     }
     
 }

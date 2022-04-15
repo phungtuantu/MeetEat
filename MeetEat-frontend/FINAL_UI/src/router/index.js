@@ -8,6 +8,7 @@ import OrderPage from "@/views/OrderPage";
 import OfferPage from "@/views/OfferPage";
 import LoginPage from "@/views/LoginPage";
 import CreateAccountPage from "@/views/CreateAccountPage";
+import SelectPreferencesPage from "@/views/SelectPreferencesPage";
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("auth-token")}`;
 axios.interceptors.response.use(response => response, error => {
@@ -46,6 +47,11 @@ const routes = [
     path: '/signin',
     name: 'CreateAccountPage',
     component: CreateAccountPage
+  },
+  {
+    path: '/SelectPreferences',
+    name: 'SelectPreferencesPage',
+    component: SelectPreferencesPage
   },
 
 ]
