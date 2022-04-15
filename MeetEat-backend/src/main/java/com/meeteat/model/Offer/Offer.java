@@ -44,6 +44,7 @@ public class Offer implements Serializable {
     private String title;
     private double price;
     private int totalPortions;
+    private int remainingPortions;
     //create enum for state
     private int state;
     private String details;
@@ -158,12 +159,21 @@ public class Offer implements Serializable {
         return reversations;
     }
 
-    public void setReversations(List<Reservation> reversations) {
-        this.reversations = reversations;
+    public void addReversation(Reservation reservation) {
+        this.reversations.add(reservation);
+        this.totalPortions-= reservation.getNbOfPortion();
     }
 
     public List<Message> getMessages() {
         return messages;
+    }
+
+    public int getRemainingPortions() {
+        return remainingPortions;
+    }
+
+    public void setRemainingPortions(int remainingPortions) {
+        this.remainingPortions = remainingPortions;
     }
 
     public void setMessages(List<Message> messages) {
@@ -206,6 +216,7 @@ public class Offer implements Serializable {
         this.title = title;
         this.price = price;
         this.totalPortions = totalPortions;
+        this.remainingPortions = totalPortions;
         this.details = details;
         this.classifications = classifications;
         this.ingredients = ingredients;
