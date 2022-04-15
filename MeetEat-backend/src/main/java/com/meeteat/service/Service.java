@@ -5,10 +5,7 @@
  */
 package com.meeteat.service;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.maps.model.LatLng;
-import com.meeteat.service.GeoNetApi;
 import com.meeteat.dao.CookDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.MessageDao;
@@ -30,9 +27,7 @@ import com.meeteat.model.User.User;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
