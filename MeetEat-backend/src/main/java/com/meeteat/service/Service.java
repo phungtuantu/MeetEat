@@ -45,6 +45,24 @@ public class Service {
     protected ReservationDao reservationDao = new ReservationDao();
     protected ReviewDao reviewDao = new ReviewDao();
     protected MessageDao messageDao = new MessageDao();
+
+    public Long createPreferenceTag(PreferenceTag preferenceTag){
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            preferenceTagDao.create(preferenceTag);
+            JpaTool.validateTransaction();
+            result = preferenceTag.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createPreferenceTag", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
     
     public Long createAccount(User user){
         Long result = null;
@@ -96,6 +114,24 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return result;
+    }
+    
+    public Offer updateOffer(Offer offer){
+        Offer res = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            offerDao.merge(offer);
+            JpaTool.validateTransaction();
+            res = offer;
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling updateOffer", ex);
+            JpaTool.cancelTransaction();
+            res = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return res;
     }
     
     public Long approveCook(Cook cook){
@@ -274,22 +310,6 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return offer;
-    }
-    
-    public User findUserById(Long userId){
-        JpaTool.createPersistenceContext();
-        User user = null;
-        try{
-            JpaTool.openTransaction();
-            user = userDao.searchById(userId);
-            JpaTool.validateTransaction();
-        } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-            JpaTool.cancelTransaction();
-        } finally{
-            JpaTool.closePersistenceContext();
-        }
-        return user;
     }
     
     public PreferenceTag findPreferanceTagById(Long prefTagId){

@@ -16,6 +16,7 @@ import com.meeteat.service.Service;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import com.meeteat.DBpopulation.DBpopulation;
 
 /**
  *
@@ -27,14 +28,7 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        JpaTool.init();
-//        testCreatePref();
-//        testCreateAccount();
-//        testApproveCook();
-//        testMakeOffer();
-//        testSpecifyPreferences();
-        JpaTool.destroy();
+        DBPopulation dpb = new DBPopulation();
     }
     
     public static void testCreatePref(){
