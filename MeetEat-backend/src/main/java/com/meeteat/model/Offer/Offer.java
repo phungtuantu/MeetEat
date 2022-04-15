@@ -19,6 +19,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -56,9 +57,11 @@ public class Offer implements Serializable {
     }
     private offerState state;
     private String details;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(name="offer_classifications")
     private List<PreferenceTag> classifications;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(name="offer_ingredients")
     private List<Ingredient> ingredients;
     private String specifications;
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
@@ -238,7 +241,7 @@ public class Offer implements Serializable {
     }
 
     public Offer(Cook cook, Date creationDate, String title, double price, int totalPortions,
-            String details, String specifications, List<Ingredient> ingredients, List<PreferenceTag> classafication,
+            String details, List<PreferenceTag> classafication, List<Ingredient> ingredients, String specifications,
             String address, String city, String zipCode) {
         this.cook = cook;
         this.creationDate = creationDate;

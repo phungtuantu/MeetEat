@@ -122,34 +122,32 @@ public class DBPopulation {
             int totalPortions = number.numberBetween(0, 30);
             String details = ram.quote();
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
-                                    details, "", ingredients, classifications, address.streetAddress(), address.city(), 
+                                    details, classifications, ingredients, "", address.streetAddress(), address.city(), 
                                     address.zipCode());
             System.out.println(address.streetAddress());
             service.makeOffer(offer);
             //offer.setIngredients(ingredients);
             for(Ingredient ing : ingredients){
-                System.out.println(ing);
+                //System.out.println(ing);
             }
             //offer.setClassifications(classifications);
             for(PreferenceTag ing : classifications){
-                System.out.println(ing);
+                //System.out.println(ing);
             }
             //service.updateOffer(offer);
         }
     }
     
-    public static void main(String [] args){
+    public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, int nbOffers){
         JpaTool.init();
-        DBPopulation ss = new DBPopulation();
-        ss.createUsers(5);
-        ss.createCooks(3);
-        ss.createIngedients(15);
-        ss.createDiets();
-        ss.createCuisines(20);
-        ss.createOffers(1);
+        createUsers(nbUsers);
+        createCooks(nbCooks);
+        createIngedients(nbIngredients);
+        createDiets();
+        createCuisines(nbCuisines);
+        createOffers(nbOffers);
         JpaTool.destroy();
     }
-    
     private List<Ingredient> getIngredientsForOffer(){
         int min = 0;
         int max = ingredientsList.size();
@@ -185,4 +183,8 @@ public class DBPopulation {
         return ll;
     }
     
+    public static void main(String [] args){
+        DBPopulation dbp = new DBPopulation();
+        dbp.populateDatabase(100, 30, 200, 20, 30);
+    }
 }
