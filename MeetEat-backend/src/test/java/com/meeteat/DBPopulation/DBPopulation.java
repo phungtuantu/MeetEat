@@ -5,18 +5,27 @@
  */
 package com.meeteat.DBPopulation;
 import com.github.javafaker.Address;
+import com.github.javafaker.Country;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Food;
 import com.github.javafaker.Name;
 import com.github.javafaker.DateAndTime;
+import com.github.javafaker.RickAndMorty;
+import com.github.javafaker.Number;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.Preference.Diet;
 import com.meeteat.model.Preference.Ingredient;
+import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
+import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.service.Service;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 /**
  *
@@ -27,6 +36,10 @@ public class DBPopulation {
     Service service;
     LinkedList<Long> userIdList = new LinkedList<>();
     LinkedList<Long> cookIdList = new LinkedList<>();
+    LinkedList<Ingredient> ingredientsList = new LinkedList<>();
+    LinkedList<Diet> dietList = new LinkedList<>();
+    LinkedList<Cuisine> cuisineList = new LinkedList<>();
+    LinkedList<CookRequest> cookRequestList = new LinkedList<>();
     Locale locale = new Locale("fr");
     public DBPopulation(){
         faker = new Faker(locale);
@@ -61,13 +74,57 @@ public class DBPopulation {
         for(int i =0; i<(nbIngredients/2); i++){
             Food food = faker.food();
             Ingredient ingredient = new Ingredient(food.ingredient());
-            service.createIngredient(ingredient);
+            service.createPreferenceTag(ingredient);
+            ingredientsList.add(ingredient);
         }
         for(int i =0; i<(nbIngredients/2); i++){
             Food food = faker.food();
             Ingredient ingredient = new Ingredient(food.spice());
-            service.createIngredient(ingredient);
+            service.createPreferenceTag(ingredient);
+            ingredientsList.add(ingredient);
         }
+    }
+    
+    public void createDiets(){
+        dietList.add(new Diet("Vegetarian"));
+        dietList.add(new Diet("Vegan"));
+        dietList.add(new Diet("Pesco Vegetarian"));
+        dietList.add(new Diet("Diary-free"));
+        dietList.add(new Diet("Gluten free"));
+        dietList.add(new Diet("No pork"));
+        for(Diet diet : dietList){
+            service.createPreferenceTag(diet);
+        }
+    }
+    
+    public void createCuisines(int nbCuisines){
+        for(int i = 0; i<nbCuisines; i++){
+            Country country = faker.country();
+            String name = country.name();
+            Cuisine cuisine = new Cuisine(name);
+            service.createPreferenceTag(cuisine);
+            cuisineList.add(cuisine);
+        }
+    }
+    
+    public void createOffers(int nbOffers){
+        int min = 0;
+        for(int i = 0; i<nbOffers; i++){
+            Number number = faker.number();
+            List<Ingredient> offerIngredientsList = getIngredientsForOffer();
+            List<PreferenceTag> offerPreferenceTagList = getPreferenceTagForOffer();
+            Long cook = cookIdList.get(number.numberBetween(min, cookIdList.size()));
+            RickAndMorty ram = faker.rickAndMorty();
+            DateAndTime dat = faker.date();
+            Date creationDate = dat.birthday(0, 2);
+            String title = ram.character();
+            double price = number.randomDouble(2, 0, 20);
+            int totalPortions = number.numberBetween(0, 30);
+            String details = ram.quote();
+        }
+        
+        //Cook cook, Date creationDate, String title, double price, int totalPortions,
+         //   String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications
     }
     
     public static void main(String [] args){
@@ -76,7 +133,44 @@ public class DBPopulation {
         ss.createUsers(5);
         ss.createCooks(3);
         ss.createIngedients(15);
+        ss.createDiets();
+        ss.createCuisines(20);
         JpaTool.destroy();
+    }
+    
+    private List<Ingredient> getIngredientsForOffer(){
+        int min = 0;
+        int max = ingredientsList.size();
+        Number number = faker.number();
+        int lower = number.numberBetween(min, max);
+        int upper = number.numberBetween(lower, max);
+        List<Ingredient> ll = new LinkedList<>();
+        for(int i = lower; i<upper; i++){
+            ll.add(ingredientsList.get(i));
+        }
+        return ll;
+    }
+    
+    private List<PreferenceTag> getPreferenceTagForOffer(){
+        Number number = faker.number();
+        int nbCuisines = number.numberBetween(0, cuisineList.size());
+        int nbDiets = number.numberBetween(0, dietList.size());
+        List<PreferenceTag> ll = new LinkedList<>();
+        int startCuisine = number.numberBetween(0, cuisineList.size());
+        while((startCuisine + nbCuisines) >= cuisineList.size()){
+            startCuisine = number.numberBetween(0, cuisineList.size());
+        }
+        int startDiet = number.numberBetween(0, dietList.size());
+        while((startDiet + nbDiets) >= dietList.size()){
+            startDiet = number.numberBetween(0, dietList.size());
+        }
+        for(int i = startCuisine; i<(startCuisine + nbCuisines); i++){
+            ll.add(cuisineList.get(i));
+        }
+        for(int i = startDiet; i<(startDiet + nbDiets); i++){
+            ll.add(dietList.get(i));
+        }
+        return ll;
     }
     
 }
