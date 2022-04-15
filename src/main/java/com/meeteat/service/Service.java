@@ -11,7 +11,12 @@ import com.meeteat.dao.PreferenceTagDao;
 import com.meeteat.dao.UserDao;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.Preference.Diet;
+import com.meeteat.model.Preference.Ingredient;
+import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.User;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,60 +25,117 @@ import java.util.logging.Logger;
  * @author gvnge
  */
 public class Service {
-    
+
     protected UserDao userDao = new UserDao();
     protected OfferDao offerDao = new OfferDao();
     protected PreferenceTagDao preferenceTagDao = new PreferenceTagDao();
 
-    public Long createCuisine(Cuisine cuisine){
+    public Long createCuisine(Cuisine cuisine) {
         Long result = null;
         JpaTool.createPersistenceContext();
-        try{
+        try {
             JpaTool.openTransaction();
             preferenceTagDao.create(cuisine);
             JpaTool.validateTransaction();
             result = cuisine.getId();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
             JpaTool.cancelTransaction();
             result = null;
-        } finally{
+        } finally {
             JpaTool.closePersistenceContext();
         }
         return result;
     }
-    
-    public Long createAccount(User user){
+
+    public Long createAccount(User user) {
         Long result = null;
         JpaTool.createPersistenceContext();
-        try{
+        try {
             JpaTool.openTransaction();
             userDao.create(user);
             JpaTool.validateTransaction();
             result = user.getId();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
             JpaTool.cancelTransaction();
             result = null;
-        } finally{
+        } finally {
             JpaTool.closePersistenceContext();
         }
         return result;
     }
-    
-    public Long makeOffer(Offer offer){
+
+    public Long makeOffer(Offer offer) {
         Long result = null;
         JpaTool.createPersistenceContext();
-        try{
+        try {
             JpaTool.openTransaction();
             offerDao.create(offer);
             JpaTool.validateTransaction();
             result = offer.getId();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling makeOffer", ex);
             JpaTool.cancelTransaction();
             result = null;
-        } finally{
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+
+    public List <Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
+        //diet --> ok
+        //cuisine -->ok
+        //preferences (ingredients)--> ok
+        //price --> ok
+        //localisation
+        List <Offer> ongoingOffers;
+        List <Offer> result = null;
+        JpaTool.createPersistenceContext(); 
+        try {
+            JpaTool.openTransaction();
+            
+            //priceRange
+            int priceLimit;
+            switch (priceRange) {
+                case 1 ->
+                    priceLimit = 5;
+                case 2 ->
+                    priceLimit = 9;
+                default ->
+                    priceLimit = 20;
+            }
+            ongoingOffers = offerDao.getOngoingOffers(priceLimit);
+            
+            //generate preferences list
+            List <Long> preferences = null; 
+            List <Long> ingredients = null;
+            preferences.addAll(requestPreferences); //cuisine and diets
+            for (PreferenceTag preference:user.getPreferences()){
+                if(!(preference instanceof Ingredient)){
+                    preferences.add(preference.getId());
+                }else{
+                    ingredients.add(preference.getId());
+                }
+            }
+            
+            //check the preferences in ongoingOffers
+            
+            for(Offer offer:ongoingOffers){
+                if(offer.getClassifications().containsAll(preferences) && Collections.disjoint(offer.getClassifications(), ingredients)){
+                    result.add(offer);
+                }
+            }
+            
+            //location
+
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchOffers", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally {
             JpaTool.closePersistenceContext();
         }
         return result;
@@ -462,5 +524,5 @@ public class Service {
 //        }
 //        return resultat;
 //    }
-    
+
 }

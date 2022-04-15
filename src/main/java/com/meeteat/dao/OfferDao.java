@@ -33,23 +33,37 @@ public class OfferDao {
         return em.find(Offer.class, offerId); // renvoie null si l'identifiant n'existe pas
     }
     
-//    public Offer searchByFilters(List <Diet> diets, Cuisine cuisine, int priceRange, User user) {
-//        //ne pas oublier les infos du user: preferences + localisation
-//        // preferences
-//        //localisation
-//        //diet
-//        //cuisine
-//        
-//        EntityManager em = JpaTool.obtainPersistenceContext();
-//        int priceLimit;
-//        switch (priceRange) {
-//            case 1 -> priceLimit = 5;
-//            case 2 -> priceLimit = 9;
-//            default -> priceLimit = 20;
-//        }
-//        TypedQuery<Offer> query = em.createQuery("SELECT O FROM Offer o WHERE o.price <= :priceLimit AND o.classifications");
-//        return em.find(Offer.class, offerId); // renvoie null si l'identifiant n'existe pas
-//    }
+    public List<Offer> searchByFilters(List<Long> preferences, List<Long> ingredients, int priceLimit) {
+        
+        //preferences : list of diets + type of cuisine
+        //to do : gestion des ingredients dans la requete SQL et gestion de la localisation des offres
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        //preferences
+        String squery = "SELECT o FROM Offer o WHERE ";
+        for(Long idPreference:preferences){
+            squery = squery + "CONTAINS (o.classifications,"+idPreference+") AND";
+        }
+        squery = squery.substring(0, squery.length()-3);
+        squery = squery + "AND o.price <= :priceLimit";
+        TypedQuery<Offer> query = em.createQuery(squery, Offer.class);
+        return query.getResultList();
+        
+        //        TypedQuery<Offer> query = em.createQuery("SELECT o FROM Offer o WHERE (SELECT c from o.classifications c IN (:searchPrefrences))= ALL (:searchPreferences)", Offer.class);
+//query.setParameter("searchPreferences",searchPreferences);
+//        TypedQuery<Offer> queryPreferences = em.createQuery("SELECT o FROM Offer o WHERE o. <= :priceLimit AND ");
+//        TypedQuery<Offer> query = em.createQuery("SELECT O FROM Offer o WHERE o.price <= :priceLimit AND ");
+        
+    }
+    
+    public List<Offer> getOngoingOffers(int priceLimit) {
+        
+        //returns offers according to priceLimit
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        TypedQuery<Offer> query = em.createQuery("SELECT o from offer o WHERE o.price <= :pricelimit AND o.state = :state ", Offer.class);
+        query.setParameter("pricelimit",priceLimit);
+        query.setParameter("state","ONGOING");
+        return query.getResultList();
+    }
     
 
     
