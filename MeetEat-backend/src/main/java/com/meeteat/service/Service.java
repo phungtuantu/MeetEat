@@ -23,6 +23,7 @@ import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -333,4 +334,22 @@ public class Service {
         }
         return message;
     }
+    
+    public User specifyPreferences(List<PreferenceTag> listPref, User user){
+        JpaTool.createPersistenceContext();
+        User user1 = user;
+        user1.setPreferences(listPref);
+        try{
+            JpaTool.openTransaction();
+            user = userDao.modify(user1);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
+    }
+    
 }
