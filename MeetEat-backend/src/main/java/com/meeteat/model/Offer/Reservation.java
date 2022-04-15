@@ -31,8 +31,14 @@ public class Reservation implements Serializable {
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date reservationDate;
-    //convert to enum later
-    private int state;
+    enum reservationState {
+        REQUEST,
+        RESERVATION,
+        REJECTED,
+        CANCELLED,
+        PURCHASEDMEAL
+    }
+    private reservationState state;
     private int nbOfPortion;
     @ManyToOne
     private Offer offer;

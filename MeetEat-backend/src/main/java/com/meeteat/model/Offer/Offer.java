@@ -44,9 +44,13 @@ public class Offer implements Serializable {
     private String title;
     private double price;
     private int totalPortions;
-    private int remainingPortions;
-    //create enum for state
-    private int state;
+    enum offerState {
+        PENDING,
+        ONGOING,
+        SOLDOUT,
+        UNAVAILABLE
+    }
+    private offerState state;
     private String details;
     @ManyToMany
     private List<PreferenceTag> classifications;
@@ -58,6 +62,8 @@ public class Offer implements Serializable {
     @OneToMany(mappedBy="associatedOffer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
     private String address;
+    private double latitude;
+    private double longitude;
 
     public Cook getCook() {
         return cook;
@@ -115,11 +121,11 @@ public class Offer implements Serializable {
         this.totalPortions = totalPortions;
     }
 
-    public int getState() {
+    public offerState getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(offerState state) {
         this.state = state;
     }
 
@@ -203,9 +209,7 @@ public class Offer implements Serializable {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-    private double latitude;
-    private double longitude;
-
+    
     public Offer() {
     }
 
@@ -221,7 +225,7 @@ public class Offer implements Serializable {
         this.classifications = classifications;
         this.ingredients = ingredients;
         this.specifications = specifications;
-        this.state = 0;
+        this.state = offerState.PENDING;
     }
     
     
