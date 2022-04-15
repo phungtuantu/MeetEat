@@ -112,6 +112,24 @@ public class Service {
         return result;
     }
     
+    public Offer updateOffer(Offer offer){
+        Offer res = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            offerDao.merge(offer);
+            JpaTool.validateTransaction();
+            res = offer;
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling updateOffer", ex);
+            JpaTool.cancelTransaction();
+            res = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return res;
+    }
+    
     public Long approveCook(Cook cook){
         Long result = null;
         JpaTool.createPersistenceContext();

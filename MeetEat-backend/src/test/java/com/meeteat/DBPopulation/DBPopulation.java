@@ -122,9 +122,19 @@ public class DBPopulation {
             int totalPortions = number.numberBetween(0, 30);
             String details = ram.quote();
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
-                                    details, classifications, ingredients, "", 
-                                    address.streetAddress(), address.city(), address.zipCode());
+                                    details, "", ingredients, classifications, address.streetAddress(), address.city(), 
+                                    address.zipCode());
+            System.out.println(address.streetAddress());
             service.makeOffer(offer);
+            //offer.setIngredients(ingredients);
+            for(Ingredient ing : ingredients){
+                System.out.println(ing);
+            }
+            //offer.setClassifications(classifications);
+            for(PreferenceTag ing : classifications){
+                System.out.println(ing);
+            }
+            //service.updateOffer(offer);
         }
     }
     
