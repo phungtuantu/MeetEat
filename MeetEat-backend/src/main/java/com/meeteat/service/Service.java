@@ -5,6 +5,9 @@
  */
 package com.meeteat.service;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.meeteat.service.GeoNetApi;
 import com.meeteat.dao.CookDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.MessageDao;
@@ -24,7 +27,11 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -336,14 +343,21 @@ public class Service {
         return message;
     }
     
-     public List <Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
+     public PriorityQueue <Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
         //diet --> ok
         //cuisine -->ok
         //preferences (ingredients)--> ok
         //price --> ok
         //localisation
         List <Offer> ongoingOffers;
-        List <Offer> result = null;
+        PriorityQueue<Offer> sortedByDistanceOffers = new PriorityQueue<>(new Comparator<Offer>() {
+            public int compare(Offer n1, Offer n2) {
+                Double distance1 = n1.getDistanceToUser();
+                Double distance2 = n2.getDistanceToUser();
+                return distance1.compareTo(distance2); //May be - instead
+            }
+        });
+
         JpaTool.createPersistenceContext(); 
         try {
             JpaTool.openTransaction();
@@ -371,26 +385,25 @@ public class Service {
                     ingredients.add(preference.getId());
                 }
             }
-            
-            //check the preferences in ongoingOffers
-            
-            for(Offer offer:ongoingOffers){
+            //check the preferences in ongoingOffers + distance to User
+            double distance;
+            for(Offer offer:ongoingOffers){// total complexity O(n * log(n))
                 if(offer.getClassifications().containsAll(preferences) && Collections.disjoint(offer.getClassifications(), ingredients)){
-                    result.add(offer);
+                    distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
+                    offer.setDistanceToUser(distance);
+                    sortedByDistanceOffers.add(offer); // insertion on O(log(n))
                 }
-            }
-            
-            //location
+            }        
 
             JpaTool.validateTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchOffers", ex);
             JpaTool.cancelTransaction();
-            result = null;
+            sortedByDistanceOffers = null;
         } finally {
             JpaTool.closePersistenceContext();
         }
-        return result;
+        return sortedByDistanceOffers;
     }
     public User specifyPreferences(List<PreferenceTag> listPref, User user){
         JpaTool.createPersistenceContext();
