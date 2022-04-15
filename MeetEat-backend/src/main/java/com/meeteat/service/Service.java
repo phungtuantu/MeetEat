@@ -337,11 +337,10 @@ public class Service {
     
     public User specifyPreferences(List<PreferenceTag> listPref, User user){
         JpaTool.createPersistenceContext();
-        User user1 = user;
-        user1.setPreferences(listPref);
+        user.setPreferences(listPref);
         try{
             JpaTool.openTransaction();
-            user = userDao.modify(user1);
+            userDao.merge(user);
             JpaTool.validateTransaction();
         } catch (Exception ex){
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
@@ -351,5 +350,21 @@ public class Service {
         }
         return user;
     }
+    
+//    public List<Reservation> findPurchasedMeals(Long userId){
+//        JpaTool.createPersistenceContext();
+//        Message message = null;
+//        try{
+//            JpaTool.openTransaction();
+//            message = messageDao.searchById(messageId);
+//            JpaTool.validateTransaction();
+//        } catch (Exception ex){
+//            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+//            JpaTool.cancelTransaction();
+//        } finally{
+//            JpaTool.closePersistenceContext();
+//        }
+//        return message;
+//    }
     
 }
