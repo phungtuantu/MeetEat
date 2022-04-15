@@ -41,7 +41,7 @@ public class OfferDao extends AbstractDao<Offer>{
         EntityManager em = JpaTool.obtainPersistenceContext();
         TypedQuery<Offer> query = em.createQuery("SELECT o from offer o WHERE o.price <= :pricelimit AND o.state = :state ", Offer.class);
         query.setParameter("pricelimit",priceLimit);
-        query.setParameter("state","ONGOING");
+        query.setParameter("state",1);
         return query.getResultList();
     }
     
