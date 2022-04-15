@@ -49,12 +49,11 @@ public class DBPopulation {
     public void createUsers(int nbUsers){
         for(int i = 0; i<nbUsers; i++){
             String email = faker.pokemon().name();
-            String password = faker.crypto().sha1();
             String payementInfo = faker.crypto().sha1();
             Address address = faker.address();
             Name name = faker.name();
             String phone = faker.phoneNumber().cellPhone();
-            User user = new User(name.firstName(), name.lastName(), address.streetAddress(), phone, email, password);
+            User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
             userIdList.add(service.createAccount(user));
         }
     }
@@ -111,9 +110,10 @@ public class DBPopulation {
         int min = 0;
         for(int i = 0; i<nbOffers; i++){
             Number number = faker.number();
-            List<Ingredient> offerIngredientsList = getIngredientsForOffer();
-            List<PreferenceTag> offerPreferenceTagList = getPreferenceTagForOffer();
-            Long cook = cookIdList.get(number.numberBetween(min, cookIdList.size()));
+            Address address = faker.address();
+            List<Ingredient> ingredients = getIngredientsForOffer();
+            List<PreferenceTag> classifications = getPreferenceTagForOffer();
+            Cook cook = service.findCookById(cookIdList.get(number.numberBetween(min, cookIdList.size())));
             RickAndMorty ram = faker.rickAndMorty();
             DateAndTime dat = faker.date();
             Date creationDate = dat.birthday(0, 2);
@@ -121,10 +121,11 @@ public class DBPopulation {
             double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
             String details = ram.quote();
+            Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
+                                    details, classifications, ingredients, "", 
+                                    address.streetAddress(), address.city(), address.zipCode());
+            service.makeOffer(offer);
         }
-        
-        //Cook cook, Date creationDate, String title, double price, int totalPortions,
-         //   String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications
     }
     
     public static void main(String [] args){
@@ -135,6 +136,7 @@ public class DBPopulation {
         ss.createIngedients(15);
         ss.createDiets();
         ss.createCuisines(20);
+        ss.createOffers(1);
         JpaTool.destroy();
     }
     
