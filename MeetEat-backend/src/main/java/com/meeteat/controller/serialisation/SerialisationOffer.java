@@ -27,14 +27,18 @@ import javax.servlet.http.HttpServletResponse;
 public class SerialisationOffer extends Serialisation{
 
     @Override
-    public void serialiser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void serialise(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JsonObject container = new JsonObject();
         Offer offer = (Offer)request.getAttribute("offer");
         container.addProperty("id",offer.getId());
         container.addProperty("cookId",offer.getCook().getId());
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        container.addProperty("publicationDate",df.format(offer.getPublicationDate()));
-        container.addProperty("expirationDate",df.format(offer.getExpirationDate()));
+        if (offer.getPublicationDate()!=null){
+            container.addProperty("publicationDate",df.format(offer.getPublicationDate()));
+        }
+        if (offer.getExpirationDate()!=null){
+            container.addProperty("expirationDate",df.format(offer.getExpirationDate()));
+        }
         container.addProperty("title",offer.getTitle());
         container.addProperty("price",offer.getPrice());
         container.addProperty("totalPortion",offer.getTotalPortions());
@@ -42,32 +46,37 @@ public class SerialisationOffer extends Serialisation{
         
         JsonArray jsonClassificationList = new JsonArray();
         List<PreferenceTag> classifications = offer.getClassifications();
-        for (PreferenceTag classification : classifications){
+        classifications.stream().map(classification -> {
             JsonObject jsonPref = new JsonObject();
             jsonPref.addProperty("id", classification.getId());
             jsonPref.addProperty("name", classification.getName());
+            return jsonPref;
+        }).forEachOrdered(jsonPref -> {
             jsonClassificationList.add(jsonPref);
-        }
+        });
         container.add("classifications",jsonClassificationList);
         
         JsonArray jsonIngredientList = new JsonArray();
         List<Ingredient> ingredients = offer.getIngredients();
-        for (PreferenceTag ingredient : ingredients){
+        ingredients.stream().map(ingredient -> {
             JsonObject jsonPref = new JsonObject();
             jsonPref.addProperty("id", ingredient.getId());
             jsonPref.addProperty("name", ingredient.getName());
+            return jsonPref;
+        }).forEachOrdered(jsonPref -> {
             jsonIngredientList.add(jsonPref);
-        }
+        });
         container.add("ingredients",jsonIngredientList);
         
         container.addProperty("specifications", offer.getSpecifications());
         container.addProperty("address", offer.getAddress());
         container.addProperty("remainingPortions",offer.getRemainingPortions());
-        
-        PrintWriter out = this.getWriter(response);
-        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-        gson.toJson(container,out);
-        out.close();
+        container.addProperty("city", offer.getCity());
+        container.addProperty("zipCode", offer.getZipCode());
+        try (PrintWriter out = this.getWriter(response)) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+            gson.toJson(container,out);
+        }
     }
     
 }

@@ -45,7 +45,7 @@ export default {
     background: #191919;
     text-align: center;
     transition: 0.25s;
-    margin-top: 100px
+    margin-top: 10px;
 }
 
 .box input[type="text"],
