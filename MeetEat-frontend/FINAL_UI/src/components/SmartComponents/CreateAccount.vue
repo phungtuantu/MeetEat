@@ -4,14 +4,18 @@
           <div class="col-md-6">
               <div class="card">
                   <form onsubmit="event.preventDefault()" class="box">
-                      <h1>Login</h1>
-                      <input type="text" name="" placeholder="Email address"> 
-                      <input type="password" name="" placeholder="Password"> 
-                      <input type="submit" name="" value="Login" href="#">
-                      <div class="column">
-                        <a class="text-muted" href="#">Don't have an account yet ?</a>
-                        <button class="btn" type="button">Create an account</button>
-                      </div>
+                    <h1>Sign in</h1>
+                    <input type="text" name="" placeholder="Family name"> 
+                    <input type="text" name="" placeholder="First name"> 
+                    <input type="text" name="" placeholder="Address">
+                    <div class="column">
+                        <input type="text" name="" placeholder="Zip code">
+                        <input type="text" name="" placeholder="City">
+                    </div>
+                    <input type="text" name="" placeholder="Phone number">
+                    <input type="text" name="" placeholder="Email address"> 
+                    <input type="password" name="" placeholder="Password">
+                    <input type="submit" name="" value="Sign in" href="#">
                   </form>
               </div>
           </div>
@@ -21,7 +25,7 @@
 
 <script>
 export default {
-  name: "Login" //même nom que le nom de fichier
+  name: "CreateAccount" //même nom que le nom de fichier
 }
 </script>
 
@@ -39,8 +43,9 @@ export default {
     top: 50%;
     left: 50%;
     background: #191919;
+    text-align: center;
     transition: 0.25s;
-    margin-top: 100px
+    margin-top: 10px;
 }
 
 .box input[type="text"],
@@ -94,20 +99,19 @@ export default {
     width: 100%;
 }
 
-.column{
-  text-align: left;
+.column input[type="text"]{
+    float: left;
+    display: inline-flexbox;
+    margin-left: 30px;
+    margin-right: 0px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    width: 185px;
 }
 
 .text-muted {
     margin-left : 30px;
     text-decoration: underline;
-}
-
-.btn{
-  margin-right : 30px;
-  float: right;
-  background-color: cyan;
-  text-transform: none;
 }
 
 </style>

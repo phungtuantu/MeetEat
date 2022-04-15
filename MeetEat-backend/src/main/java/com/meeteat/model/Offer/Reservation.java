@@ -5,6 +5,7 @@
  */
 package com.meeteat.model.Offer;
 
+import com.meeteat.model.User.User;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -31,11 +32,19 @@ public class Reservation implements Serializable {
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date reservationDate;
-    //convert to enum later
-    private int state;
+    enum reservationState {
+        REQUEST,
+        RESERVATION,
+        REJECTED,
+        CANCELLED,
+        PURCHASEDMEAL
+    }
+    private reservationState state;
     private int nbOfPortion;
     @ManyToOne
     private Offer offer;
+    @ManyToOne
+    private User customer;
     @OneToMany(mappedBy="source",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
@@ -59,6 +68,14 @@ public class Reservation implements Serializable {
         return nbOfPortion;
     }
 
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
+
+    public User getCustomer() {
+        return customer;
+    }
+
     public void setNbOfPortion(int nbOfPortion) {
         this.nbOfPortion = nbOfPortion;
     }
@@ -77,9 +94,7 @@ public class Reservation implements Serializable {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
-    }
-
-    
+    } 
 
     @Override
     public String toString() {

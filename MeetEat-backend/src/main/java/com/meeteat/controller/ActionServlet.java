@@ -10,8 +10,10 @@ import com.meeteat.controller.action.Action;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.serialisation.Serialisation;
+import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,10 +49,17 @@ public class ActionServlet extends HttpServlet {
             }
             case "makeOffer" -> {
                 action = new ActionMakeOffer();
+                serialisation = new SerialisationOffer();
                 break;
             }
         }
         
+        if (action!=null&&serialisation!=null){
+            action.executer(request);
+            serialisation.serialise(request, response);
+        } else{
+            response.sendError(400, "Bad Request (Action and/or Serialisation missing for request)");
+        }
     }
     
     @Override

@@ -33,6 +33,7 @@ public class main {
 //        testCreateAccount();
 //        testApproveCook();
 //        testMakeOffer();
+//        testSpecifyPreferences();
         JpaTool.destroy();
     }
     
