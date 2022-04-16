@@ -6,6 +6,11 @@
 package com.meeteat.dao;
 
 import com.meeteat.model.Offer.Reservation;
+import com.meeteat.model.Offer.ReservationState;
+import com.meeteat.model.User.User;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -15,4 +20,16 @@ public class ReservationDao extends AbstractDao<Reservation> {
     public ReservationDao() {
         super(Reservation.class);
     }
+    
+    public List<Reservation> searchPurchasedMeals(User user){
+        Reservation result = null;
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        String jpql="select r from Reservation r where r.customer= :customer and r.state = :purchasedState";
+        TypedQuery query=em.createQuery(jpql, Reservation.class);
+        query.setParameter("customer",user);
+        query.setParameter("purchasedState",ReservationState.PURCHASEDMEAL);
+        List<Reservation> purchasedMeals = query.getResultList();
+        return purchasedMeals;
+    }
+
 }

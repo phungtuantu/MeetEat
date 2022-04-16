@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,21 +34,34 @@ public class Reservation implements Serializable {
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date reservationDate;
-    enum reservationState {
-        REQUEST,
-        RESERVATION,
-        REJECTED,
-        CANCELLED,
-        PURCHASEDMEAL
-    }
-    private reservationState state;
+    @Enumerated(EnumType.STRING)
+    private ReservationState state;
     private int nbOfPortion;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Offer offer;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private User customer;
     @OneToMany(mappedBy="source",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Review> reviews;
+
+    public Reservation() {
+    }
+
+    public Reservation(Date reservationDate, ReservationState state, int nbOfPortion, Offer offer, User customer) {
+        this.reservationDate = reservationDate;
+        this.state = state;
+        this.nbOfPortion = nbOfPortion;
+        this.offer = offer;
+        this.customer = customer;
+    }
+
+    public ReservationState getState() {
+        return state;
+    }
+
+    public void setState(ReservationState state) {
+        this.state = state;
+    }
 
     public Long getId() {
         return id;

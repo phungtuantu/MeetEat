@@ -9,7 +9,6 @@ import com.google.maps.model.LatLng;
 import com.meeteat.model.Preference.PreferenceTag;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,7 +60,6 @@ public class User implements Serializable, Loginable {
         this.lastName = lastName;
         this.mail = mail;
         this.noTelephone = noTelephone;
-        this.preferences = new LinkedList<>();
         this.address = address;
         this.city = city;
         this.zipCode = zipCode;

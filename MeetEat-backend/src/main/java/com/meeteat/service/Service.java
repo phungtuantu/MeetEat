@@ -24,6 +24,7 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -400,7 +401,7 @@ public class Service {
             userDao.merge(user);
             JpaTool.validateTransaction();
         } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling specifyPreferences", ex);
             JpaTool.cancelTransaction();
         } finally{
             JpaTool.closePersistenceContext();
@@ -408,20 +409,20 @@ public class Service {
         return user;
     }
     
-//    public List<Reservation> findPurchasedMeals(Long userId){
-//        JpaTool.createPersistenceContext();
-//        Message message = null;
-//        try{
-//            JpaTool.openTransaction();
-//            message = messageDao.searchById(messageId);
-//            JpaTool.validateTransaction();
-//        } catch (Exception ex){
-//            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-//            JpaTool.cancelTransaction();
-//        } finally{
-//            JpaTool.closePersistenceContext();
-//        }
-//        return message;
-//    }
-    
+    public List<Reservation> searchPurchasedMeals(User user){
+        JpaTool.createPersistenceContext();
+        List<Reservation> purchasedMeals = new LinkedList<>();
+        try{
+            JpaTool.openTransaction();
+            purchasedMeals = reservationDao.searchPurchasedMeals(user);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchPurchasedMeals", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return purchasedMeals;
+    }
+        
 }
