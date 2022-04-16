@@ -7,6 +7,7 @@
 package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
+import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationOffer;
@@ -41,6 +42,11 @@ public class ActionServlet extends HttpServlet {
         Serialisation serialisation = null;
         String todo = request.getParameter("todo");
         switch (todo){
+            case "consultOffer" -> {
+                action = new ActionConsultOffer();
+                serialisation = new SerialisationOffer();
+                break;
+            }
             case "makeOffer" -> {
                 action = new ActionMakeOffer();
                 serialisation = new SerialisationOffer();
@@ -50,7 +56,7 @@ public class ActionServlet extends HttpServlet {
         
         if (action!=null&&serialisation!=null){
             action.executer(request);
-            serialisation.serialiser(request, response);
+            serialisation.serialise(request, response);
         } else{
             response.sendError(400, "Bad Request (Action and/or Serialisation missing for request)");
         }
@@ -68,5 +74,42 @@ public class ActionServlet extends HttpServlet {
         super.destroy();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 }
