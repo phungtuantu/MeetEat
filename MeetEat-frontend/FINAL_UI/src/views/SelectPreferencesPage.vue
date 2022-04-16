@@ -19,7 +19,7 @@ import NavbarReturnHome from '@/components/SmartComponents/NavbarReturnHome.vue'
 import SelectPreferences from '@/components/SmartComponents/SelectPreferences.vue'
 import Footer from "@/components/SmartComponents/Footer";
 export default {
-  name: 'Home',
+  name: 'SelectPreferencesPage',
   components: {
     NavbarReturnHome,
     SelectPreferences,
