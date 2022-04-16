@@ -414,22 +414,6 @@ public class Service {
        return sortedByDistanceOffers;
    }
     
-       public User specifyPreferences(List<PreferenceTag> listPref, User user){
-           JpaTool.createPersistenceContext();
-           user.setPreferences(listPref);
-           try{
-               JpaTool.openTransaction();
-               userDao.merge(user);
-               JpaTool.validateTransaction();
-           } catch (Exception ex){
-               Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-               JpaTool.cancelTransaction();
-           } finally{
-               JpaTool.closePersistenceContext();
-           }
-           return user;
-       }
-    
     public PriorityQueue <Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
        //SearchOffers according to :diet, cuisine, user's preferences, price and location
 

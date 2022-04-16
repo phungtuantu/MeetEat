@@ -18,7 +18,7 @@ import com.meeteat.service.Service;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import com.meeteat.DBpopulation.DBpopulation;
+//import com.meeteat.DBpopulation.DBpopulation;
 
 /**
  *
@@ -71,20 +71,21 @@ public class main {
         Service service = new Service();
         System.out.println("View purchased meals");
         User user2 = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith2@here.com","password","oh");
-        service.createAccount(user2);
+//        service.createAccount(user2);
         Cook cook = new Cook(user2, new Date(), 0, "", "none");
-        service.approveCook(cook);
+//        service.approveCook(cook);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
         Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
         User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password","ohoo");
-        service.createAccount(user); 
-        service.makeOffer(offer);
+//        service.createAccount(user); 
+//        service.makeOffer(offer);
         Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
-        service.createReservation(res1);
+//        service.createReservation(res1);
         Reservation res2 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 4, offer, user);
-        service.createReservation(res2);
-        List<Reservation> res = service.searchPurchasedMeals(user);
+//        service.createReservation(res2);
+        User user3 = service.findUserById( (long) 2);
+        List<Reservation> res = service.searchPurchasedMeals(user3);
         res.forEach(r -> {
             System.out.println(r.getNbOfPortion());
         });
