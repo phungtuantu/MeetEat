@@ -13,9 +13,15 @@
             <img src="../../assets/home.png" alt="home" width="35px">
         </button>
         <h1 class="display-5">MeetEat</h1>
+        <a href="http://localhost:8081/">
+          <img src="../../assets/MeetEat_logo.jpg" width="35px">
+        </a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         </ul>
         <div class="form-inline my-2 my-lg-0">
+            <button type="button" class="btn2 btn-primary">
+                <img src="../../assets/mailbox.png" alt="basket" width="40px">
+            </button>
             <button type="button" class="btn2 btn-primary">
                 <img src="../../assets/basket.png" alt="basket" width="40px">
             </button>
@@ -31,7 +37,7 @@
 
 <script>
 export default {
-  name: "NavbarFullMenu",
+  name: "NavbarReturnHome",
   data() {
     return {
 
@@ -62,6 +68,11 @@ export default {
 
 .display-5{
     margin-left: 10px;
+}
+
+a{
+  margin-left: 15px;
+  margin-bottom: 10px;
 }
 
 </style>
