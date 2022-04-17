@@ -7,16 +7,16 @@
          <br/>
          <div class = "row">
             <div class = "col-sm-3">
-                <img src="../../assets/peruvian-ceviche.jpg" width="140px">
+                <img src="../../assets/peruvian-ceviche.jpg" width="100%">
             </div>
             <div class = "col-sm-8">
                 <div class="row">
                     <div class="col-7"><h6 class="heading">Peruvian Ceviche</h6></div>
-                    <div class=""><img src="../../assets/calendar.png" width="20px">23 September</div>
+                    <div class="date"><img src="../../assets/calendar.png" width="20px">23 September</div>
                 </div>
                 <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                 <div class="row">
-                    <div class="col-3">1 portion</div>
+                    <div class="col-4">1 portion</div>
                     <div class="col-1"> <img src="../../assets/point.png" width="10px"> </div>
                     <div class="col-3">6€</div>
                 </div>
@@ -47,11 +47,13 @@
                 <input type="radio" name="rating" value="1" id="1">
                 <label for="1">☆</label> 
             </div>
-            <br/>
-            <br/>
+            <br/> <br/>
+            <br/> <br/>
             <h4 class="heading">Leave a comment</h4>
             <div class="comment-area">
-                <textarea class="form-control" placeholder="I recommend..." rows="4"></textarea> 
+                <textarea class="form-control" placeholder=
+                "How did the meal or meeting go (punctuality, atmosphere, etc.)? Would you recommend this member to the community?" 
+                rows="4"></textarea> 
             </div>
             <div class="pull-right"> 
                     <button class="btn btn-success send btn-sm">Send 
@@ -104,6 +106,10 @@ figure {
     height: 3px;   
 }
 
+.date{
+    margin-right:10px
+}
+
 .comment-area textarea {
     resize: none;
     border: 1px solid #ad9f9f
@@ -128,12 +134,17 @@ figure {
 }
 
 .rating{
-    padding: 5px;
+    padding: 0px;
     display: flex;
     margin-top: -10px;
+    margin-left: 10px;
     flex-direction: row-reverse;
-    margin-left: -4px;
-    float: left
+    float: left;
+    height: 10%;
+}
+
+.label{
+    width: 150px;
 }
 
 .rating>input {
@@ -142,16 +153,17 @@ figure {
 
 .rating>label {
     position: relative;
-    width: 19px;
-    font-size: 25px;
+    font-size: 60px;
+    /*width: 19px;*/
     color: #ff0000;
-    cursor: pointer
+    cursor: pointer;
 }
 
 .rating>label::before {
     content: "\2605";
     position: absolute;
-    opacity: 0
+    opacity: 0;
+    height: 10%;
 }
 
 .rating>label:hover:before,
