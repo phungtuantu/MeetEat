@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "Login" //même nom que le nom de fichier
+  name: "Login"
 }
 </script>
 

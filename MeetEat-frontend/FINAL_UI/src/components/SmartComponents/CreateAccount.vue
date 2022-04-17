@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: "CreateAccount" //même nom que le nom de fichier
+  name: "CreateAccount"
 }
 </script>
 

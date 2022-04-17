@@ -2,39 +2,33 @@
 <div class="container mt-5 d-flex justify-content-center">
     <div class="card p-4 mt-3">
         <div class = "container-fluid">
-         <h4 class="heading">Evaluate your order</h4>
+        <h4 class="heading">Evaluate Ithan</h4>
          <hr class="line-color">
-         <br/>
          <div class = "row">
-            <div class = "col-sm-3">
-                <img src="../../assets/peruvian-ceviche.jpg" width="100%">
-            </div>
             <div class = "col-sm-8">
                 <div class="row">
                     <div class="col-7"><h6 class="heading">Peruvian Ceviche</h6></div>
                     <div class="date"><img src="../../assets/calendar.png" width="20px">23 September</div>
                 </div>
-                <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                 <div class="row">
                     <div class="col-4">1 portion</div>
                     <div class="col-1"> <img src="../../assets/point.png" width="10px"> </div>
                     <div class="col-3">6€</div>
                 </div>
             </div>
-            <div class = "col-sm-1">
+            <div class = "col-sm-3">
                 <figure>
                     <a href="">
-                        <img src="https://i.imgur.com/xELPaag.jpg" width="50px" class=""> <!--class="rounded-circle mt-2"-->
+                        <img src="../../assets/ithan.jpg" width="60px" class="rounded-circle mt-2"> <!--class="rounded-circle mt-2"-->
                     </a>
-                    <figcaption>Sarah</figcaption>
+                    <figcaption>Ithan</figcaption>
                 </figure>
             </div>
          </div>
       </div>
 
       <div class="container-fluid">
-            <br/>
-            <h4 class="heading">Rate your order out of 5</h4>
+            <h4 class="heading">Rate your guest out of 5</h4>
             <div class="rating"> 
                 <input type="radio" name="rating" value="5" id="5">
                 <label for="5">☆</label> 
@@ -67,7 +61,7 @@
 
 <script>
 export default {
-  name: "EvaluateMeal"
+  name: "EvaluateGuest"
 }
 </script>
 
@@ -104,6 +98,10 @@ figure {
     border-color: black;
     margin: 0;
     height: 3px;   
+}
+
+.date{
+    margin-left:20px;
 }
 
 .date img{

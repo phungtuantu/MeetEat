@@ -10,6 +10,9 @@ import LoginPage from "@/views/LoginPage";
 import CreateAccountPage from "@/views/CreateAccountPage";
 import SelectPreferencesPage from "@/views/SelectPreferencesPage";
 import EvaluateMealPage from "@/views/EvaluateMealPage";
+import ReportCookPage from "@/views/ReportCookPage";
+import EvaluateGuestPage from "@/views/EvaluateGuestPage";
+import ReportGuestPage from "@/views/ReportGuestPage";
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("auth-token")}`;
 axios.interceptors.response.use(response => response, error => {
@@ -58,6 +61,21 @@ const routes = [
     path: '/evaluatemeal',
     name: 'EvaluateMealPage',
     component: EvaluateMealPage
+  },
+  {
+    path: '/reportcook',
+    name: 'ReportCookPage',
+    component: ReportCookPage
+  },
+  {
+    path: '/evaluateguest',
+    name: 'EvaluateGuestPage',
+    component: EvaluateGuestPage
+  },
+  {
+    path: '/reportguest',
+    name: 'ReportGuestPage',
+    component: ReportGuestPage
   },
 
 ]
