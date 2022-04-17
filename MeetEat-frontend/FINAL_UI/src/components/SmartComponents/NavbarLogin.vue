@@ -7,7 +7,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <h1 class="display-5">MeetEat</h1>
-        <a href="http://localhost:8081/">
+        <a href="http://localhost:8080/">
           <img src="../../assets/MeetEat_logo.jpg" width="35px">
         </a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">

@@ -2,7 +2,7 @@
 <div class="container mt-5 d-flex justify-content-center">
     <div class="card p-4 mt-3">
         <div class = "container-fluid">
-         <h4 class="heading">Evaluate your order</h4>
+         <h4 class="heading">Report the cook</h4>
          <hr class="line-color">
          <br/>
          <div class = "row">
@@ -34,26 +34,10 @@
 
       <div class="container-fluid">
             <br/>
-            <h4 class="heading">Rate your order out of 5</h4>
-            <div class="rating"> 
-                <input type="radio" name="rating" value="5" id="5">
-                <label for="5">☆</label> 
-                <input type="radio" name="rating" value="4" id="4">
-                <label for="4">☆</label> 
-                <input type="radio" name="rating" value="3" id="3">
-                <label for="3">☆</label> 
-                <input type="radio" name="rating" value="2" id="2">
-                <label for="2">☆</label> 
-                <input type="radio" name="rating" value="1" id="1">
-                <label for="1">☆</label> 
-            </div>
-            <br/> <br/>
-            <br/> <br/>
-            <h4 class="heading">Leave a comment</h4>
+            <h4 class="heading">State the reason of your report</h4>
             <div class="comment-area">
-                <textarea class="form-control" placeholder=
-                "How did the meal or meeting go (punctuality, politeness, etc.)? Would you recommend this member to the community?" 
-                rows="4"></textarea> 
+                <textarea class="form-control" placeholder="Non respect of the sanitary rules ? Disrespectful attitude?" rows="4">
+                </textarea> 
             </div>
             <div class="pull-right"> 
                     <button class="btn btn-success send btn-sm">Send 
@@ -131,6 +115,15 @@ figure {
 .pull-right .btn{
     width: 100px;
     border-radius: 15px;
+    color: #fff;
+    background-color: #ff0000;
+    border-color: #ff0000
+}
+
+.pull-right .btn:hover{
+    color: #fff;
+    background-color: #ac0303;
+    border-color: #f50202
 }
 
 .rating{
