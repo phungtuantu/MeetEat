@@ -3,12 +3,17 @@ import VueRouter from 'vue-router'
 import "chart.js/auto";
 import 'chart.js';
 import axios from 'axios'
-import Home from "@/views/Home";
+import HomePage from "@/views/HomePage";
 import OrderPage from "@/views/OrderPage";
 import OfferPage from "@/views/OfferPage";
 import LoginPage from "@/views/LoginPage";
 import CreateAccountPage from "@/views/CreateAccountPage";
 import SelectPreferencesPage from "@/views/SelectPreferencesPage";
+import EvaluateMealPage from "@/views/EvaluateMealPage";
+import ReportCookPage from "@/views/ReportCookPage";
+import EvaluateGuestPage from "@/views/EvaluateGuestPage";
+import ReportGuestPage from "@/views/ReportGuestPage";
+import ViewReviewsPage from "@/views/ViewReviewsPage";
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("auth-token")}`;
 axios.interceptors.response.use(response => response, error => {
@@ -24,8 +29,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'HomePage',
+    component: HomePage
   },
 
   {
@@ -44,14 +49,39 @@ const routes = [
     component: LoginPage
   },
   {
-    path: '/signin',
+    path: '/signup',
     name: 'CreateAccountPage',
     component: CreateAccountPage
   },
   {
-    path: '/SelectPreferences',
+    path: '/selectpreferences',
     name: 'SelectPreferencesPage',
     component: SelectPreferencesPage
+  },
+  {
+    path: '/evaluatemeal',
+    name: 'EvaluateMealPage',
+    component: EvaluateMealPage
+  },
+  {
+    path: '/reportcook',
+    name: 'ReportCookPage',
+    component: ReportCookPage
+  },
+  {
+    path: '/evaluateguest',
+    name: 'EvaluateGuestPage',
+    component: EvaluateGuestPage
+  },
+  {
+    path: '/reportguest',
+    name: 'ReportGuestPage',
+    component: ReportGuestPage
+  },
+  {
+    path: '/viewreviews',
+    name: 'ViewReviewsPage',
+    component: ViewReviewsPage
   },
 
 ]

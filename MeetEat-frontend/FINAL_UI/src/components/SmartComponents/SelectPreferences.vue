@@ -95,7 +95,7 @@
 
 <script>
 export default {
-  name: "SelectPreferences" //même nom que le nom de fichier
+  name: "SelectPreferences"
 }
 </script>
 

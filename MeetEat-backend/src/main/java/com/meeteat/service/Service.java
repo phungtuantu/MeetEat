@@ -5,10 +5,7 @@
  */
 package com.meeteat.service;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.maps.model.LatLng;
-import com.meeteat.service.GeoNetApi;
 import com.meeteat.dao.CookDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.MessageDao;
@@ -29,10 +26,9 @@ import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +46,24 @@ public class Service {
     protected ReservationDao reservationDao = new ReservationDao();
     protected ReviewDao reviewDao = new ReviewDao();
     protected MessageDao messageDao = new MessageDao();
+
+    public Long createPreferenceTag(PreferenceTag preferenceTag){
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            preferenceTagDao.create(preferenceTag);
+            JpaTool.validateTransaction();
+            result = preferenceTag.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createPreferenceTag", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
     
     public Long createAccount(User user){
         Long result = null;
@@ -69,6 +83,22 @@ public class Service {
         return result;
     }
     
+    public User findUserById(Long userId){
+        User user = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            user = userDao.searchById(userId);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
+    }
+    
     public Long makeOffer(Offer offer){
         Long result = null;
         JpaTool.createPersistenceContext();
@@ -85,6 +115,24 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return result;
+    }
+    
+    public Offer updateOffer(Offer offer){
+        Offer res = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            offerDao.merge(offer);
+            JpaTool.validateTransaction();
+            res = offer;
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling updateOffer", ex);
+            JpaTool.cancelTransaction();
+            res = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return res;
     }
     
     public Long approveCook(Cook cook){
@@ -265,22 +313,6 @@ public class Service {
         return offer;
     }
     
-    public User findUserById(Long userId){
-        JpaTool.createPersistenceContext();
-        User user = null;
-        try{
-            JpaTool.openTransaction();
-            user = userDao.searchById(userId);
-            JpaTool.validateTransaction();
-        } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-            JpaTool.cancelTransaction();
-        } finally{
-            JpaTool.closePersistenceContext();
-        }
-        return user;
-    }
-    
     public PreferenceTag findPreferanceTagById(Long prefTagId){
         JpaTool.createPersistenceContext();
         PreferenceTag prefTag = null;
@@ -379,22 +411,6 @@ public class Service {
        return sortedByDistanceOffers;
    }
     
-       public User specifyPreferences(List<PreferenceTag> listPref, User user){
-           JpaTool.createPersistenceContext();
-           user.setPreferences(listPref);
-           try{
-               JpaTool.openTransaction();
-               userDao.merge(user);
-               JpaTool.validateTransaction();
-           } catch (Exception ex){
-               Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-               JpaTool.cancelTransaction();
-           } finally{
-               JpaTool.closePersistenceContext();
-           }
-           return user;
-       }
-    
     public PriorityQueue <Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
        //SearchOffers according to :diet, cuisine, user's preferences, price and location
 
@@ -454,6 +470,7 @@ public class Service {
        }
        return sortedByDistanceOffers;
    }
+          
     public User specifyPreferences(List<PreferenceTag> listPref, User user){
         JpaTool.createPersistenceContext();
         user.setPreferences(listPref);
@@ -462,7 +479,7 @@ public class Service {
             userDao.merge(user);
             JpaTool.validateTransaction();
         } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling specifyPreferences", ex);
             JpaTool.cancelTransaction();
         } finally{
             JpaTool.closePersistenceContext();
@@ -486,4 +503,20 @@ public class Service {
 //        return message;
 //    }
     
+    public List<Reservation> searchPurchasedMeals(User user){
+        JpaTool.createPersistenceContext();
+        List<Reservation> purchasedMeals = new LinkedList<>();
+        try{
+            JpaTool.openTransaction();
+            purchasedMeals = reservationDao.searchPurchasedMeals(user);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchPurchasedMeals", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return purchasedMeals;
+    }
+        
 }

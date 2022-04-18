@@ -4,7 +4,7 @@
           <div class="col-md-6">
               <div class="card">
                   <form onsubmit="event.preventDefault()" class="box">
-                    <h1>Sign in</h1>
+                    <h1>Sign up</h1>
                     <input type="text" name="" placeholder="Family name"> 
                     <input type="text" name="" placeholder="First name"> 
                     <input type="text" name="" placeholder="Address">
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: "CreateAccount" //même nom que le nom de fichier
+  name: "CreateAccount"
 }
 </script>
 

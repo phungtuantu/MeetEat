@@ -2,7 +2,7 @@
   <div class="home">
     <Navbar></Navbar>
     <br/>
-    <HomePage/>
+    <Home/>
     <br/>
     <Footer></Footer>
   </div>
@@ -11,14 +11,14 @@
 <script>
 // @ is an alias to /src
 import Navbar from '@/components/SmartComponents/Navbar.vue'
-import HomePage from '@/components/SmartComponents/HomePage.vue'
+import Home from '@/components/SmartComponents/Home.vue'
 import Footer from "@/components/SmartComponents/Footer";
 export default {
-  name: 'Home',
+  name: 'HomePage',
   components: {
     Footer,
     Navbar,
-    HomePage
+    Home
   }
 }
 </script>

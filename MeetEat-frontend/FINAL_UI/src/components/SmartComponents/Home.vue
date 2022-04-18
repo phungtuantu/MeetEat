@@ -1,7 +1,6 @@
 <template>
   <div>
-
-
+    
     <!-- Carousel wrapper -->
     <div
         id="carouselBasicExample"
