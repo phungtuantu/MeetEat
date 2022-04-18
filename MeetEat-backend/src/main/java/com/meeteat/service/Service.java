@@ -356,12 +356,9 @@ public class Service {
                 return distance1.compareTo(distance2); //May be - instead
             }
         });
-
        JpaTool.createPersistenceContext(); 
        try {
            JpaTool.openTransaction();
-
-        
            ongoingOffers = offerDao.getOngoingOffers(20);
             
            //check the preferences in ongoingOffers + distance to User
@@ -457,21 +454,21 @@ public class Service {
        }
        return sortedByDistanceOffers;
    }
-       public User specifyPreferences(List<PreferenceTag> listPref, User user){
-           JpaTool.createPersistenceContext();
-           user.setPreferences(listPref);
-           try{
-               JpaTool.openTransaction();
-               userDao.merge(user);
-               JpaTool.validateTransaction();
-           } catch (Exception ex){
-               Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-               JpaTool.cancelTransaction();
-           } finally{
-               JpaTool.closePersistenceContext();
-           }
-           return user;
-       }
+    public User specifyPreferences(List<PreferenceTag> listPref, User user){
+        JpaTool.createPersistenceContext();
+        user.setPreferences(listPref);
+        try{
+            JpaTool.openTransaction();
+            userDao.merge(user);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
+    }
     
 //    public List<Reservation> findPurchasedMeals(Long userId){
 //        JpaTool.createPersistenceContext();
