@@ -95,9 +95,9 @@ figure {
 }
 
 .line-color {
-    border-color: black;
+    background-color: black;
     margin: 0;
-    height: 3px;   
+    /*height: 1px;*/   
 }
 
 .date{
