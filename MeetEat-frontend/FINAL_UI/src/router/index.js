@@ -16,6 +16,8 @@ import ReportGuestPage from "@/views/ReportGuestPage";
 import ViewReviewsPage from "@/views/ViewReviewsPage";
 import ModificationAccountPage from "@/views/ModificationAccountPage";
 import CookOfferHistoryPage from "@/views/CookOfferHistoryPage";
+import ModificationOfferPage from "@/views/ModificationOfferPage";
+import ResumeOrderPage from "@/views/ResumeOrderPage";
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("auth-token")}`;
 axios.interceptors.response.use(response => response, error => {
@@ -44,6 +46,12 @@ const routes = [
     path: '/orderPage/:id',
     name: 'OfferPage',
     component: OfferPage
+  },
+
+  {
+    path: '/modificationOffer/:id',
+    name: 'ModificationOffer',
+    component: ModificationOfferPage
   },
   {
     path: '/login',
@@ -84,7 +92,12 @@ const routes = [
     path: '/viewreviews',
     name: 'ViewReviewsPage',
     component: ViewReviewsPage
-  },  
+  },
+  {
+    path: '/myBasket',
+    name: 'OrderReview',
+    component: ResumeOrderPage
+  },
   {
     path: '/modificationAccount',
     name: 'ModificationAccountPage',
