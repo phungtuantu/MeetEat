@@ -8,6 +8,8 @@ package com.meeteat.model.User;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -25,6 +27,8 @@ public class Cook implements Serializable{
     private String education;
     private String training;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @OneToOne
     private User user;
     private int numberOfReviews;

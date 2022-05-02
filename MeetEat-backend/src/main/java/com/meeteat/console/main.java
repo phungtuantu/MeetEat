@@ -30,14 +30,12 @@ public class main {
         
         JpaTool.init();
 //        testCreatePref();
-        testCreateAccount();
-        testApproveCook();
-        testMakeOffer();
+//        testCreateAccount();
+//        testApproveCook();
+//        testMakeOffer();
 //        testSpecifyPreferences();
-<<<<<<< Updated upstream
-=======
-//        testViewPurchasedMeals();
->>>>>>> Stashed changes
+        Service service = new Service();
+        System.out.println(service.findOfferById(1l).getDetails());
         JpaTool.destroy();
     }
     
@@ -70,7 +68,7 @@ public class main {
     public static void testMakeOffer(){
         Service service = new Service();
         System.out.println("make a few offers");
-        long cookId = 2;
+        long cookId = 1;
         Cook cook = service.findCookById(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
