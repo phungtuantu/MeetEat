@@ -7,17 +7,17 @@
     <class>com.meeteat.model.Preference.Ingredient</class>
     <class>com.meeteat.model.Preference.PreferenceTag</class>
     <class>com.meeteat.model.Offer.Message</class>
+    <class>com.meeteat.model.Offer.Offer</class>
     <class>com.meeteat.model.Offer.Reservation</class>
     <class>com.meeteat.model.Offer.Review</class>
     <class>com.meeteat.model.User.Cook</class>
     <class>com.meeteat.model.User.User</class>
-    <class>com.meeteat.model.Offer.Offer</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/meeteat?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.schema-generation.database.action" value="create"/>
       <property name="javax.persistence.jdbc.password" value="password"/>
-      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
     </properties>
   </persistence-unit>
 </persistence>
