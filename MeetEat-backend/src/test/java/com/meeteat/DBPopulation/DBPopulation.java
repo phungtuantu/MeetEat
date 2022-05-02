@@ -47,19 +47,23 @@ public class DBPopulation {
     }
     
     public void createUsers(int nbUsers){
+        System.out.println("creatin users...");
         for(int i = 0; i<nbUsers; i++){
-            String email = faker.pokemon().name();
+            String email = faker.internet().emailAddress();
+            String profilePhoto = faker.internet().image();
             String payementInfo = faker.crypto().sha1();
             Address address = faker.address();
             Name name = faker.name();
             String phone = faker.phoneNumber().cellPhone();
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
+            user.setProfilePhotoURL(profilePhoto);
             userIdList.add(service.createAccount(user));
         }
     }
     
     public void createCooks(int nbCooks){
         assert(nbCooks < userIdList.size());
+        System.out.println("creatin cooks...");
         for(int i = 0; i<nbCooks; i++){
             User user = service.findUserById(userIdList.get(i));
             DateAndTime dat = faker.date();
@@ -70,6 +74,7 @@ public class DBPopulation {
     }
     
     public void createIngedients(int nbIngredients){
+        System.out.println("creatin ingredients...");
         for(int i =0; i<(nbIngredients/2); i++){
             Food food = faker.food();
             Ingredient ingredient = new Ingredient(food.ingredient());
@@ -85,6 +90,7 @@ public class DBPopulation {
     }
     
     public void createDiets(){
+        System.out.println("creatin diets...");
         dietList.add(new Diet("Vegetarian"));
         dietList.add(new Diet("Vegan"));
         dietList.add(new Diet("Pesco Vegetarian"));
@@ -97,6 +103,7 @@ public class DBPopulation {
     }
     
     public void createCuisines(int nbCuisines){
+        System.out.println("creatin cuisines...");
         for(int i = 0; i<nbCuisines; i++){
             Country country = faker.country();
             String name = country.name();
@@ -108,6 +115,7 @@ public class DBPopulation {
     
     public void createOffers(int nbOffers){
         int min = 0;
+        System.out.println("creatin offers...");
         for(int i = 0; i<nbOffers; i++){
             Number number = faker.number();
             Address address = faker.address();

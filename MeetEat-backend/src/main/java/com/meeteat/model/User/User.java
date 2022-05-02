@@ -39,6 +39,7 @@ public class User implements Serializable, Loginable {
     private String zipCode;
     private LatLng location;
     private String noTelephone;
+    private String profilePhotoURL;
     @ManyToMany
     private List<PreferenceTag> preferences;
 
@@ -72,6 +73,14 @@ public class User implements Serializable, Loginable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getProfilePhotoURL() {
+        return profilePhotoURL;
+    }
+
+    public void setProfilePhotoURL(String profilePhotoURL) {
+        this.profilePhotoURL = profilePhotoURL;
     }
 
     public String getFirstName() {

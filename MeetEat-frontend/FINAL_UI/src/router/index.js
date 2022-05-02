@@ -18,7 +18,9 @@ import ModificationAccountPage from "@/views/ModificationAccountPage";
 import CookOfferHistoryPage from "@/views/CookOfferHistoryPage";
 import ModificationOfferPage from "@/views/ModificationOfferPage";
 import ResumeOrderPage from "@/views/ResumeOrderPage";
+import BecomeCookPage from "@/views/BecomeCookPage";
 import VerificationCookPage from "@/views/VerificationCookPage";
+
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("auth-token")}`;
 axios.interceptors.response.use(response => response, error => {
@@ -114,7 +116,11 @@ const routes = [
     name: 'VerificationCook',
     component: VerificationCookPage
   },
-
+  {
+    path: '/becomeCook',
+    name: 'BecomeCookPage',
+    component: BecomeCookPage
+  },
 
 ]
 
