@@ -2,7 +2,7 @@
   <div class="container">
     <div class="card mb-3">
       <img class="card-img-top" id="mainPicture"
-           src="https://codingyaar.com/wp-content/uploads/bootstrap-4-card-image-left-demo-image.jpg"
+           src="../../assets/lasagne.jpg"
            alt="Card image cap">
       <div class="card-body" style="text-align: left;">
         <h5 class="card-title">Delicious Lasagna ! </h5>

@@ -26,21 +26,29 @@ public class ActionMakeOffer extends Action {
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-//        Long cookId = (Long)session.getAttribute("cookId");
-//        Cook cook = new Cook();
-//        Date currentTime = new Date();
-//        String title = (String)session.getAttribute("title");
-//        Double price = (Double)session.getAttribute("price");
-//        Integer totalPortions = (Integer)session.getAttribute("totalPortions");
-//        String details = (String)session.getAttribute("details");
-//        Cook cook = service.searchCookById(cookId);
-//        todo: make list of ingredients and shit
-//        List<Long> ingredientIds = 
-        List<PreferenceTag> classifications = new LinkedList<>();
+        Long cookId = (Long)session.getAttribute("userId");
+        Cook cook = service.findCookById(cookId);
+        Date currentTime = new Date();
+        String title = request.getParameter("title");
+        Double price = Double.parseDouble(request.getParameter("price"));
+        Integer totalPortions = Integer.parseInt(request.getParameter("totalPortions"));
+        String details = request.getParameter("details");
         List<Ingredient> ingredients = new LinkedList<>();
+        for (String ingredientId : request.getParameterValues("ingredients")){
+            ingredients.add((Ingredient)(service.findPreferanceTagById(Long.parseLong(ingredientId))));
+        }
+        List<PreferenceTag> classifications = new LinkedList<>();
+        for (String preferenceTagId : request.getParameterValues("preferences")){
+            classifications.add(service.findPreferanceTagById(Long.parseLong(preferenceTagId)));
+        }
         String specifications = (String)session.getAttribute("specifications");
-//        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details, classifications, ingredients, specifications);
-//        service.makeOffer(offer);
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String zipCode = request.getParameter("zipCode");
+        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details,
+                classifications, ingredients, specifications,address,city,zipCode);
+        service.makeOffer(offer);
+        request.setAttribute("offer",offer);
     }
     
 }

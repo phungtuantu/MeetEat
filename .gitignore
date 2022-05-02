@@ -351,3 +351,4 @@ MigrationBackup/
 /target/
 /nbproject/
 nb-configuration.xml
+/MeetEat-backend/target/
