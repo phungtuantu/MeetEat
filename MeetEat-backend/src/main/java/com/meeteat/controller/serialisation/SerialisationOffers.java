@@ -36,7 +36,16 @@ public class SerialisationOffers extends Serialisation{
         offers.stream().map(offer->{
             JsonObject jsonOffer = new JsonObject();
             jsonOffer.addProperty("id",offer.getId());
-            jsonOffer.addProperty("cookId", offer.getCook().getId());
+            JsonObject jsonCook = new JsonObject();
+        
+            jsonCook.addProperty("id",offer.getCook().getId());
+            jsonCook.addProperty("firstName",offer.getCook().getFirstName());
+            jsonCook.addProperty("lastName",offer.getCook().getLastName());
+            jsonCook.addProperty("rating",offer.getCook().getRating());
+            jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
+            jsonCook.addProperty("image", offer.getCook().getProfilePictureUrl());
+
+            jsonOffer.add("cook",jsonCook);
             if (offer.getPublicationDate()!=null){
             jsonOffer.addProperty("publicationDate",df.format(offer.getPublicationDate()));
             }

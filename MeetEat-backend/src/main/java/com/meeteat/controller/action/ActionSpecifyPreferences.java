@@ -32,5 +32,6 @@ public class ActionSpecifyPreferences extends Action{
         }
         user = service.specifyPreferences(requestPreferences, user);
         System.out.println(user);
+        request.setAttribute("user",user);
     } 
 }

@@ -27,8 +27,12 @@ public class Cook implements Serializable{
     private String education;
     private String training;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @OneToOne
     private User user;
+    private int numberOfReviews;
+    private double rating;
 
     public Cook() {
     }
@@ -39,6 +43,8 @@ public class Cook implements Serializable{
         this.level = level;
         this.education = education;
         this.training = training;
+        this.numberOfReviews = 0;
+        this.rating = 0;
     }
     
     public Date getVerifiedDate() {
@@ -119,6 +125,27 @@ public class Cook implements Serializable{
 
     public void setNoTelephone(String noTelephone) {
         this.user.setNoTelephone(noTelephone);
+    }
+    
+    public String getProfilePictureUrl() {
+        return user.getProfilePictureUrl();
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.user.setProfilePictureUrl(profilePictureUrl);
+    }
+
+    public int getNumberOfReviews() {
+        return numberOfReviews;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void updateRating(int reviewNote) {
+        rating = (rating*numberOfReviews+reviewNote)/(numberOfReviews+1);
+        numberOfReviews++;
     }
     
     @Override

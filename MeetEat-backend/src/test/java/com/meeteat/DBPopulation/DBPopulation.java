@@ -22,6 +22,7 @@ import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.service.Service;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,8 @@ public class DBPopulation {
     LinkedList<Cuisine> cuisineList = new LinkedList<>();
     LinkedList<CookRequest> cookRequestList = new LinkedList<>();
     Locale locale = new Locale("fr");
+    int nbProfilePictures = 20;
+    int nbOfferPictures = 20;
     public DBPopulation(){
         faker = new Faker(locale);
         service = new Service();
@@ -55,9 +58,10 @@ public class DBPopulation {
             Address address = faker.address();
             Name name = faker.name();
             String phone = faker.phoneNumber().cellPhone();
+            String password = faker.lorem().fixedString(8);
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
-            user.setProfilePhotoURL(profilePhoto);
-            userIdList.add(service.createAccount(user));
+            user.setProfilePhotoPath("./Images/profile_images/profile" + (i%nbProfilePictures + 1));
+            userIdList.add(service.createAccount(user, password));
         }
     }
     
@@ -132,6 +136,7 @@ public class DBPopulation {
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
                                     details, classifications, ingredients, "", address.streetAddress(), address.city(), 
                                     address.zipCode());
+            offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             System.out.println(address.streetAddress());
             service.makeOffer(offer);
             //offer.setIngredients(ingredients);

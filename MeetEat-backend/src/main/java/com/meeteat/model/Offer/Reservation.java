@@ -8,6 +8,7 @@ package com.meeteat.model.Offer;
 import com.meeteat.model.User.User;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ import javax.persistence.Temporal;
 
 /**
  *
- * @author gvnge
+ * @author gvnge, johanbonnedahl
  */
 @Entity
 public class Reservation implements Serializable {
@@ -53,6 +54,30 @@ public class Reservation implements Serializable {
         this.nbOfPortion = nbOfPortion;
         this.offer = offer;
         this.customer = customer;
+        this.reviews = new LinkedList();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public void addReview(Review review){
+        for(Review r: reviews){
+            if(r.getId().equals(review.getId())){
+                reviews.remove(r);
+                reviews.add(review);
+                return;
+            }
+        }
+        this.reviews.add(review);
+    }
+
+    public Date getReservationDate() {
+        return reservationDate;
     }
 
     public ReservationState getState() {
@@ -63,24 +88,12 @@ public class Reservation implements Serializable {
         this.state = state;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getReservationDate() {
-        return reservationDate;
-    }
-
-    public void setReservationDate(Date reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
     public int getNbOfPortion() {
         return nbOfPortion;
+    }
+
+    public void setNbOfPortion(int nbOfPortion) {
+        this.nbOfPortion = nbOfPortion;
     }
 
     public void setCustomer(User customer) {
@@ -89,10 +102,6 @@ public class Reservation implements Serializable {
 
     public User getCustomer() {
         return customer;
-    }
-
-    public void setNbOfPortion(int nbOfPortion) {
-        this.nbOfPortion = nbOfPortion;
     }
 
     public Offer getOffer() {
