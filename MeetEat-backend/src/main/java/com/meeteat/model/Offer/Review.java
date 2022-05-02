@@ -26,7 +26,24 @@ public class Review implements Serializable {
     private Long id;
     @ManyToOne
     private Reservation source;
+    @ManyToOne
+    private User reviewedUser;
+    @ManyToOne
+    private User reviewingUser;
+    private int nbOfStars;
+    private String comment;
 
+    public Review(Reservation source, User reviewedUser, User reviewingUser, int nbOfStars, String comment) {
+        this.source = source;
+        this.reviewedUser = reviewedUser;
+        this.reviewingUser = reviewingUser;
+        this.nbOfStars = nbOfStars;
+        this.comment = comment;
+    }
+
+    public Review() {
+    }
+    
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -50,12 +67,7 @@ public class Review implements Serializable {
     public String getComment() {
         return comment;
     }
-    @ManyToOne
-    private User reviewedUser;
-    @ManyToOne
-    private User reviewingUser;
-    private int nbOfStars;
-    private String comment;
+    
 
     public Long getId() {
         return id;

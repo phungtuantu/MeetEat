@@ -9,6 +9,7 @@ import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Offer.Reservation;
 import com.meeteat.model.Offer.ReservationState;
+import com.meeteat.model.Offer.Review;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
@@ -33,9 +34,9 @@ public class main {
         
         JpaTool.init();
 //        testCreatePref();
-        testCreateAccount();
-//        testApproveCook();
-//          testMakeOffer();
+//        testCreateAccount();
+        testApproveCook();
+//        testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
@@ -56,12 +57,18 @@ public class main {
         service.createAccount(user, "password");
     }
     
-//    public static void testCreateReview(){
-//        Service service = new Service();
-//        System.out.println("create an account");
-//        User user = service.findUserById( (long) 2);
-//        service.createReview(review);
-//    }
+    public static void testCreateReview(){
+        Service service = new Service();
+        System.out.println("create a review");
+        User user = service.findUserById( (long) 2);
+        Cook cook = service.findUserById( (long) 3);
+        List<PreferenceTag> classifications = new LinkedList<>();
+        List<Ingredient> ingredients = new LinkedList<>();
+        Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
+        Review rev = new Review(res1, );
+        service.createReview(rev);
+    }
     
     public static void testApproveCook(){
         Service service = new Service();
