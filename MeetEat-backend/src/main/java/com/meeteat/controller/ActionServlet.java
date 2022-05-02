@@ -9,12 +9,14 @@ package com.meeteat.controller;
 import com.meeteat.controller.action.Action;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
+import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationOffers;
+import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationUser;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
@@ -69,8 +71,15 @@ public class ActionServlet extends HttpServlet {
             }
             case "specifiyPreferences" -> {
                 action = new ActionSpecifyPreferences();
+                serialisation = new SerialisationUser();
                 break;
             }
+            case "createReservation" -> {
+                action = new ActionCreateReservation();
+                serialisation = new SerialisationReservation();
+                break;
+            }
+            
         }
         
         if (action!=null&&serialisation!=null){
