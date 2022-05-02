@@ -37,7 +37,8 @@ public class main {
 //        testApproveCook();
 //        testMakeOffer();
 //        testSpecifyPreferences();
-        testViewPurchasedMeals();
+//        testViewPurchasedMeals();
+//        testMakeReservation();
         JpaTool.destroy();
     }
     
@@ -107,6 +108,12 @@ public class main {
         List<Ingredient> ingredients = new LinkedList<>();
         Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
         service.makeOffer(offer);
+    }
+    
+    public static void testMakeReservation(){
+        Service service = new Service();
+        Reservation reservation = new Reservation(new Date(System.currentTimeMillis()),ReservationState.REQUEST,2, service.getOfferFromId(1l), service.getUserFromId(1l));
+        service.createReservation(reservation);
     }
     
     public static void testSpecifyPreferences(){
