@@ -30,10 +30,14 @@ public class main {
         
         JpaTool.init();
 //        testCreatePref();
-//        testCreateAccount();
-//        testApproveCook();
-//        testMakeOffer();
+        testCreateAccount();
+        testApproveCook();
+        testMakeOffer();
 //        testSpecifyPreferences();
+<<<<<<< Updated upstream
+=======
+//        testViewPurchasedMeals();
+>>>>>>> Stashed changes
         JpaTool.destroy();
     }
     
