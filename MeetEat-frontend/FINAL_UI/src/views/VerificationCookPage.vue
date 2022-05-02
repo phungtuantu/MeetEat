@@ -2,6 +2,7 @@
   <div class="home">
     <NavbarReturnHome></NavbarReturnHome>
     <br/>
+
     <VerificationCook/>
     <br/>
     <Footer></Footer>

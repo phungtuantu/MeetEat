@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding-right: 40px;padding-left: 40px; padding-top: 20px; padding-bottom: 20px;">
   <h1>
     Become cook
   </h1>
