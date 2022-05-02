@@ -35,10 +35,11 @@ public class main {
 //        testCreatePref();
 //        testCreateAccount();
 //        testApproveCook();
-//        testMakeOffer();
+          testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
+//         testAuthenticate();
         JpaTool.destroy();
     }
     
@@ -55,12 +56,12 @@ public class main {
         service.createAccount(user);
     }
     
-    public static void testCreateReview(){
-        Service service = new Service();
-        System.out.println("create an account");
-        User user = service.findUserById( (long) 2);
-        service.createReview(review);
-    }
+//    public static void testCreateReview(){
+//        Service service = new Service();
+//        System.out.println("create an account");
+//        User user = service.findUserById( (long) 2);
+//        service.createReview(review);
+//    }
     
     public static void testApproveCook(){
         Service service = new Service();
@@ -74,6 +75,7 @@ public class main {
         service.approveCook(cook);
         System.out.println(cook);
     }
+    
     
     public static void testViewPurchasedMeals(){
         Service service = new Service();
@@ -135,6 +137,19 @@ public class main {
         System.out.println(user.getPreferences().get(0).getName());
         System.out.println(user.getPreferences().get(1).getName());
     }
+    
+    public static void testAuthenticate (){
+        Service service = new Service();
+        System.out.println("authenticate a user");
+        long userId = 1;
+        User user = service.findUserById(userId);
+        System.out.println("Le user de test est: ");
+        System.out.println(user);
+        User AuthenticatedUser=service.authenticate(user.getMail(), user.getPassword());
+        System.out.println("Le user connecté est: ");
+        System.out.println(AuthenticatedUser);
+    }
+    
     
 //    public static void initialiserClients() {
 //        
