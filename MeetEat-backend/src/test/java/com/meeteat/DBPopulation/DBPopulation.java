@@ -50,11 +50,13 @@ public class DBPopulation {
         System.out.println("creatin users...");
         for(int i = 0; i<nbUsers; i++){
             String email = faker.internet().emailAddress();
+            String profilePhoto = faker.internet().image();
             String payementInfo = faker.crypto().sha1();
             Address address = faker.address();
             Name name = faker.name();
             String phone = faker.phoneNumber().cellPhone();
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
+            user.setProfilePhotoURL(profilePhoto);
             userIdList.add(service.createAccount(user));
         }
     }
