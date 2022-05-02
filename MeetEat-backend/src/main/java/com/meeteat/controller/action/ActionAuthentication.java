@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Ihssane
  */
-public class ActionAuthentication {
+public class ActionAuthentication extends Action{
     
     public void executer(HttpServletRequest request){
         
@@ -26,7 +26,6 @@ public class ActionAuthentication {
             HttpSession session = request.getSession();
             session.setAttribute("userId", user.getId());
             request.setAttribute("connection", true);
-            request.setAttribute("user", user);
         }
         else{
             request.setAttribute("connection", false);

@@ -39,7 +39,7 @@ public class User implements Serializable, Loginable {
     private String zipCode;
     private LatLng location;
     private String noTelephone;
-    private String profilePhotoURL;
+    private String profilePhotoPath;
     @ManyToMany
     private List<PreferenceTag> preferences;
     private String password;
@@ -76,12 +76,12 @@ public class User implements Serializable, Loginable {
         this.id = id;
     }
 
-    public String getProfilePhotoURL() {
-        return profilePhotoURL;
+    public String getProfilePhotoPath() {
+        return profilePhotoPath;
     }
 
-    public void setProfilePhotoURL(String profilePhotoURL) {
-        this.profilePhotoURL = profilePhotoURL;
+    public void setProfilePhotoPath(String profilePhotoPath) {
+        this.profilePhotoPath = profilePhotoPath;
     }
 
     public String getFirstName() {

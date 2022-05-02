@@ -7,8 +7,10 @@
 package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
+import com.meeteat.controller.action.ActionAuthentication;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
+import com.meeteat.controller.action.ActionCreateAccount;
 import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionSearchOffers;
@@ -49,6 +51,7 @@ public class ActionServlet extends HttpServlet {
         Serialisation serialisation = null;
         String todo = request.getParameter("todo");
         switch (todo){
+            
             case "consultOffer" -> {
                 action = new ActionConsultOffer();
                 serialisation = new SerialisationOffer();
@@ -65,6 +68,7 @@ public class ActionServlet extends HttpServlet {
                 break;
             }
            
+            
             case "searchOffers" -> {
                 action = new ActionSearchOffers();
                 serialisation = new SerialisationOffers();
@@ -78,6 +82,16 @@ public class ActionServlet extends HttpServlet {
             case "createReservation" -> {
                 action = new ActionCreateReservation();
                 serialisation = new SerialisationReservation();
+                break;
+            }
+            case "createAccount" -> {
+                action = new ActionCreateAccount();
+                serialisation = new SerialisationUser();
+                break;
+            }
+            case "authenticate" -> {
+                action = new ActionAuthentication();
+                serialisation = new SerialisationUser();
                 break;
             }
             
