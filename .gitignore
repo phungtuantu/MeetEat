@@ -354,3 +354,5 @@ MigrationBackup/
 
 # Images
 /Images/
+/*/Images/meals_photos/
+/*/Images/profile_images/
