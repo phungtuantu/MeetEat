@@ -9,7 +9,6 @@ import com.google.maps.model.LatLng;
 import com.meeteat.model.Preference.PreferenceTag;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,9 +39,11 @@ public class User implements Serializable, Loginable {
     private String zipCode;
     private LatLng location;
     private String noTelephone;
+    private String profilePhotoPath;
     @ManyToMany
     private List<PreferenceTag> preferences;
     private String profilePictureUrl;
+    private String password;
 
 
     public List<PreferenceTag> getPreferences() {
@@ -62,7 +63,6 @@ public class User implements Serializable, Loginable {
         this.lastName = lastName;
         this.mail = mail;
         this.noTelephone = noTelephone;
-        this.preferences = new LinkedList<>();
         this.address = address;
         this.city = city;
         this.zipCode = zipCode;
@@ -76,6 +76,14 @@ public class User implements Serializable, Loginable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getProfilePhotoPath() {
+        return profilePhotoPath;
+    }
+
+    public void setProfilePhotoPath(String profilePhotoPath) {
+        this.profilePhotoPath = profilePhotoPath;
     }
 
     public String getFirstName() {
@@ -149,6 +157,13 @@ public class User implements Serializable, Loginable {
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     @Override
