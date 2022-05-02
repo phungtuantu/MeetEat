@@ -67,6 +67,7 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffer();
                 break;
             }
+           
             
             case "searchOffers" -> {
                 action = new ActionSearchOffers();

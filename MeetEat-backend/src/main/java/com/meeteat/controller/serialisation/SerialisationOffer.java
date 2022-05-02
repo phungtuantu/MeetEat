@@ -31,7 +31,17 @@ public class SerialisationOffer extends Serialisation{
         JsonObject container = new JsonObject();
         Offer offer = (Offer)request.getAttribute("offer");
         container.addProperty("id",offer.getId());
-        container.addProperty("cookId",offer.getCook().getId());
+        
+        JsonObject jsonCook = new JsonObject();
+        
+        jsonCook.addProperty("id",offer.getCook().getId());
+        jsonCook.addProperty("firstName",offer.getCook().getFirstName());
+        jsonCook.addProperty("lastName",offer.getCook().getLastName());
+        jsonCook.addProperty("rating",offer.getCook().getRating());
+        jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
+        jsonCook.addProperty("image", offer.getCook().getProfilePictureUrl());
+        
+        container.add("cook",jsonCook);
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         if (offer.getPublicationDate()!=null){
             container.addProperty("publicationDate",df.format(offer.getPublicationDate()));

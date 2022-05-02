@@ -5,7 +5,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" @click="goHome()">
             <img src="../../assets/arrow-left.png" alt="left-arrow" width="40px">
             <!-- <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a> -->
         </button>
@@ -13,9 +13,7 @@
             <img src="../../assets/home.png" alt="home" width="35px">
         </button>
         <h1 class="display-5">MeetEat</h1>
-        <a href="http://localhost:8080/">
-          <img src="../../assets/MeetEat_logo.jpg" width="35px">
-        </a>
+          <img src="../../assets/MeetEat_logo.jpg" width="35px" @click="goHome()">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         </ul>
         <div class="form-inline my-2 my-lg-0">
@@ -36,6 +34,7 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
   name: "NavbarReturnHome",
   data() {
@@ -44,10 +43,13 @@ export default {
     }
   },
   methods: {
-
+    goHome : function(){
+      router.replace('/');
+    }
   },
 }
 </script>
+
 
 <style scoped>
 
@@ -73,6 +75,10 @@ export default {
 a{
   margin-left: 15px;
   margin-bottom: 10px;
+}
+
+img{
+  cursor: pointer;
 }
 
 </style>

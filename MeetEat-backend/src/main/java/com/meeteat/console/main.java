@@ -40,6 +40,7 @@ public class main {
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
+         testAuthenticate();
         JpaTool.destroy();
     }
     
@@ -53,7 +54,7 @@ public class main {
         Service service = new Service();
         System.out.println("create an account");
         User user = new User("Bob", "Smith","here", "this city", "1010","0611","bobsmith@here.com");
-        service.createAccount(user);
+        service.createAccount(user, "password");
     }
     
     public static void testCreateReview(){
@@ -73,7 +74,7 @@ public class main {
         Service service = new Service();
         System.out.println("create an account then make a cook");
         User user = new User("Bob the Second", "Smith","here","this city", "1010", "0611","bobthesecondsmith@here.com");
-        service.createAccount(user);
+        service.createAccount(user, "password");
         System.out.println("make him a cook");
         Cook cook = new Cook(user, new Date(), 0, "", "none");
         System.out.println(user);
@@ -81,6 +82,7 @@ public class main {
         service.approveCook(cook);
         System.out.println(cook);
     }
+    
     
     public static void testViewPurchasedMeals(){
         Service service = new Service();
@@ -109,7 +111,7 @@ public class main {
     public static void testMakeOffer(){
         Service service = new Service();
         System.out.println("make a few offers");
-        long cookId = 2;
+        long cookId = 1;
         Cook cook = service.findCookById(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
@@ -127,7 +129,7 @@ public class main {
         Service service = new Service();
         System.out.println("specify preferences");
         User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password","oh");
-        service.createAccount(user);
+        service.createAccount(user, "password");
         PreferenceTag pref1 = new PreferenceTag("viande");
         PreferenceTag pref2 = new PreferenceTag("beurre");
         PreferenceTag pref3 = new PreferenceTag("riz");
@@ -142,6 +144,22 @@ public class main {
         System.out.println(user.getPreferences().get(0).getName());
         System.out.println(user.getPreferences().get(1).getName());
     }
+    
+    public static void testAuthenticate (){
+        Service service = new Service();
+        System.out.println("authenticate a user");
+        long userId = 1;
+        User user = service.findUserById(userId);
+        System.out.println("Le user de test est: ");
+        System.out.println(user);
+        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+        System.out.println("Avec le bon mdp : Le user connecté est: ");
+        System.out.println(AuthenticatedUser);
+        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+        System.out.println("Avec le mauvais mdp : Le user connecté est: ");
+        System.out.println(NonAuthenticatedUser);
+    }
+    
     
 //    public static void initialiserClients() {
 //        
