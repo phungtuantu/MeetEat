@@ -21,7 +21,7 @@ import java.security.MessageDigest;
  *
  * @author Ihssane
  */
-public class ActionCreateAccount {
+public class ActionCreateAccount extends Action{
     public void executer(HttpServletRequest request){
         Service service = new Service();        
         String firstName = request.getParameter("firstName");
