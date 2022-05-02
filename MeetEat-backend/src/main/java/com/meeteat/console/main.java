@@ -37,7 +37,8 @@ public class main {
 //        testApproveCook();
 //        testMakeOffer();
 //        testSpecifyPreferences();
-        testViewPurchasedMeals();
+//        testViewPurchasedMeals();
+//        testMakeReservation();
         JpaTool.destroy();
     }
     
@@ -104,7 +105,8 @@ public class main {
     
     public static void testMakeReservation(){
         Service service = new Service();
-        service.makeReservation(service.getOfferFromId(1l), service.getUserFromId(1l), new Date(System.currentTimeMillis()), 2);
+        Reservation reservation = new Reservation(new Date(System.currentTimeMillis()),ReservationState.REQUEST,2, service.getOfferFromId(1l), service.getUserFromId(1l));
+        service.createReservation(reservation);
     }
     
     public static void testSpecifyPreferences(){

@@ -24,7 +24,7 @@ import javax.persistence.Temporal;
 
 /**
  *
- * @author gvnge
+ * @author gvnge, johanbonnedahl
  */
 @Entity
 public class Reservation implements Serializable {
@@ -53,20 +53,8 @@ public class Reservation implements Serializable {
         this.state = state;
         this.nbOfPortion = nbOfPortion;
         this.offer = offer;
-        this.user = user;
+        this.customer = customer;
         this.reviews = new LinkedList();
-    }
-    
-    public Reservation(){
-        
-    }
-
-    public ReservationState getState() {
-        return state;
-    }
-
-    public void setState(ReservationState state) {
-        this.state = state;
     }
 
     public Long getId() {
@@ -108,43 +96,12 @@ public class Reservation implements Serializable {
         this.nbOfPortion = nbOfPortion;
     }
 
-    public Offer getOffer() {
-        return offer;
-    }
-
-
-    public User getUser() {
-        return user;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    
-
-    public Date getReservationDate() {
-        return reservationDate;
-    }
-
-    public void setReservationDate(Date reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
-    public int getNbOfPortion() {
-        return nbOfPortion;
-    }
-
     public void setCustomer(User customer) {
         this.customer = customer;
     }
 
     public User getCustomer() {
         return customer;
-    }
-
-    public void setNbOfPortion(int nbOfPortion) {
-        this.nbOfPortion = nbOfPortion;
     }
 
     public Offer getOffer() {

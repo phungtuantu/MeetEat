@@ -172,10 +172,12 @@ public class Service {
     }
     public User getUserFromId(Long id){
         //Might not be needed in the future, currently used for testing
+        JpaTool.createPersistenceContext();
         return userDao.searchById(id);
     }
     public Offer getOfferFromId(Long id){
         //Might not be needed in the future, currently used for testing
+        JpaTool.createPersistenceContext();
         return offerDao.searchById(id);
     }
     
