@@ -157,6 +157,7 @@ public class User implements Serializable, Loginable {
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
+    }
 
     public String getPassword() {
         return password;
