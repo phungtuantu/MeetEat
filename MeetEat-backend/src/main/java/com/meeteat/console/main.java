@@ -34,8 +34,6 @@ public class main {
 //        testApproveCook();
 //        testMakeOffer();
 //        testSpecifyPreferences();
-        Service service = new Service();
-        System.out.println(service.findOfferById(1l).getDetails());
         JpaTool.destroy();
     }
     
