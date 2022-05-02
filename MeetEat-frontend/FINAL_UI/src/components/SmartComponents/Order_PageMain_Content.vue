@@ -162,7 +162,7 @@
 
       <div class="card">
         <img class="card-img-top"
-             src="https://codingyaar.com/wp-content/uploads/bootstrap-4-card-image-left-demo-image.jpg"/>
+             src="../../assets/lasagne.jpg"/>
         <div class="card-body" style="text-align: left;">
           <h5 class="card-title">Delicious Lasagna ! </h5>
           <p class="card-text">

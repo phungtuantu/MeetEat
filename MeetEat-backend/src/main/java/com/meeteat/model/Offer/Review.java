@@ -26,6 +26,30 @@ public class Review implements Serializable {
     private Long id;
     @ManyToOne
     private Reservation source;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Reservation getSource() {
+        return source;
+    }
+
+    public User getReviewedUser() {
+        return reviewedUser;
+    }
+
+    public User getReviewingUser() {
+        return reviewingUser;
+    }
+
+    public int getNbOfStars() {
+        return nbOfStars;
+    }
+
+    public String getComment() {
+        return comment;
+    }
     @ManyToOne
     private User reviewedUser;
     @ManyToOne

@@ -7,14 +7,18 @@
 package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
+import com.meeteat.controller.action.ActionAuthentication;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
+import com.meeteat.controller.action.ActionCreateAccount;
+import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationOffers;
+import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationUser;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
@@ -47,8 +51,14 @@ public class ActionServlet extends HttpServlet {
         Serialisation serialisation = null;
         String todo = request.getParameter("todo");
         switch (todo){
+            
             case "consultOffer" -> {
                 action = new ActionConsultOffer();
+                serialisation = new SerialisationOffer();
+                break;
+            }
+            case "consultOffers" -> {
+                action = new ActionConsultOffers();
                 serialisation = new SerialisationOffer();
                 break;
             }
@@ -57,11 +67,7 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffer();
                 break;
             }
-            case "consultOffers" -> {
-                action = new ActionConsultOffers();
-                serialisation = new SerialisationOffers();
-                break;
-            }
+            
             case "searchOffers" -> {
                 action = new ActionSearchOffers();
                 serialisation = new SerialisationOffers();
@@ -69,8 +75,25 @@ public class ActionServlet extends HttpServlet {
             }
             case "specifiyPreferences" -> {
                 action = new ActionSpecifyPreferences();
+                serialisation = new SerialisationUser();
                 break;
             }
+            case "createReservation" -> {
+                action = new ActionCreateReservation();
+                serialisation = new SerialisationReservation();
+                break;
+            }
+            case "createAccount" -> {
+                action = new ActionCreateAccount();
+                serialisation = new SerialisationUser();
+                break;
+            }
+            case "authenticate" -> {
+                action = new ActionAuthentication();
+                serialisation = new SerialisationUser();
+                break;
+            }
+            
         }
         
         if (action!=null&&serialisation!=null){

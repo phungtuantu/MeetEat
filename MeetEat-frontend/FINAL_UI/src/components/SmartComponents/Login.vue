@@ -9,8 +9,9 @@
                       <input type="password" name="" placeholder="Password"> 
                       <input type="submit" name="" value="Login" href="#">
                       <div class="column">
-                        <a class="text-muted" href="#">Don't have an account yet ?</a>
-                        <button class="btn" type="button">Create an account</button>
+                        <a class="text-muted" href="http://localhost:8080/signup">Don't have an account yet ?
+                            <button class="btn" type="button">Create an account</button>
+                        </a>
                       </div>
                   </form>
               </div>

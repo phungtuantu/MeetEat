@@ -42,6 +42,7 @@ public class User implements Serializable, Loginable {
     private String profilePhotoPath;
     @ManyToMany
     private List<PreferenceTag> preferences;
+    private String password;
 
 
     public List<PreferenceTag> getPreferences() {
@@ -146,6 +147,14 @@ public class User implements Serializable, Loginable {
 
     public void setNoTelephone(String noTelephone) {
         this.noTelephone = noTelephone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     @Override
