@@ -12,6 +12,7 @@ import com.meeteat.service.Service;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -22,7 +23,8 @@ public class ActionSpecifyPreferences extends Action{
    @Override
     public void executer(HttpServletRequest request){
         Service service = new Service();
-        Long userId = Long.parseLong(request.getParameter("userId"));
+        HttpSession session = request.getSession();
+        Long userId = (Long)session.getAttribute("userId");
         User user = service.findUserById(userId);
         List<PreferenceTag> requestPreferences = new LinkedList<>();
         for (String preferenceId : request.getParameterValues("requestPreferences")){
@@ -30,6 +32,5 @@ public class ActionSpecifyPreferences extends Action{
         }
         user = service.specifyPreferences(requestPreferences, user);
         System.out.println(user);
-        request.setAttribute("user",user);
     } 
 }
