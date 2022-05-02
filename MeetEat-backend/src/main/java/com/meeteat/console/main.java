@@ -54,12 +54,12 @@ public class main {
         service.createAccount(user);
     }
     
-    public static void testCreateReview(){
+    /*public static void testCreateReview(){
         Service service = new Service();
         System.out.println("create an account");
         User user = service.findUserById( (long) 2);
         service.createReview(review);
-    }
+    }*/
     
     public static void testApproveCook(){
         Service service = new Service();
