@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/PLD-SMART" antiResourceLocking="false" privileged="true" >
-  
-  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
-         allow=".*" />
-  
+<Context antiResourceLocking="false" path="/PLD-SMART" privileged="true">
+  <Valve allow=".*" className="org.apache.catalina.valves.RemoteAddrValve"/>
   <Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/>
 </Context>

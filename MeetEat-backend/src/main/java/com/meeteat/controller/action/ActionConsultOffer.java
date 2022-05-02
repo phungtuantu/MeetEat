@@ -19,7 +19,6 @@ public class ActionConsultOffer extends Action {
         Service service = new Service();
         Long offerId = Long.parseLong(request.getParameter("offerId"));
         Offer offer = service.findOfferById(offerId);
-        System.out.println(offer);
         request.setAttribute("offer",offer);
     }
 }

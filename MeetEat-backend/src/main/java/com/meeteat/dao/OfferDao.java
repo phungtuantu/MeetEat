@@ -17,7 +17,7 @@ import javax.persistence.TypedQuery;
 public class OfferDao extends AbstractDao<Offer>{
     public OfferDao(){
         super(Offer.class);
-    } 
+    }
     
     public List<Offer> getOngoingOffers(int priceLimit) {
         
