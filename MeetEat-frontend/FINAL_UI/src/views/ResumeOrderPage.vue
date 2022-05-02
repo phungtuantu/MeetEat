@@ -3,7 +3,7 @@
   <div class="home">
     <NavbarReturnHome></NavbarReturnHome>
     <br/>
-    <ResumeOrder/>
+      <ResumeOrder/>
     <br/>
     <Footer></Footer>
   </div>
