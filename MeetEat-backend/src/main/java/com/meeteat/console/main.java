@@ -35,12 +35,13 @@ public class main {
         JpaTool.init();
 //        testCreatePref();
 //        testCreateAccount();
-        testApproveCook();
+//        testApproveCook();
 //        testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
-         testAuthenticate();
+//        testAuthenticate();
+        testCreateReview();
         JpaTool.destroy();
     }
     
@@ -61,12 +62,15 @@ public class main {
         Service service = new Service();
         System.out.println("create a review");
         User user = service.findUserById( (long) 2);
-        Cook cook = service.findUserById( (long) 3);
+        User user2 = service.findUserById( (long) 3);
+        Cook cook = service.findCookById( (long) 3);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
         Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        service.makeOffer(offer);
         Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
-        Review rev = new Review(res1, );
+        service.createReservation(res1);
+        Review rev = new Review(res1, user2, user, 4, "delicious" );
         service.createReview(rev);
     }
     
