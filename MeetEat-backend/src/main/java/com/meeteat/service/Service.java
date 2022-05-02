@@ -25,6 +25,7 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import static com.meeteat.service.GeoNetApi.getLatLng;
+import java.security.MessageDigest;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Comparator;
@@ -83,6 +84,89 @@ public class Service {
         return result;
     }
     
+    public Long encryptPassword(User user, String password){
+        //The MD5 (Message Digest) is a very popular hashing algorithm. 
+        //It is a cryptographic hash function that generates a 128-bits hash value.
+        //This algorithm is defined under java.security package in Java programming.
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            String encryptedPassword = null;
+             /* MessageDigest instance for MD5. */  
+            MessageDigest m = MessageDigest.getInstance("MD5");  
+              
+            /* Add plain-text password bytes to digest using MD5 update() method. */  
+            m.update(password.getBytes());  
+              
+            /* Convert the hash value into bytes */   
+            byte[] bytes = m.digest();  
+              
+            /* The bytes array has bytes in decimal form. Converting it into hexadecimal format. */  
+            StringBuilder s = new StringBuilder();  
+            for(int i=0; i< bytes.length ;i++)  
+            {  
+                s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));  
+            }  
+              
+            /* Complete hashed password in hexadecimal format */  
+            encryptedPassword = s.toString();  
+            JpaTool.openTransaction();
+            user.setPassword(encryptedPassword);
+            userDao.merge(user);
+            JpaTool.validateTransaction();
+            result = user.getId();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public User authenticate (String mail, String password){
+        JpaTool.createPersistenceContext();
+        User user = null;
+        String verifiedPassword = null;
+        try{
+            String encryptedPassword = null;
+             /* MessageDigest instance for MD5. */  
+            MessageDigest m = MessageDigest.getInstance("MD5");  
+              
+            /* Add plain-text password bytes to digest using MD5 update() method. */  
+            m.update(password.getBytes());  
+              
+            /* Convert the hash value into bytes */   
+            byte[] bytes = m.digest();  
+              
+            /* The bytes array has bytes in decimal form. Converting it into hexadecimal format. */  
+            StringBuilder s = new StringBuilder();  
+            for(int i=0; i< bytes.length ;i++)  
+            {  
+                s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));  
+            }  
+              
+            /* Complete hashed password in hexadecimal format */  
+            encryptedPassword = s.toString(); 
+            
+            JpaTool.openTransaction();
+            user = userDao.SearchByMail(mail);
+            verifiedPassword = user.getPassword();
+            if(verifiedPassword == null ? encryptedPassword != null : !verifiedPassword.equals(encryptedPassword)){
+                user = null;
+            }
+            JpaTool.validateTransaction();
+            
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling authenticate", ex);
+            JpaTool.cancelTransaction();
+            user = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
+    }
     public User findUserById(Long userId){
         User user = null;
         JpaTool.createPersistenceContext();
