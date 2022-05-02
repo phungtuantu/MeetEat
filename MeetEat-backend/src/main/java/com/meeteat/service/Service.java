@@ -393,17 +393,8 @@ public class Service {
     
     public Offer findOfferById(Long offerId){
         JpaTool.createPersistenceContext();
-        Offer offer = null;
-        try{
-            JpaTool.openTransaction();
-            offer = offerDao.searchById(offerId);
-            JpaTool.validateTransaction();
-        } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-            JpaTool.cancelTransaction();
-        } finally{
-            JpaTool.closePersistenceContext();
-        }
+        Offer offer = offerDao.searchById(offerId);
+        JpaTool.closePersistenceContext();
         return offer;
     }
     
