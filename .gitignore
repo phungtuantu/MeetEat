@@ -351,3 +351,6 @@ MigrationBackup/
 /target/
 /nbproject/
 /MeetEat-backend/target/
+
+# Images
+/Images
