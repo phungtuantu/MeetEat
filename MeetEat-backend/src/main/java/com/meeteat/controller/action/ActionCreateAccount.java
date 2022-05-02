@@ -33,8 +33,7 @@ public class ActionCreateAccount extends Action{
         String noTelephone = request.getParameter("noTelephone");
         String password = request.getParameter("password");
         User user = new User (firstName,lastName, address, city, zipCode, noTelephone,mail);
-        service.createAccount(user);
-        service.encryptPassword(user, password);
+        service.createAccount(user, password);
         request.setAttribute("user",user);
     }
 }

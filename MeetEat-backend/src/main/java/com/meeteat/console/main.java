@@ -33,13 +33,13 @@ public class main {
         
         JpaTool.init();
 //        testCreatePref();
-//        testCreateAccount();
+        testCreateAccount();
 //        testApproveCook();
-          testMakeOffer();
+//          testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
-//         testAuthenticate();
+         testAuthenticate();
         JpaTool.destroy();
     }
     
@@ -53,7 +53,7 @@ public class main {
         Service service = new Service();
         System.out.println("create an account");
         User user = new User("Bob", "Smith","here", "this city", "1010","0611","bobsmith@here.com");
-        service.createAccount(user);
+        service.createAccount(user, "password");
     }
     
 //    public static void testCreateReview(){
@@ -67,7 +67,7 @@ public class main {
         Service service = new Service();
         System.out.println("create an account then make a cook");
         User user = new User("Bob the Second", "Smith","here","this city", "1010", "0611","bobthesecondsmith@here.com");
-        service.createAccount(user);
+        service.createAccount(user, "password");
         System.out.println("make him a cook");
         Cook cook = new Cook(user, new Date(), 0, "", "none");
         System.out.println(user);
@@ -122,7 +122,7 @@ public class main {
         Service service = new Service();
         System.out.println("specify preferences");
         User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password","oh");
-        service.createAccount(user);
+        service.createAccount(user, "password");
         PreferenceTag pref1 = new PreferenceTag("viande");
         PreferenceTag pref2 = new PreferenceTag("beurre");
         PreferenceTag pref3 = new PreferenceTag("riz");
@@ -145,9 +145,12 @@ public class main {
         User user = service.findUserById(userId);
         System.out.println("Le user de test est: ");
         System.out.println(user);
-        User AuthenticatedUser=service.authenticate(user.getMail(), user.getPassword());
-        System.out.println("Le user connecté est: ");
+        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+        System.out.println("Avec le bon mdp : Le user connecté est: ");
         System.out.println(AuthenticatedUser);
+        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+        System.out.println("Avec le mauvais mdp : Le user connecté est: ");
+        System.out.println(NonAuthenticatedUser);
     }
     
     
