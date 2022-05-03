@@ -7,7 +7,9 @@ package com.meeteat.model.Offer;
 
 import com.meeteat.model.User.User;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,9 +26,26 @@ public class Review implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Reservation source;
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private User reviewedUser;
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private User reviewingUser;
+    private int nbOfStars;
+    private String comment;
 
+    public Review(Reservation source, User reviewedUser, User reviewingUser, int nbOfStars, String comment) {
+        this.source = source;
+        this.reviewedUser = reviewedUser;
+        this.reviewingUser = reviewingUser;
+        this.nbOfStars = nbOfStars;
+        this.comment = comment;
+    }
+
+    public Review() {
+    }
+    
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -50,12 +69,7 @@ public class Review implements Serializable {
     public String getComment() {
         return comment;
     }
-    @ManyToOne
-    private User reviewedUser;
-    @ManyToOne
-    private User reviewingUser;
-    private int nbOfStars;
-    private String comment;
+    
 
     public Long getId() {
         return id;

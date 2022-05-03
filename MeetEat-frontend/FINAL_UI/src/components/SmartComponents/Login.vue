@@ -9,9 +9,7 @@
                       <input type="password" name="" placeholder="Password"> 
                       <input type="submit" name="" value="Login" href="#">
                       <div class="column">
-                        <a class="text-muted" href="http://localhost:8080/signup">Don't have an account yet ?
-                            <button class="btn" type="button">Create an account</button>
-                        </a>
+                        <button class="btn" type="button" @click="createAccount()">Create an account</button>
                       </div>
                   </form>
               </div>
@@ -21,8 +19,14 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
-  name: "Login"
+  name: "Login",
+   methods: {
+    becomeCook : function(){
+      router.replace('/signup');
+    }
+  },
 }
 </script>
 

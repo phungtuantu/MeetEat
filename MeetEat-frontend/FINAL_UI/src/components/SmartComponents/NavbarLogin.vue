@@ -7,9 +7,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <h1 class="display-5">MeetEat</h1>
-        <a href="http://localhost:8080/">
-          <img src="../../assets/MeetEat_logo.jpg" width="35px">
-        </a>
+          <a><img src="../../assets/MeetEat_logo.jpg" width="35px" @click="goHome()"></a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         </ul>
       </div>
@@ -19,6 +17,7 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
   name: "Navbar",
   data() {
@@ -27,7 +26,9 @@ export default {
     }
   },
   methods: {
-
+    goHome : function(){
+      router.replace('/');
+    }
   },
 }
 </script>
@@ -36,5 +37,6 @@ export default {
 a{
   margin-left: 15px;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 </style>

@@ -33,7 +33,7 @@
               </div>
             </div>
             <br/>
-            <button type="button" class="btn btn-success" @click='addIngredients'>Add an ingredient</button>
+              <button type="button" class="btn btn-success" @click='addIngredients'>Add an ingredient</button>
 
         </div>
         <div class="col-sm">
@@ -181,7 +181,7 @@
       </div>
 
       <div class="col-sm">
-        <button type="button" class="btn btn-danger  btn-lg btn-block" @click='deleteOffer'>Delete</button>
+        <button type="button" class="btn btn-danger  btn-lg btn-block" @click='deleteOffer()'>Delete</button>
 
       </div>
     </div>
@@ -304,5 +304,10 @@ article input {
 input[type=checkbox]:checked ~ div {
   background-color: green;
 }
+
+/*
+.btn-success{
+  float: left;
+}*/
 
 </style>

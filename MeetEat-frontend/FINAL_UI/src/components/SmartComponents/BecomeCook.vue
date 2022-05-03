@@ -37,8 +37,8 @@
         </div>
         <div class="col-5">
             <div class="column">
-                <button class="btn btn-success">
-                        Become a cook
+                <button class="btn btn-success" @click="becomeCook()">
+                  Become a cook
                 </button>
             </div>
         </div>
@@ -48,8 +48,14 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
-  name: "OnGoingOffers"
+  name: "OnGoingOffers",
+  methods: {
+    becomeCook : function(){
+      router.replace('/verificationCook');
+    }
+  },
 }
 </script>
 

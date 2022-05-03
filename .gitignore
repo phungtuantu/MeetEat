@@ -354,4 +354,9 @@ MigrationBackup/
 
 # Images
 /Images/
+
 MeetEat-backend/nb-configuration.xml
+
+/*/Images/meals_photos/
+/*/Images/profile_images/
+
