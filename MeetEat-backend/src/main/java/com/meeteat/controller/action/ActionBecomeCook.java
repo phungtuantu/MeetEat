@@ -32,18 +32,22 @@ public class ActionBecomeCook extends Action{
         String id_ImagePath = request.getParameter("idImagePath");
         String certificationImagePath = request.getParameter("certificationImagePath");
         RequestImage id_Image = new RequestImage(id_ImagePath);    
-        RequestImage certificationImage = new RequestImage(certificationImagePath);  
+        RequestImage certificationImage = new RequestImage(certificationImagePath); 
+        service.createRequestImage(id_Image);
+        service.createRequestImage(certificationImage);
         List<RequestImage> equipmentImages = new LinkedList<>();
         for (String equipmentImagePath : request.getParameterValues("equipmentImagePath")){
             //equipmentImages.add((service.createRequestImage(Long.parseLong(equipmentImageId))));
             RequestImage equipmentImage = new RequestImage(equipmentImagePath);
             equipmentImages.add(equipmentImage);
+            service.createRequestImage(equipmentImage);
         }
         
         Date requestDate = new Date();
         CookRequest cookRequest = new CookRequest(requestDate, user, equipmentImages, id_Image, certificationImage);
         
         service.becomeCook(cookRequest);
+        System.out.println(cookRequest.getIdCookRequest());
         request.setAttribute("cookRequest",cookRequest);
     }
     
