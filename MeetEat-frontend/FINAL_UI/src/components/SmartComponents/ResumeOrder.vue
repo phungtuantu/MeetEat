@@ -6,7 +6,7 @@
 
     <div class="row">
       <div class="col-sm-7">
-        <h2>My shopping list ( {{orders.length}} product)</h2>
+        <h2>My shopping list ( {{totalQty}} product)</h2>
       </div>
       <div class="col-sm">
         <button type="button" class="btn btn-dark" @click="backHome()">Continue my shopping </button>
@@ -20,28 +20,32 @@
 
     <div class="row">
       <div class="col-sm">
-        <div class="card border border-secondary" v-for="order in orders" :key="order.title" style="background-color: lightgray">
+        <div class="card border border-secondary" v-for="order in orders" :key="order.order.id" style="background-color: lightgray">
           <img class="card-img-top"
                src="../../assets/lasagne.jpg" style="padding-left: 5px;"/>
           <div class="card-body" style="text-align: left;">
-            <h5 class="card-title">{{order.title}}</h5>
+            <h5 class="card-title">{{order.order.title}}</h5>
             <p class="card-text">
-              <b>Ordered : {{order.dateOrdered}} </b><br/>
-              <b>Delivery : {{order.dateDelivery}} </b><br/>
-              {{order.description}}<br/>
+              <b>Delivery : (A changer)01/01/2022{{order.order.expirationDate}} </b><br/>
+              {{order.order.details}}<br/>
             </p>
-            <p class="card-text" v-for="option in order.options" :key="option">
-              {{option}}
+            <!--
+            <p class="card-text" v-for="option in order.order.classifications" :key="option">
+              {{option.name}}
+            </p>
+            -->
+            <p class="card-text">
+              {{order.order.details}}
             </p>
             <div class="row">
               <div class="col-sm">
                 <p class="card-text">
-                  <b>{{order.price}}$</b>
+                  <b>{{order.order.price * order.qty}}$</b>
                 </p>
               </div>
               <div class="col-sm">
                 <p class="card-text">
-                  <b>Number of portions : {{order.nbPortions}}</b>
+                  <b>Number of portions : {{order.qty}}</b>
                 </p>
               </div>
             </div>
@@ -59,9 +63,9 @@
           <h3>Summary</h3>
           <hr class="my-4"/>
           <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center" v-for="order in orders" :key="order">
-              {{ order.title }} <br/>
-              <span class="badge badge-primary badge-pill">Number of portions {{ order.nbPortions }}</span>
+            <li class="list-group-item d-flex justify-content-between align-items-center" v-for="order in orders" :key="order.order.id">
+              {{ order.order.title }} <br/>
+              <span class="badge badge-primary badge-pill">Number of portions {{ order.qty }}</span>
             </li>
           </ul>
         <hr class="my-4"/>
@@ -71,7 +75,7 @@
             <h4>Total</h4>
           </div>
           <div class="col-sm">
-              {{total}}$
+              {{totalPrice}}$
           </div>
         </div>
       </div>
@@ -119,21 +123,16 @@
 
 <script>
 import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
 
 export default {
   name: "ResumeOrder",
   data() { return {
-    orders : [
-        {
-          title : 'Delicious lasagna !',
-          nbPortions : 1,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '03/01/2022',
-          options : [ 'noPork'],
-          price : 5
-        }],
+    orders : [],
     total : 5,
+    totalQty : 0,
+    totalPrice : 0,
   }
   },
   methods : {
@@ -152,6 +151,27 @@ export default {
       router.replace('/orderPage')
 
     },
+  },
+  async mounted() {
+    var arr = JSON.parse(sessionStorage.getItem("basket"));
+    if (arr !== null) {
+      for (let i = 0; i < arr.length; i++) {
+        console.log(arr[i]);
+        var element = null;
+        await axios.get(urlAPI + 'todo=consultOffer&offerId=' + arr[i].id)
+            .then(response => (element = response.data));
+
+        this.orders.push({
+          order : element,
+          qty : arr[i].qty
+        });
+
+        this.totalPrice += (arr[i].qty * element.price);
+        this.totalQty += arr[i].qty;
+      }
+
+        console.log(this.orders);
+    }
   }
 }
 </script>
