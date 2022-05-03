@@ -165,7 +165,6 @@ public class Service {
             System.out.println(password);
             System.out.println("password" + password);
             encryptedPassword = this.encryptPassword(password);
-            System.out.println("encrypted password" + encryptedPassword);
             user = userDao.SearchByMail(mail);
             System.out.println("user trouvé par la dao" + user);
 
@@ -444,7 +443,12 @@ public class Service {
     public Offer viewOfferDetails(Long offerId, String address){
         Offer offer = this.findOfferById(offerId);
         LatLng location = getLatLng(address);
-        Double distance = offer.getDistanceToUser();
+        Double distance;
+        if (offer.getLocation()!=null && location!=null){
+            distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
+        } else{
+            distance = Double.MAX_VALUE;
+        }
         offer.setDistanceToUser(distance);
         return offer;
     }
@@ -719,8 +723,23 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
-
         return cookRequest;
+    }
+    
+    public List<Reservation> viewReservationsList(User user) {
+        //view the reservations made by a user
+        List<Reservation> reservationsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            reservationsList = reservationDao.getReservationsListByUserId(user.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewReservationsList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return reservationsList;
     }
 
     public List<Review> viewCooksReviews(Long cookId){
@@ -743,7 +762,6 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
-        
         return result;
     }
 }

@@ -354,6 +354,12 @@ MigrationBackup/
 
 # Images
 /Images/
+
+MeetEat-backend/nb-configuration.xml
+
 /*/Images/meals_photos/
 /*/Images/profile_images/
+
+MeetEat-backend/src/main/resources/META-INF/persistence.xml
 /MeetEat-backend/nbproject/
+

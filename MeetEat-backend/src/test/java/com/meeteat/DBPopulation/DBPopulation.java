@@ -44,7 +44,9 @@ public class DBPopulation {
     Locale locale = new Locale("fr");
     int nbProfilePictures = 20;
     int nbOfferPictures = 20;
+    String [] specifications = {"noPork", "pescoVegetarian", "vegetarian", "vegan", "dairyFree", "glutenFree"};
     public DBPopulation(){
+        
         faker = new Faker(locale);
         service = new Service();
     }
@@ -133,8 +135,9 @@ public class DBPopulation {
             double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
             String details = ram.quote();
+            String specs = createSpecifications();
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
-                                    details, classifications, ingredients, "", address.streetAddress(), address.city(), 
+                                    details, classifications, ingredients, specs, address.streetAddress(), address.city(), 
                                     address.zipCode());
             offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             System.out.println(address.streetAddress());
@@ -149,6 +152,17 @@ public class DBPopulation {
             }
             //service.updateOffer(offer);
         }
+    }
+    
+    private String createSpecifications(){
+        Number number = faker.number();
+        int minSpecs = number.numberBetween(0, specifications.length);
+        int maxSpecs = number.numberBetween(minSpecs, specifications.length);
+        String res = specifications[minSpecs];
+        for(int i = minSpecs+1; i<maxSpecs; i++){
+            res = res + ", " + specifications[i];
+        }
+        return res;
     }
     
     public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, int nbOffers){
