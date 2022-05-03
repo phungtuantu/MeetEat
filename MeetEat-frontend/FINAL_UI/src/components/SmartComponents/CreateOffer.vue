@@ -2,11 +2,11 @@
 
   <div class="container">
     <div style="text-align: center">
-      <h1>Set my Offer</h1>
+      <h1>Create an Offer</h1>
     </div>
     <form>
       <div class="form-group">
-        <img class="" id="mainPicture" src="../../assets/lasagne.jpg" height="400px" width="60%" >
+        <img class="" id="mainPicture" src="../../assets/grey-square.png" height="400px" width="60%" >
       </div>
 
       <div class="form-group">
@@ -15,7 +15,7 @@
       </div>
 
       <div class="form-group row">
-        <label for="title" class="col-sm-2 col-form-label">Titre</label>
+        <label for="title" class="col-sm-2 col-form-label">Title</label>
         <div class="col-sm-10">
           <input type="text" class="form-control" id="title" v-model="title">
         </div>
@@ -48,7 +48,7 @@
       </div>
 
       <div class="form-group row">
-        <label for="specification" class="col-sm-2 col-form-label">More specification</label>
+        <label for="specification" class="col-sm-2 col-form-label">More specifications :</label>
         <div class="col-sm-10">
           <textarea id="specification" class="form-control" rows="3" v-model="specification"></textarea>
         </div>
@@ -71,7 +71,7 @@
 
 
       <div class="form-group row">
-        <label for="specification" class="col-sm-2 col-form-label">More specification</label>
+        <label for="specification" class="col-sm-2 col-form-label">Diet </label>
         <div class="col-sm-10">
           <div class="row">
             <article class=" col-sm">
@@ -134,26 +134,80 @@
       </div>
 
       <div class="form-group row">
-        <label for="portions" class="col-sm-2 col-form-label">Portions available</label>
+        <label for="portions" class="col-sm-2 col-form-label">Number of servings</label>
         <div class="col-sm-10">
           <input type="number" class="form-control-plaintext" id="portions" v-model="portions">
         </div>
       </div>
 
+      <div class="form-group row">
+        <label for="portions" class="col-sm-2 col-form-label">Expiration date</label>
+        <div class="col-sm-10">
+          <input type="date" class="form-control-plaintext" id="portions" v-model="portions">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="portions" class="col-sm-2 col-form-label">Sales address</label>
+        <input type="text" name="" placeholder="Address">
+        </div>
+
+        <div class="form-group row">
+        <label for="portions" class="col-sm-2 col-form-label">Zip code </label>
+        <input type="text" name="" placeholder="Zip code">
+        </div>
+
+        <div class="form-group row">
+        <label for="portions" class="col-sm-2 col-form-label">City </label>
+            <input type="text" name="" placeholder="City">
+        </div>
+
+        <div class="form-group row">
+        <label for="portions" class="col-sm-2 col-form-label">City </label>
+            <input type="text" name="" placeholder="City">
+        </div>
+
+        <div class="row">
+        <label for="portions" class="col-sm-2 col-form-label">Check one or both </label>
+            <article class="col-4">
+              <input type="checkbox"/>
+              <div>
+                <span>
+                  To take away
+                </span>
+              </div>
+            </article>
+            <article class="col-4">
+              <input type="checkbox"/>
+              <div>
+                <span>
+                  On site
+                </span>
+              </div>
+            </article>
+        </div>
+        <br>
+
     </form>
 
-    <button type="button" class="btn btn-success" @click='validateInformation'>Validate</button>
+    <div class="row">
+        <div class="col-sm" id="validate">
+            <button type="button" class="btn btn-success2" @click='validateInformation()'>Next step</button>
+        </div>
+    </div>
+
+
     <template v-if="show === 1">
       <form>
         <div class="form-group row">
-          <label for="suggestedPrice" class="col-sm-2 col-form-label">Suggested price</label>
+          <label for="suggestedPrice" class="col-sm-2 col-form-label">Price suggestion</label>
           <div class="col-sm-10">
             <input type="number" disabled readonly class="form-control-plaintext" id="suggestedPrice" v-model="suggestedPrice">
           </div>
         </div>
 
         <div class="form-group row">
-          <label for="sellingPrice" class="col-sm-2 col-form-label">Selling price</label>
+          <label for="sellingPrice" class="col-sm-2 col-form-label">Sale price</label>
           <div class="col-sm-10">
             <input type="number" step="0.01" class="form-control-plaintext" id="sellingPrice" v-model="sellingPrice">
           </div>
@@ -167,7 +221,14 @@
         </div>
       </form>
 
-      <button type="button" class="btn btn-success" @click='save'>Save</button>
+      <button type="button" class="btn btn-success2" id="saveBtn" @click='save()'>Publish</button>
+    </template>
+
+    <template v-if="show === 2">
+        <div class="row">
+            <label class="successPublish">Your application has been published successfully</label>
+            <button type="button" class="btn btn-info" id="okHome" @click='backHome()'> OK </button>
+        </div>
     </template>
 
     <br/>
@@ -176,23 +237,19 @@
 
     <div class="row">
       <div class="col-sm">
-        <button type="button" class="btn btn-dark  btn-lg btn-block" @click='backHome()'>Cancel</button>
-
+        <br>
+        <button type="button" class="btn btn-dark  btn-lg btn-block" id="cancelBtn" @click='backHome()'>Cancel</button>
       </div>
-
+    <!--
       <div class="col-sm">
         <button type="button" class="btn btn-danger  btn-lg btn-block" @click='deleteOffer()'>Delete</button>
-
-      </div>
+      </div>-->
     </div>
 
-
     <br/>
     <br/>
-
     <br/>
     <br/>
-
 
   </div>
 </template>
@@ -249,6 +306,7 @@ export default {
 
     validateInformation : function ()
     {
+        document.getElementById("validate").style.display = "none";
       this.show = 1;
     },
 
@@ -263,7 +321,9 @@ export default {
 
     save : function () {
       console.log('save');
-
+      document.getElementById("saveBtn").style.display = "none";
+      document.getElementById("cancelBtn").style.display = "none";
+      this.show = 2;
     },
 
   },
@@ -274,7 +334,6 @@ export default {
 
 article {
   position: relative;
-
   margin: 5px;
   float: left;
   border: 2px solid black;
@@ -305,9 +364,39 @@ input[type=checkbox]:checked ~ div {
   background-color: green;
 }
 
+.btn-dark, .btn-success2{
+    width: 50%;
+    height: 50px;
+    float: center;
+    font-size: 20px;
+}
+
+.btn-success2{
+    background-color: green;
+    color: white;
+}
+
+.btn-dark{
+    margin-left: 25%;
+}
+
+.btn-info{
+    background-color: grey;
+    margin-left: 20px;
+}
+
+.successPublish{
+    color: gray;
+    float: center;
+    margin-left: 100px;
+    margin-top: 30px;
+    font-size: 20px;
+}
+
 input[type="checkbox"]{
     width: 100%;
     height: 100%;
 }
+
 
 </style>

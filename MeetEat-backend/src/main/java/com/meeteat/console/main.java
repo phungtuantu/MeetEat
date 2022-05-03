@@ -35,13 +35,14 @@ public class main {
         JpaTool.init();
 //        testCreatePref();
 //        testCreateAccount();
+          testModifyAccount();
 //        testApproveCook();
 //        testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
 //        testAuthenticate();
-        testCreateReview();
+//        testCreateReview();
         JpaTool.destroy();
     }
     
@@ -56,6 +57,15 @@ public class main {
         System.out.println("create an account");
         User user = new User("Bob", "Smith","here", "this city", "1010","0611","bobsmith@here.com");
         service.createAccount(user, "password");
+    }
+    
+    public static void testModifyAccount(){
+        Service service = new Service();
+        System.out.println("modify an account");
+        Long id = new Long(100);
+        User user = service.modifyAccount(id, "Luna", "Booba", "avenue des bgs", "lyon", "2323",
+            "060000000",false, "hacker", ""); 
+        System.out.println(user);
     }
     
     public static void testCreateReview(){
@@ -150,16 +160,28 @@ public class main {
     }
     
     public static void testAuthenticate (){
+//        Service service = new Service();
+//        System.out.println("authenticate a user");
+//        long userId = 1;
+//        User user = service.findUserById(userId);
+//        System.out.println("Le user de test est: ");
+//        System.out.println(user);
+//        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+//        System.out.println("Avec le bon mdp : Le user connecté est: ");
+//        System.out.println(AuthenticatedUser);
+//        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+//        System.out.println("Avec le mauvais mdp : Le user connecté est: ");
+//        System.out.println(NonAuthenticatedUser);
         Service service = new Service();
         System.out.println("authenticate a user");
-        long userId = 1;
-        User user = service.findUserById(userId);
-        System.out.println("Le user de test est: ");
-        System.out.println(user);
-        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+//        long userId = 1;
+//        User user = service.findUserById(userId);
+//        System.out.println("Le user de test est: ");
+//        System.out.println(user);
+        User AuthenticatedUser=service.authenticate("lilou.gonzalez@yahoo.fr", "password");
         System.out.println("Avec le bon mdp : Le user connecté est: ");
         System.out.println(AuthenticatedUser);
-        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+        User NonAuthenticatedUser=service.authenticate("lilou.gonzalez@yahoo.fr", "hack");
         System.out.println("Avec le mauvais mdp : Le user connecté est: ");
         System.out.println(NonAuthenticatedUser);
     }

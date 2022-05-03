@@ -44,20 +44,32 @@ public class ServiceTest {
     public void tearDown() {
     }
     
-    @Test
-    public void setPriceTest(){
-        Offer offer = new Offer();
-        service.makeOffer(offer);
-        double price = 69.69;
-        service.setPrice(offer.getId(), price);
-        Offer offer3 = service.findOfferById(offer.getId());
-        assertEquals(offer3.getId(), offer.getId());
-        assertEquals(offer3.getPrice(), price);
-    }
+    
+    
+//    @Test
+//    public void setPriceTest(){
+//        Offer offer = new Offer();
+//        service.makeOffer(offer);
+//        double price = 69.69;
+//        service.setPrice(offer.getId(), price);
+//        Offer offer3 = service.findOfferById(offer.getId());
+//        assertEquals(offer3.getId(), offer.getId());
+//        assertEquals(offer3.getPrice(), price);
+//    }
 
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //
     // @Test
     // public void hello() {}
+    
+    @Test
+    public void publishOfferTest(){
+        Offer offer = new Offer();
+        service.makeOffer(offer);
+        service.publishOffer(offer.getId());
+        Offer newOffer = service.getOfferFromId(offer.getId());
+        System.out.println(newOffer.getState());
+        assertEquals(newOffer.getState(), Offer.offerState.ONGOING);
+    }
 }

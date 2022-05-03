@@ -50,7 +50,7 @@ public class Offer implements Serializable {
     private int totalPortions;
     private int remainingPortions;
     private String offerPhotoPath;
-    enum offerState {
+    public enum offerState {
         PENDING,
         ONGOING,
         SOLDOUT,
@@ -219,6 +219,10 @@ public class Offer implements Serializable {
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
         this.totalPortions-= reservation.getNbOfPortion();
+    }
+    
+    public void publishOffer(){
+        this.state = offerState.ONGOING;
     }
 
     public List<Message> getMessages() {
