@@ -88,6 +88,38 @@ public class Service {
         }
         return result;
     }
+    
+    public User modifyAccount(Long userId, String firstName, String lastName, String address, String city, String zipCode,
+            String noTelephone,Boolean passwordUpdated, String password, String profilePhotoPath) {
+        
+        JpaTool.createPersistenceContext();
+        User user = userDao.searchById(userId);
+        User result = null;
+        try {
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setAddress(address);
+            user.setCity(city);
+            user.setZipCode(zipCode);
+            user.setNoTelephone(noTelephone);
+            if (passwordUpdated == true){
+                String encryptedPassword = this.encryptPassword(password);
+                user.setPassword(encryptedPassword);
+            }
+            user.setProfilePhotoPath(profilePhotoPath);
+            JpaTool.openTransaction();
+            userDao.merge(user);
+            JpaTool.validateTransaction();
+            result = user;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling modifyAccount", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
 
     public String encryptPassword(String password) {
         //The MD5 (Message Digest) is a very popular hashing algorithm. 
@@ -647,7 +679,24 @@ public class Service {
         }
         return offersHistory;
     }
-
+    
+    public List<User> consultGuestsList(Offer offer) {
+        //returns the list of users who made a reservation on an offer
+        List<User> guestsList = new LinkedList<>();
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            for(Reservation reservation : offer.getReservations()){
+                guestsList.add(reservation.getCustomer());
+            }
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling consultGuestsList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return guestsList;
+    }
     public CookRequest viewCookRequest(Long cookRequestId) {
         CookRequest cookRequest = null;
         JpaTool.createPersistenceContext();
@@ -661,6 +710,7 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
+        
         return cookRequest;
     }
 }
