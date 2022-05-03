@@ -20,7 +20,6 @@ import ModificationOfferPage from "@/views/ModificationOfferPage";
 import ResumeOrderPage from "@/views/ResumeOrderPage";
 import BecomeCookPage from "@/views/BecomeCookPage";
 import VerificationCookPage from "@/views/VerificationCookPage";
-import Historic from "@/components/SmartComponents/Historic";
 import HistoricPage from "@/views/HistoricPage";
 
 

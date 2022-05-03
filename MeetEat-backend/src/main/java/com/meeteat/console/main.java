@@ -34,13 +34,13 @@ public class main {
         
         JpaTool.init();
 //        testCreatePref();
-//        testCreateAccount();
+       testCreateAccount();
 //        testApproveCook();
 //        testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
-//        testAuthenticate();
+        testAuthenticate();
         testCreateReview();
         JpaTool.destroy();
     }

@@ -128,6 +128,9 @@ public class Service {
         try{
             JpaTool.openTransaction();
             encryptedPassword = this.encryptPassword(password);
+//            System.err.println(encryptedPassword);
+//            System.err.println(mail);
+
             user = userDao.SearchByMail(mail);
             verifiedPassword = user.getPassword();
             if (!verifiedPassword.equals(encryptedPassword)){
