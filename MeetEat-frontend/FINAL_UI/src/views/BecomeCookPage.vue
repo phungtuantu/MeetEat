@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavbarLogin></NavbarLogin>
+    <NavbarReturnHome></NavbarReturnHome>
     <br/>
       <BecomeCook/>
     <br/>
@@ -9,12 +9,12 @@
 
 <script>
 // @ is an alias to /src
-import NavbarLogin from "@/components/SmartComponents/NavbarLogin.vue";
+import NavbarReturnHome from "@/components/SmartComponents/NavbarReturnHome.vue";
 import BecomeCook from '@/components/SmartComponents/BecomeCook.vue'
 export default {
   name: 'BecomeCookPage',
   components: {
-    NavbarLogin,
+    NavbarReturnHome,
     BecomeCook,
   }
 }

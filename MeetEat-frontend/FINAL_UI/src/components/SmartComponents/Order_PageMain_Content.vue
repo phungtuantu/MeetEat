@@ -346,6 +346,12 @@ input[type=checkbox]:checked ~ div {
   right: 5px;
 }
 
+
+input[type="checkbox"]{
+    width: 100%;
+    height: 100%;
+}
+
 @keyframes slidein {
   from {
     margin-top: 100%;

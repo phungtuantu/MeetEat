@@ -58,7 +58,7 @@ public class DBPopulation {
             Address address = faker.address();
             Name name = faker.name();
             String phone = faker.phoneNumber().cellPhone();
-            String password = faker.lorem().fixedString(8);
+            String password = "password";
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
             user.setProfilePhotoPath("./Images/profile_images/profile" + (i%nbProfilePictures + 1));
             userIdList.add(service.createAccount(user, password));

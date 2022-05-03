@@ -23,7 +23,7 @@ import router from "@/router";
 export default {
   name: "Login",
    methods: {
-    becomeCook : function(){
+    createAccount : function(){
       router.replace('/signup');
     }
   },

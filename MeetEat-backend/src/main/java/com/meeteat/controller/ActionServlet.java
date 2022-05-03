@@ -15,6 +15,7 @@ import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
+import com.meeteat.controller.action.ActionViewOffersHistory;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationOffers;
@@ -59,7 +60,7 @@ public class ActionServlet extends HttpServlet {
             }
             case "consultOffers" -> {
                 action = new ActionConsultOffers();
-                serialisation = new SerialisationOffer();
+                serialisation = new SerialisationOffers();
                 break;
             }
             case "makeOffer" -> {
@@ -94,7 +95,11 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationUser();
                 break;
             }
-            
+            case "viewOffersHistory"-> {
+                action = new ActionViewOffersHistory();
+                serialisation = new SerialisationOffers();
+                break;
+            }
         }
         
         if (action!=null&&serialisation!=null){

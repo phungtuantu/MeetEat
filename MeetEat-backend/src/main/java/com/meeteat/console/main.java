@@ -34,13 +34,14 @@ public class main {
         
         JpaTool.init();
 //        testCreatePref();
-        testCreateAccount();
-        testApproveCook();
-        testMakeOffer();
+//        testCreateAccount();
+//        testApproveCook();
+//        testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
-         testAuthenticate();
+        testAuthenticate();
+//        testCreateReview();
         JpaTool.destroy();
     }
     
@@ -57,18 +58,21 @@ public class main {
         service.createAccount(user, "password");
     }
     
-//    public static void testCreateReview(){
-//        Service service = new Service();
-//        System.out.println("create a review");
-//        User user = service.findUserById( (long) 2);
-//        Cook cook = service.findUserById( (long) 3);
-//        List<PreferenceTag> classifications = new LinkedList<>();
-//        List<Ingredient> ingredients = new LinkedList<>();
-//        Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
-//        Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
-//        Review rev = new Review(res1, );
-//        service.createReview(rev);
-//    }
+    public static void testCreateReview(){
+        Service service = new Service();
+        System.out.println("create a review");
+        User user = service.findUserById( (long) 2);
+        User user2 = service.findUserById( (long) 3);
+        Cook cook = service.findCookById( (long) 3);
+        List<PreferenceTag> classifications = new LinkedList<>();
+        List<Ingredient> ingredients = new LinkedList<>();
+        Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        service.makeOffer(offer);
+        Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
+        service.createReservation(res1);
+        Review rev = new Review(res1, user2, user, 4, "delicious" );
+        service.createReview(rev);
+    }
     
     public static void testApproveCook(){
         Service service = new Service();
@@ -146,16 +150,28 @@ public class main {
     }
     
     public static void testAuthenticate (){
+//        Service service = new Service();
+//        System.out.println("authenticate a user");
+//        long userId = 1;
+//        User user = service.findUserById(userId);
+//        System.out.println("Le user de test est: ");
+//        System.out.println(user);
+//        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+//        System.out.println("Avec le bon mdp : Le user connecté est: ");
+//        System.out.println(AuthenticatedUser);
+//        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+//        System.out.println("Avec le mauvais mdp : Le user connecté est: ");
+//        System.out.println(NonAuthenticatedUser);
         Service service = new Service();
         System.out.println("authenticate a user");
-        long userId = 1;
-        User user = service.findUserById(userId);
-        System.out.println("Le user de test est: ");
-        System.out.println(user);
-        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+//        long userId = 1;
+//        User user = service.findUserById(userId);
+//        System.out.println("Le user de test est: ");
+//        System.out.println(user);
+        User AuthenticatedUser=service.authenticate("lilou.gonzalez@yahoo.fr", "password");
         System.out.println("Avec le bon mdp : Le user connecté est: ");
         System.out.println(AuthenticatedUser);
-        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+        User NonAuthenticatedUser=service.authenticate("lilou.gonzalez@yahoo.fr", "hack");
         System.out.println("Avec le mauvais mdp : Le user connecté est: ");
         System.out.println(NonAuthenticatedUser);
     }
