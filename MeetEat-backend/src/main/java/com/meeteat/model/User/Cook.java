@@ -147,6 +147,10 @@ public class Cook implements Serializable{
         rating = (rating*numberOfReviews+reviewNote)/(numberOfReviews+1);
         numberOfReviews++;
     }
+
+    public User getUser() {
+        return user;
+    }
     
     @Override
     public String toString() {
