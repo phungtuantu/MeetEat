@@ -687,7 +687,24 @@ public class Service {
         }
         return offersHistory;
     }
-
+    
+    public List<User> consultGuestsList(Offer offer) {
+        //returns the list of users who made a reservation on an offer
+        List<User> guestsList = new LinkedList<>();
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            for(Reservation reservation : offer.getReservations()){
+                guestsList.add(reservation.getCustomer());
+            }
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling consultGuestsList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return guestsList;
+    }
     public CookRequest viewCookRequest(Long cookRequestId) {
         CookRequest cookRequest = null;
         JpaTool.createPersistenceContext();
@@ -701,6 +718,7 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
+        
         return cookRequest;
     }
 }

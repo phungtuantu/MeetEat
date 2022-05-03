@@ -8,6 +8,7 @@ package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
 import com.meeteat.controller.action.ActionAuthentication;
+import com.meeteat.controller.action.ActionConsultGuestsList;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
 import com.meeteat.controller.action.ActionCreateAccount;
@@ -22,6 +23,7 @@ import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationOffers;
 import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationUser;
+import com.meeteat.controller.serialisation.SerialisationUsers;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -104,6 +106,12 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffers();
                 break;
             }
+            case "consultGuestsList"-> {
+                action = new ActionConsultGuestsList();
+                serialisation = new SerialisationUsers();
+                break;
+            }
+            
         }
         
         if (action!=null&&serialisation!=null){

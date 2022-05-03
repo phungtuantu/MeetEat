@@ -127,13 +127,6 @@ public class Cook implements Serializable{
         this.user.setNoTelephone(noTelephone);
     }
     
-    public String getProfilePictureUrl() {
-        return user.getProfilePictureUrl();
-    }
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.user.setProfilePictureUrl(profilePictureUrl);
-    }
 
     public int getNumberOfReviews() {
         return numberOfReviews;
