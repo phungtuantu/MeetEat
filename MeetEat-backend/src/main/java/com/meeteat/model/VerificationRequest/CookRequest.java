@@ -34,7 +34,7 @@ public class CookRequest implements Serializable{
     private Date requestDate;
     @ManyToOne
     private User user;
-    @OneToMany(mappedBy="CookRequest",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="cookRequest",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<RequestImage> equipmentImages;
     @OneToOne
     private RequestImage idImage;

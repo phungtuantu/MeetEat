@@ -12,6 +12,9 @@
     <class>com.meeteat.model.Offer.Review</class>
     <class>com.meeteat.model.User.Cook</class>
     <class>com.meeteat.model.User.User</class>
+    <class>com.meeteat.model.Offer.Offer</class>
+    <class>com.meeteat.model.VerificationRequest.RequestImage</class>
+    <class>com.meeteat.model.VerificationRequest.CookRequest</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/meeteat?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

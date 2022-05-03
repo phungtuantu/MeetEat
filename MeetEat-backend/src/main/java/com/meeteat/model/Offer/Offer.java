@@ -12,6 +12,7 @@ import com.meeteat.model.User.Cook;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -218,7 +219,6 @@ public class Offer implements Serializable {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
-        this.totalPortions-= reservation.getNbOfPortion();
     }
     
     public void publishOffer(){
@@ -272,6 +272,7 @@ public class Offer implements Serializable {
         this.classifications = classifications;
         this.ingredients = ingredients;
         this.offerPhotoPath = "";
+        this.reservations = new LinkedList<>();
     }
     
     

@@ -1,47 +1,80 @@
 <template>
-  <div class="container">
-      <div class="row">
-          <div class="col-md-6">
-              <div class="card">
-                  <form onsubmit="event.preventDefault()" class="box">
+  <div class="" align="center">
+                  <form class="box" id="needs-validation" novalidate>
                     <h1>Sign up</h1>
-                    <input type="text" name="" placeholder="Family name"> 
-                    <input type="text" name="" placeholder="First name"> 
-                    <input type="text" name="" placeholder="Address">
+                    <input type="text" name="" placeholder="Family name" class="form-control"  v-model="lastName" required>
+                    <input type="text" name="" placeholder="First name" class="form-control"   v-model="firstName" required>
+                    <input type="text" name="" placeholder="Address" class="form-control"  v-model="address" required>
                     <div class="column">
-                        <input type="text" name="" placeholder="Zip code">
-                        <input type="text" name="" placeholder="City">
+                        <input type="text" name="" placeholder="Zip code" class="form-control"  v-model="zipCode" required>
+                        <input type="text" name="" placeholder="City" class="form-control"  v-model="city" required>
                     </div>
-                    <input type="text" name="" placeholder="Phone number">
-                    <input type="text" name="" placeholder="Email address"> 
-                    <input type="password" name="" placeholder="Password">
-                    <input type="submit" name="" value="Sign in" href="#">
+                    <input type="text" name="" placeholder="Phone number" class="form-control"   v-model="tel" required>
+                    <input type="email" name="" placeholder="Email address" class="form-control"  v-model="email" required>
+                    <input type="password" name="" placeholder="Password" class="form-control"  v-model="password" required>
+                    <button type="button" class="btn btn-success" v-on:click="createUser()">Sign in</button>
+
                   </form>
-              </div>
-          </div>
-      </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import {urlAPI} from "@/variables";
+import router from "@/router";
+
 export default {
-  name: "CreateAccount"
+  name: "CreateAccount",
+  data() {
+    return {
+      firstName : "",
+      lastName : "",
+      email : "",
+      address : "",
+      city : "",
+      zipCode : "",
+      tel : "",
+      password : "",
+      effective : null,
+    }
+  },
+  methods : {
+    createUser : async function () {
+      var form = document.getElementById('needs-validation');
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log("PAS OK");
+
+      } else {
+
+        console.log("OK");
+
+        axios.get(urlAPI + 'todo=createAccount&firstName=' + this.firstName + '&lastName=' + this.lastName
+            + '&mail=' + this.email + '&address=' + this.address + '&city=' + this.city + '&zipCode=' + this.zipCode
+            + '&noTelephone=' + this.tel + '&password=' + this.password)
+            .then(response => (this.effective = response))
+
+        console.log('Effectif : ' + this.effective);
+        await router.replace('/orderPage');
+
+
+      }
+
+
+      form.classList.add('was-validated');
+    },
+
+  }
 }
 </script>
 
 <style scoped>
 
-.card {
-    margin-bottom: 20px;
-    border: none
-}
 
 .box {
     width: 500px;
     padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
     background: #191919;
     text-align: center;
     transition: 0.25s;
@@ -49,18 +82,16 @@ export default {
 }
 
 .box input[type="text"],
+.box input[type="email"],
 .box input[type="password"] {
     border: 0;
-    background: white;
     display: block;
     margin: 20px auto;
     text-align: left;
-    border: 2px solid #3498db;
     padding: 10px 10px;
     width: 400px;
     outline: none;
     color: black;
-    border-radius: 5px;
     transition: 0.25s
 }
 
@@ -71,13 +102,7 @@ export default {
     font-weight: 500
 }
 
-.box input[type="text"]:focus,
-.box input[type="password"]:focus {
-    width: 100%;
-    border-color: #2ecc71
-}
-
-.box input[type="submit"] {
+.btn {
     border: 0;
     width: 400px;
     background: green;
@@ -98,7 +123,7 @@ export default {
     background: #2ecc71;
     width: 100%;
 }
-
+.column input[type="email"],
 .column input[type="text"]{
     float: left;
     display: inline-flexbox;

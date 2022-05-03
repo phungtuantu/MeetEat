@@ -169,20 +169,22 @@
             <b>At 150m from your position</b><br/>
             {{offer.description }}
           </p>
-          <br/>
+          <p class="">
+            <b>Price : {{offer.price }}$</b><br/>
+          </p>
+          <!--
+                   <div class="input-group w-auto">
 
-
-          <div class="input-group w-auto">
-            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" v-bind:value="offer.price">
-            <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
-                   value="-">
-            <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
-                   value="1">
-            <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
-                   value="+">
-            <button class="btn btn-dark" type="button">Add to basket</button>
+                    <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" v-bind:value="offer.price">
+                      <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
+                             value="-">
+                      <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
+                             value="1">
+                      <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
+                             value="+">
+                      <button class="btn btn-dark" type="button" @click="addToBasket(offer.id)">Add to basket</button>X
           </div>
-
+ -->
           <br/>
 
           <button class="btn btn-dark" type="button" @click="viewDetails(offer.id)">View details</button>
@@ -204,7 +206,7 @@ export default {
     return {
       orders : [
         {
-          id : 230,
+          id : 229,
           title : 'Delicious lasagna   !',
           nbPortions : 1,
           description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -270,6 +272,7 @@ export default {
       localStorage.setItem("itemId", id);
       router.replace('orderPage/'+id);
     },
+
   },
 }
 </script>
