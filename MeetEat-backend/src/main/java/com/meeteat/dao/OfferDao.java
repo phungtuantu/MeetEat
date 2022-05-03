@@ -6,6 +6,7 @@
 package com.meeteat.dao;
 
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.Offer.offerState;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -23,9 +24,9 @@ public class OfferDao extends AbstractDao<Offer>{
         
         //returns offers according to priceLimit
         EntityManager em = JpaTool.obtainPersistenceContext();
-        TypedQuery<Offer> query = em.createQuery("SELECT o from offer o WHERE o.price <= :pricelimit AND o.state = :state ", Offer.class);
+        TypedQuery<Offer> query = em.createQuery("SELECT o from Offer o WHERE o.price <= :pricelimit AND o.state = :state ", Offer.class);
         query.setParameter("pricelimit",priceLimit);
-        query.setParameter("state",1);
+        query.setParameter("state",offerState.ONGOING);
         return query.getResultList();
     }
     public List<Offer> getOffers(long idCook) {
