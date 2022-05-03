@@ -29,9 +29,11 @@ import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.security.MessageDigest;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
@@ -237,10 +239,30 @@ public class Service {
         return res;
     }
     
-    public Offer publishOffer(Long offerId){
+    public Offer publishOffer(Long offerId, Date expirationDate){
         Offer offer = getOfferFromId(offerId);
-        offer.publishOffer();
-        return updateOffer(offer);
+        Offer res = null;
+        try{
+            offer.publishOffer(expirationDate);
+            res = updateOffer(offer);
+        }catch(Exception e){
+            System.out.println("Expiration date is before the publication date");
+        }
+        return res;
+    }
+    
+    public int checkOffersExpirationDate(){
+        int cleanedOffers = 0;
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        List<Offer> offers = offerDao.getOngoingByStatus(Offer.offerState.ONGOING);
+        for(Offer offer : offers){
+            if(offer.expired(today)){
+                updateOffer(offer);
+                cleanedOffers++;
+            }
+        }
+        return cleanedOffers;
     }
     
     public Long approveCook(Cook cook){

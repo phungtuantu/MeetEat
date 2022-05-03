@@ -10,6 +10,7 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.Food;
 import com.github.javafaker.Name;
 import com.github.javafaker.DateAndTime;
+import com.github.javafaker.HarryPotter;
 import com.github.javafaker.RickAndMorty;
 import com.github.javafaker.Number;
 import com.meeteat.dao.JpaTool;
@@ -144,13 +145,13 @@ public class DBPopulation {
             List<Ingredient> ingredients = getIngredientsForOffer();
             List<PreferenceTag> classifications = getPreferenceTagForOffer();
             Cook cook = service.findCookById(cookIdList.get(number.numberBetween(min, cookIdList.size())));
-            RickAndMorty ram = faker.rickAndMorty();
+            HarryPotter hp = faker.harryPotter();
             DateAndTime dat = faker.date();
             Date creationDate = dat.birthday(0, 2);
-            String title = ram.character();
+            String title = hp.character();
             double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
-            String details = ram.quote();
+            String details = hp.quote();
             String specifications = faker.backToTheFuture().quote();
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
                                     details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
