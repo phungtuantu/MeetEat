@@ -26,6 +26,7 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
+import com.meeteat.model.VerificationRequest.RequestImage;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.security.MessageDigest;
 import java.util.Collections;
@@ -627,21 +628,6 @@ public class Service {
         return user;
     }
 
-//    public List<Reservation> findPurchasedMeals(Long userId){
-//        JpaTool.createPersistenceContext();
-//        Message message = null;
-//        try{
-//            JpaTool.openTransaction();
-//            message = messageDao.searchById(messageId);
-//            JpaTool.validateTransaction();
-//        } catch (Exception ex){
-//            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-//            JpaTool.cancelTransaction();
-//        } finally{
-//            JpaTool.closePersistenceContext();
-//        }
-//        return message;
-//    }
     public List<Reservation> searchPurchasedMeals(User user) {
         JpaTool.createPersistenceContext();
         List<Reservation> purchasedMeals = new LinkedList<>();
@@ -742,23 +728,18 @@ public class Service {
         return reservationsList;
     }
 
-    public List<Review> viewCooksReviews(Long cookId){
-        List<Review> result = null;
+    public Long becomeCook(CookRequest cookRequest) {
+        Long result = null;
         JpaTool.createPersistenceContext();
         try {
             JpaTool.openTransaction();
-            List <Offer> madeOffers = offerDao.getOffers(cookId);
-            for (Offer offer : madeOffers){
-                if (result==null){
-                    result = reviewDao.getOffersReviews(offer.getId());
-                } else{
-                    result.addAll(reviewDao.getOffersReviews(offer.getId()));
-                }
-            }
+            cookRequestDao.create(cookRequest);
             JpaTool.validateTransaction();
+            result = cookRequest.getIdCookRequest();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCooksReviews", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
             JpaTool.cancelTransaction();
+            result = null;
         } finally {
             JpaTool.closePersistenceContext();
         }
