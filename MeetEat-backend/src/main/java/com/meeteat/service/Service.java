@@ -415,9 +415,13 @@ public class Service {
     public Long createReservation(Reservation reservation) {
         Long result = null;
         JpaTool.createPersistenceContext();
+        Offer offer = reservation.getOffer();
+        //This "reservation" is still a request, so the number of portions does not change
+        offer.addReservation(reservation);
         try {
             JpaTool.openTransaction();
-            reservationDao.create(reservation);
+            reservationDao.create(reservation);    
+            offerDao.merge(offer);
             JpaTool.validateTransaction();
             result = reservation.getId();
         } catch (Exception ex) {
@@ -448,14 +452,14 @@ public class Service {
         return result;
     }
 
-    public Long createMessage(Message message) {
-        Long result = null;
+    public Message createMessage(Message message) {
+        Message result = null;
         JpaTool.createPersistenceContext();
         try {
             JpaTool.openTransaction();
             messageDao.create(message);
             JpaTool.validateTransaction();
-            result = message.getId();
+            result = message;
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createMessage", ex);
             JpaTool.cancelTransaction();

@@ -32,7 +32,7 @@ public class ActionSendMessage extends Action{
         Offer offer = service.findOfferById(offerId);
         String content = request.getParameter("content");
         Message message = new Message(content, sender, receiver, offer, today);
-        Message confirmationMessage = service.sendMessage(message);
+        Message confirmationMessage = service.createMessage(message);
         if (confirmationMessage != null){
             request.setAttribute("error", false);
             request.setAttribute("message", message);

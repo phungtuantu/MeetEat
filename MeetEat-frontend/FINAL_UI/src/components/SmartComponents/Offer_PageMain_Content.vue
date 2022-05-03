@@ -68,7 +68,7 @@
                  v-model="qtyOrdered">
         </div>
         <br/>
-        <button type="button" class="btn btn-dark">Add to basket </button>
+        <button type="button" class="btn btn-dark" @click="addToBasket()">Add to basket </button>
       </div>
 
 
@@ -98,6 +98,29 @@ export default {
     back : function ()
     {
       router.replace('/orderPage')
+    },
+
+    addToBasket : function ()
+    {
+      var arr = JSON.parse(sessionStorage.getItem("basket"));
+      if(arr === null){
+        arr = [];
+      }
+      var newItem = {
+        id : 0,
+        qty : 1,
+      };
+
+      newItem.id = this.idOffer;
+      newItem.qty = this.qtyOrdered;
+      arr.push(newItem);
+
+      sessionStorage.setItem("basket", JSON.stringify(arr));
+
+
+
+      router.replace('/orderPage');
+
     }
   },
 
@@ -116,6 +139,9 @@ export default {
     this.offer.specifications = this.offer.specifications.split(',');
 
     console.log(this.offer);
+    console.log(JSON.parse(sessionStorage.getItem("basket")));
+
+
 
   }
 }

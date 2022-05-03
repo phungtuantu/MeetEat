@@ -25,7 +25,7 @@ public class SerialisationAcceptRequest extends Serialisation{
     public void serialise(HttpServletRequest request, HttpServletResponse response) throws IOException{
         JsonObject container = new JsonObject();
         Reservation reservation = (Reservation) request.getAttribute("reservation");
-        if(reservation.getState() != ReservationState.RESERVATION){
+        if(reservation.getState() == ReservationState.RESERVATION){
             container.addProperty("requestAccepted", true);
         }else{
             container.addProperty("requestAccepted", false);
