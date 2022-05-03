@@ -623,7 +623,7 @@ public class Service {
         }
         return cookRequests;
     }
-
+    
     public List<Offer> viewOffersHistory(Cook cook) {
         //consult offers that have been created by a cook
         List<Offer> offersHistory = null;
@@ -640,5 +640,21 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return offersHistory;
+    }
+
+    public CookRequest viewCookRequest(Long cookRequestId) {
+        CookRequest cookRequest = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            cookRequest = cookRequestDao.searchById(cookRequestId);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOffersHistory", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return cookRequest;
     }
 }
