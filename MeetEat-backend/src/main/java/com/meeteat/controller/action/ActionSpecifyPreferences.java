@@ -5,7 +5,6 @@
  */
 package com.meeteat.controller.action;
 
-import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;

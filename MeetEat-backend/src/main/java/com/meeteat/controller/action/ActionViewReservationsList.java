@@ -10,7 +10,6 @@ import com.meeteat.model.Offer.Reservation;
 import com.meeteat.service.Service;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *

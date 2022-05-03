@@ -29,6 +29,7 @@ import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Comparator;
@@ -598,10 +599,11 @@ public class Service {
         return sortedByDistanceOffers;
     }
 
-    public PriorityQueue<Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
+    public List<Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
         //SearchOffers according to :diet, cuisine, user's preferences, price and location
 
         List<Offer> ongoingOffers;
+        List<Offer> res;
         PriorityQueue<Offer> sortedByDistanceOffers = new PriorityQueue<>(new Comparator<Offer>() {
             public int compare(Offer n1, Offer n2) {
                 Double distance1 = n1.getDistanceToUser();
@@ -625,11 +627,12 @@ public class Service {
                     priceLimit = 20;
             }
             ongoingOffers = offerDao.getOngoingOffers(priceLimit);
-
             //generate preferences list
-            List<Long> preferences = null;
-            List<Long> ingredients = null;
-            preferences.addAll(requestPreferences); //cuisine and diets
+            List<Long> preferences = new ArrayList<>();
+            List<Long> ingredients = new ArrayList<>();
+            if(requestPreferences!=null){
+                preferences.addAll(requestPreferences); //cuisine and diets
+            }
             for (PreferenceTag preference : user.getPreferences()) {
                 if (!(preference instanceof Ingredient)) {
                     preferences.add(preference.getId());
@@ -646,16 +649,17 @@ public class Service {
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
                 }
             }
+            res = new ArrayList(sortedByDistanceOffers);
 
             JpaTool.validateTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchOffers", ex);
             JpaTool.cancelTransaction();
-            sortedByDistanceOffers = null;
+            res = null;
         } finally {
             JpaTool.closePersistenceContext();
         }
-        return sortedByDistanceOffers;
+        return res;
     }
 
     public User specifyPreferences(List<PreferenceTag> listPref, User user) {
