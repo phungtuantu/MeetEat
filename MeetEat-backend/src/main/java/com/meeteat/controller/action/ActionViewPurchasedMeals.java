@@ -5,25 +5,25 @@
  */
 package com.meeteat.controller.action;
 
-import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.Reservation;
+import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
-import java.util.PriorityQueue;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author gvnge
+ * @author taha
  */
-public class ActionConsultOffers extends Action {
-
+public class ActionViewPurchasedMeals extends Action {
     @Override
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-        String address = request.getParameter("address");
-        PriorityQueue <Offer> offers=service.consultOffers(address);
-        request.setAttribute("offers",offers);
+        Long userId = (Long)session.getAttribute("userId");
+        User user = service.findUserById(userId);
+        List <Reservation> reservations = service.searchPurchasedMeals(user);
+        request.setAttribute("reservations",reservations);
     }
-    
 }

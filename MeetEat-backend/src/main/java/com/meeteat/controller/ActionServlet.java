@@ -8,21 +8,24 @@ package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
 import com.meeteat.controller.action.ActionAuthentication;
+import com.meeteat.controller.action.ActionConsultGuestsList;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
 import com.meeteat.controller.action.ActionCreateAccount;
 import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionMakeOffer;
+import com.meeteat.controller.action.ActionModifyAccount;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
+import com.meeteat.controller.action.ActionViewOffersHistory;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationOffers;
 import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationUser;
+import com.meeteat.controller.serialisation.SerialisationUsers;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -57,9 +60,12 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffer();
                 break;
             }
+            case "consultCooksReviews" ->{
+                break;
+            }
             case "consultOffers" -> {
                 action = new ActionConsultOffers();
-                serialisation = new SerialisationOffer();
+                serialisation = new SerialisationOffers();
                 break;
             }
             case "makeOffer" -> {
@@ -67,7 +73,6 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffer();
                 break;
             }
-           
             
             case "searchOffers" -> {
                 action = new ActionSearchOffers();
@@ -89,9 +94,24 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationUser();
                 break;
             }
+            case "modifyAccount" -> {
+                action = new ActionModifyAccount();
+                serialisation = new SerialisationUser();
+                break;
+            }
             case "authenticate" -> {
                 action = new ActionAuthentication();
                 serialisation = new SerialisationUser();
+                break;
+            }
+            case "viewOffersHistory"-> {
+                action = new ActionViewOffersHistory();
+                serialisation = new SerialisationOffers();
+                break;
+            }
+            case "consultGuestsList"-> {
+                action = new ActionConsultGuestsList();
+                serialisation = new SerialisationUsers();
                 break;
             }
             

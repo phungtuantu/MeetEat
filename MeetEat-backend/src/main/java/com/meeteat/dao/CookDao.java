@@ -11,6 +11,10 @@ package com.meeteat.dao;
 
 
 import com.meeteat.model.User.Cook;
+import com.meeteat.model.User.User;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -19,6 +23,17 @@ import com.meeteat.model.User.Cook;
 public class CookDao extends AbstractDao<Cook>{
     public CookDao() {
         super(Cook.class);
+    }
+    public Cook getCookByUserId(long userId) {
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        TypedQuery<Cook> query = em.createQuery("SELECT c FROM Cook c WHERE c.user.id = :userId", Cook.class);
+        query.setParameter("userId", userId); // correspond au paramètre ":mail" dans la requête
+        List<Cook> cooks = query.getResultList();
+        Cook result = null;
+        if (!cooks.isEmpty()) {
+            result = cooks.get(0); // premier de la liste
+        }
+        return result;
     }
 }
 

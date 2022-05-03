@@ -361,4 +361,5 @@ MeetEat-backend/nb-configuration.xml
 /*/Images/profile_images/
 
 MeetEat-backend/src/main/resources/META-INF/persistence.xml
-MeetEat-backend/src/main/resources/META-INF/persistence.xml
+/MeetEat-backend/nbproject/
+

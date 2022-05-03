@@ -39,7 +39,7 @@ public class SerialisationOffer extends Serialisation{
         jsonCook.addProperty("lastName",offer.getCook().getLastName());
         jsonCook.addProperty("rating",offer.getCook().getRating());
         jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
-        jsonCook.addProperty("image", offer.getCook().getProfilePictureUrl());
+        jsonCook.addProperty("image", offer.getCook().getUser().getProfilePhotoPath());
         
         container.add("cook",jsonCook);
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -83,6 +83,8 @@ public class SerialisationOffer extends Serialisation{
         container.addProperty("remainingPortions",offer.getRemainingPortions());
         container.addProperty("city", offer.getCity());
         container.addProperty("zipCode", offer.getZipCode());
+        container.addProperty("distanceToUser", offer.getDistanceToUser());
+        
         try (PrintWriter out = this.getWriter(response)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
             gson.toJson(container,out);

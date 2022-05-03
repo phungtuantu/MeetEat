@@ -23,9 +23,18 @@
             <button type="button" class="btn2 btn-primary">
                 <img src="../../assets/basket.png" alt="basket" width="40px">
             </button>
-            <button type="button" class="btn2 btn-primary">
+            <div class="dropdown">
+            <button type="button" class="btn2 btn-primary"> <!-- menuDeroulant -->
                 <img src="../../assets/user.png" alt="user" width="40px">
             </button>
+              <div class="dropdown-child">
+                <a @click="becomeCook()">BECOME A COOK</a>
+                <a @click="modifyAccount()">MODIFY ACCOUNT</a>
+                <a @click="editPreferences()">EDIT MY PREFERENCES</a>
+                <a @click="orders()">MY ORDERS</a>
+                <a @click="logOut()">LOG OUT</a>
+              </div>
+            </div>
         </div>
       </div>
     </nav>
@@ -45,7 +54,25 @@ export default {
   methods: {
     goHome : function(){
       router.replace('/');
-    }
+    },
+    /*deroulerMenu : function(){
+      document.getElementsByClassName("dropdown-child").style.display = "block";
+    },*/
+    becomeCook : function(){
+      router.replace('/becomeCook');
+    },
+    modifyAccount : function(){
+      router.replace('/modificationAccount');
+    },
+    editPreferences : function(){
+      router.replace('/evaluateguest');
+    },
+    orders : function(){
+      router.replace('/historic');
+    },
+    logOut : function(){
+      router.replace('/login');
+    },
   },
 }
 </script>
@@ -79,6 +106,31 @@ a{
 
 img{
   cursor: pointer;
+}
+
+.dropdown {
+position: relative;
+display: inline-block;
+}
+.dropdown-child {
+display: none;
+background-color: gray;
+color: white;
+min-width: 50px;
+cursor: pointer;
+padding: 5px;
+}
+.dropdown-child a {
+color: white;
+padding: 5px;
+text-decoration: none;
+display: block;
+background-color: black;
+/*border: thick double green ;*/
+margin: 5px;
+}
+.dropdown:hover .dropdown-child {
+display: block;
 }
 
 </style>

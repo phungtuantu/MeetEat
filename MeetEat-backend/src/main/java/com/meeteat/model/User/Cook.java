@@ -127,13 +127,6 @@ public class Cook implements Serializable{
         this.user.setNoTelephone(noTelephone);
     }
     
-    public String getProfilePictureUrl() {
-        return user.getProfilePictureUrl();
-    }
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.user.setProfilePictureUrl(profilePictureUrl);
-    }
 
     public int getNumberOfReviews() {
         return numberOfReviews;
@@ -146,6 +139,10 @@ public class Cook implements Serializable{
     public void updateRating(int reviewNote) {
         rating = (rating*numberOfReviews+reviewNote)/(numberOfReviews+1);
         numberOfReviews++;
+    }
+
+    public User getUser() {
+        return user;
     }
     
     @Override

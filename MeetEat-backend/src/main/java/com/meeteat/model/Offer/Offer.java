@@ -50,7 +50,7 @@ public class Offer implements Serializable {
     private int totalPortions;
     private int remainingPortions;
     private String offerPhotoPath;
-    enum offerState {
+    public enum offerState {
         PENDING,
         ONGOING,
         SOLDOUT,
@@ -66,7 +66,7 @@ public class Offer implements Serializable {
     private List<Ingredient> ingredients;
     private String specifications;
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Reservation> reversations;
+    private List<Reservation> reservations;
     @OneToMany(mappedBy="associatedOffer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
     private String address;
@@ -212,13 +212,17 @@ public class Offer implements Serializable {
         this.specifications = specifications;
     }
 
-    public List<Reservation> getReversations() {
-        return reversations;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void addReversation(Reservation reservation) {
-        this.reversations.add(reservation);
+    public void addReservation(Reservation reservation) {
+        this.reservations.add(reservation);
         this.totalPortions-= reservation.getNbOfPortion();
+    }
+    
+    public void publishOffer(){
+        this.state = offerState.ONGOING;
     }
 
     public List<Message> getMessages() {
@@ -250,7 +254,7 @@ public class Offer implements Serializable {
     }
 
     public Offer(Cook cook, Date creationDate, String title, double price, int totalPortions,
-            String details, List<PreferenceTag> classafication, List<Ingredient> ingredients, String specifications,
+            String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications,
             String address, String city, String zipCode) {
         this.cook = cook;
         this.creationDate = creationDate;
@@ -267,6 +271,7 @@ public class Offer implements Serializable {
         this.location = getLatLng(address + ", " + city);
         this.classifications = classifications;
         this.ingredients = ingredients;
+        this.offerPhotoPath = "";
     }
     
     

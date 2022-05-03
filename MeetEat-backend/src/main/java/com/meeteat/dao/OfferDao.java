@@ -28,6 +28,14 @@ public class OfferDao extends AbstractDao<Offer>{
         query.setParameter("state",1);
         return query.getResultList();
     }
+    public List<Offer> getOffers(long idCook) {
+        
+        //returns offers of a cook
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        TypedQuery<Offer> query = em.createQuery("SELECT o from offer o WHERE o.cook.id = :idCook ORDER BY DESC o.creationDate", Offer.class);
+        query.setParameter("idCook",idCook);
+        return query.getResultList();
+    }
     
 }
 

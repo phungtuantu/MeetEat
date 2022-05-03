@@ -16,6 +16,7 @@ import ReportGuestPage from "@/views/ReportGuestPage";
 import ViewReviewsPage from "@/views/ViewReviewsPage";
 import ModificationAccountPage from "@/views/ModificationAccountPage";
 import CookOfferHistoryPage from "@/views/CookOfferHistoryPage";
+import CreateOfferPage from "@/views/CreateOfferPage";
 import ModificationOfferPage from "@/views/ModificationOfferPage";
 import ResumeOrderPage from "@/views/ResumeOrderPage";
 import BecomeCookPage from "@/views/BecomeCookPage";
@@ -51,7 +52,11 @@ const routes = [
     name: 'OfferPage',
     component: OfferPage
   },
-
+  {
+    path: '/createoffer',
+    name: 'CreateOfferPage',
+    component: CreateOfferPage
+  },
   {
     path: '/modificationOffer/:id',
     name: 'ModificationOffer',
