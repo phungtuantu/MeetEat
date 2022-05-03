@@ -35,13 +35,15 @@ public class main {
         JpaTool.init();
 //        testCreatePref();
 //        testCreateAccount();
+//          testModifyAccount();
 //        testApproveCook();
-//        testMakeOffer();
+        testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
-        testAuthenticate();
+//        testAuthenticate();
 //        testCreateReview();
+          testViewOffersHistory();
         JpaTool.destroy();
     }
     
@@ -56,6 +58,15 @@ public class main {
         System.out.println("create an account");
         User user = new User("Bob", "Smith","here", "this city", "1010","0611","bobsmith@here.com");
         service.createAccount(user, "password");
+    }
+    
+    public static void testModifyAccount(){
+        Service service = new Service();
+        System.out.println("modify an account");
+        Long id = new Long(100);
+        User user = service.modifyAccount(id, "Luna", "Booba", "avenue des bgs", "lyon", "2323",
+            "060000000",false, "hacker", ""); 
+        System.out.println(user);
     }
     
     public static void testCreateReview(){
@@ -176,6 +187,24 @@ public class main {
         System.out.println(NonAuthenticatedUser);
     }
     
+    public static void testViewOffersHistory(){
+        Service service = new Service();
+        System.out.println("View offers history");
+        Cook cook = service.findCookById(Long.parseLong("1"));
+        List<PreferenceTag> classifications = new LinkedList<>();
+        List<Ingredient> ingredients = new LinkedList<>();
+        Offer offer1 = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        service.makeOffer(offer1);
+        Offer offer2 = new Offer(cook, new Date(), "teest3",5.52, 11, "bery goood food", classifications, ingredients, "noone","address2","city3","zipcode4");
+        service.makeOffer(offer2);
+        System.out.println("the test offers are:");
+        System.out.println(offer1);
+        System.out.println(offer2);
+        List<Offer> offers = service.viewOffersHistory(cook);
+        offers.forEach(o -> {
+            System.out.println(o);
+        });
+    }
     
 //    public static void initialiserClients() {
 //        

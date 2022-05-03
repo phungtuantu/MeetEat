@@ -66,14 +66,9 @@ public class Reservation implements Serializable {
     }
     
     public void addReview(Review review){
-        for(Review r: reviews){
-            if(r.getId().equals(review.getId())){
-                reviews.remove(r);
-                reviews.add(review);
-                return;
-            }
+        if(!reviews.contains(review)){
+            this.reviews.add(review);
         }
-        this.reviews.add(review);
     }
 
     public Date getReservationDate() {
@@ -118,7 +113,7 @@ public class Reservation implements Serializable {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
-    } 
+    }
 
     @Override
     public String toString() {

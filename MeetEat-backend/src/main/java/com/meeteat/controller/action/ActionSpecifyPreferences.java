@@ -5,7 +5,6 @@
  */
 package com.meeteat.controller.action;
 
-import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
@@ -24,7 +23,8 @@ public class ActionSpecifyPreferences extends Action{
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-        Long userId = (Long)session.getAttribute("userId");
+        //Long userId = (Long)session.getAttribute("userId");
+          Long userId = Long.parseLong(request.getParameter("userId"));
         User user = service.findUserById(userId);
         List<PreferenceTag> requestPreferences = new LinkedList<>();
         for (String preferenceId : request.getParameterValues("requestPreferences")){

@@ -5,12 +5,13 @@
               <div class="card">
                   <form onsubmit="event.preventDefault()" class="box">
                       <h1>Login</h1>
-                      <input type="text" name="" placeholder="Email address"> 
-                      <input type="password" name="" placeholder="Password"> 
-                      <input type="submit" name="" value="Login" href="#">
-                      <div class="column">
-                        <button class="btn" type="button" @click="createAccount()">Create an account</button>
-                      </div>
+                      <input type="text" name="" placeholder="Email address" v-model="email">
+                      <input type="password" name="" placeholder="Password" v-model="password">
+                      <button type="button" class="btn btn-success" style="width: 90%; margin-bottom: 20px;" @click="login()">Login</button>
+                      <p id="errorMessage"></p>
+                      <div style="text-align: right; padding-right: 30px;">
+                        <button class="btn btn-success" type="button" @click="createAccount()">Create an account</button>
+                        </div>
                   </form>
               </div>
           </div>
@@ -20,18 +21,46 @@
 
 <script>
 import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
 export default {
   name: "Login",
+
+  data () {
+    return{
+      email : "",
+      password : "",
+      user : null,
+    }
+  },
    methods: {
     createAccount : function(){
       router.replace('/signup');
-    }
+    },
+
+     login : async function() {
+
+       await axios.get(urlAPI + 'todo=authenticate&mail=' + this.email+'&password='+this.password)
+           .then(response => (this.user = response.data));
+        if(this.user !== null){
+          console.log(this.user);
+          sessionStorage.setItem("user", this.user);
+          router.replace('/orderPage');
+        }else{
+          document.getElementById("errorMessage").innerText= "Login or password incorrect";
+        }
+
+
+
+     }
   },
 }
 </script>
 
 <style scoped>
-
+#errorMessage {
+  color: red;
+}
 .card {
     margin-bottom: 20px;
     border: none
@@ -108,11 +137,6 @@ export default {
     text-decoration: underline;
 }
 
-.btn{
-  margin-right : 30px;
-  float: right;
-  background-color: cyan;
-  text-transform: none;
-}
+
 
 </style>

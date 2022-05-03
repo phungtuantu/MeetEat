@@ -42,7 +42,6 @@ public class User implements Serializable, Loginable {
     private String profilePhotoPath;
     @ManyToMany
     private List<PreferenceTag> preferences;
-    private String profilePictureUrl;
     private String password;
 
 
@@ -67,7 +66,6 @@ public class User implements Serializable, Loginable {
         this.city = city;
         this.zipCode = zipCode;
         this.location = getLatLng(address + ", " + city);
-        this.profilePictureUrl="";
     }
     
     public Long getId() {
@@ -149,14 +147,6 @@ public class User implements Serializable, Loginable {
 
     public void setNoTelephone(String noTelephone) {
         this.noTelephone = noTelephone;
-    }
-
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
-    }
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
     }
         
     public String getPassword() {

@@ -12,6 +12,7 @@ import com.meeteat.model.User.Cook;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -50,23 +51,23 @@ public class Offer implements Serializable {
     private int totalPortions;
     private int remainingPortions;
     private String offerPhotoPath;
-    enum offerState {
+    public enum offerState {
         PENDING,
         ONGOING,
         SOLDOUT,
         UNAVAILABLE
     }
     private offerState state;
-    private String details;
+    private String details; //Free text for the cook, description of the offer
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name="offer_classifications")
-    private List<PreferenceTag> classifications;
+    private List<PreferenceTag> classifications; // Diet and cuisine of the offer, already on the db
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name="offer_ingredients")
     private List<Ingredient> ingredients;
-    private String specifications;
+    private String specifications; //Additionnal cuisines and diet, not present on our DB
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Reservation> reversations;
+    private List<Reservation> reservations;
     @OneToMany(mappedBy="associatedOffer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
     private String address;
@@ -74,7 +75,7 @@ public class Offer implements Serializable {
     private String zipCode;
     private LatLng location;
     @Transient
-    private transient double distanceToUser;
+    private double distanceToUser;
 
     public double getDistanceToUser() {
         return distanceToUser;
@@ -212,13 +213,16 @@ public class Offer implements Serializable {
         this.specifications = specifications;
     }
 
-    public List<Reservation> getReversations() {
-        return reversations;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void addReversation(Reservation reservation) {
-        this.reversations.add(reservation);
-        this.totalPortions-= reservation.getNbOfPortion();
+    public void addReservation(Reservation reservation) {
+        this.reservations.add(reservation);
+    }
+    
+    public void publishOffer(){
+        this.state = offerState.ONGOING;
     }
 
     public List<Message> getMessages() {
@@ -250,7 +254,7 @@ public class Offer implements Serializable {
     }
 
     public Offer(Cook cook, Date creationDate, String title, double price, int totalPortions,
-            String details, List<PreferenceTag> classafication, List<Ingredient> ingredients, String specifications,
+            String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications,
             String address, String city, String zipCode) {
         this.cook = cook;
         this.creationDate = creationDate;
@@ -267,6 +271,8 @@ public class Offer implements Serializable {
         this.location = getLatLng(address + ", " + city);
         this.classifications = classifications;
         this.ingredients = ingredients;
+        this.offerPhotoPath = "";
+        this.reservations = new LinkedList<>();
     }
     
     

@@ -7,23 +7,44 @@
 package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
+import com.meeteat.controller.action.ActionAcceptRequest;
+import com.meeteat.controller.action.ActionApproveCook;
 import com.meeteat.controller.action.ActionAuthentication;
+import com.meeteat.controller.action.ActionBecomeCook;
+import com.meeteat.controller.action.ActionConsultCooksReviews;
+import com.meeteat.controller.action.ActionConsultGuestsList;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
+import com.meeteat.controller.action.ActionCookRequestDetails;
 import com.meeteat.controller.action.ActionCreateAccount;
 import com.meeteat.controller.action.ActionCreateReservation;
+import com.meeteat.controller.action.ActionEvaluateMeal;
 import com.meeteat.controller.action.ActionMakeOffer;
+import com.meeteat.controller.action.ActionModifyAccount;
+import com.meeteat.controller.action.ActionRejectRequest;
 import com.meeteat.controller.action.ActionSearchOffers;
+import com.meeteat.controller.action.ActionSeeCookRequests;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewOffersHistory;
+import com.meeteat.controller.action.ActionViewReservationsList;
+import com.meeteat.controller.action.ActionViewPurchasedMeals;
+import com.meeteat.controller.action.ActionViewReservationDetails;
 import com.meeteat.controller.serialisation.Serialisation;
+import com.meeteat.controller.serialisation.SerialisationAcceptRequest;
+import com.meeteat.controller.serialisation.SerialisationApproveCook;
+import com.meeteat.controller.serialisation.SerialisationCookRequest;
+import com.meeteat.controller.serialisation.SerialisationCookRequests;
 import com.meeteat.controller.serialisation.SerialisationOffer;
+import com.meeteat.controller.serialisation.SerialisationReservations;
 import com.meeteat.controller.serialisation.SerialisationOffers;
+import com.meeteat.controller.serialisation.SerialisationRejectRequest;
 import com.meeteat.controller.serialisation.SerialisationReservation;
+import com.meeteat.controller.serialisation.SerialisationReview;
+import com.meeteat.controller.serialisation.SerialisationReviews;
 import com.meeteat.controller.serialisation.SerialisationUser;
+import com.meeteat.controller.serialisation.SerialisationUsers;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,10 +73,18 @@ public class ActionServlet extends HttpServlet {
         Serialisation serialisation = null;
         String todo = request.getParameter("todo");
         switch (todo){
-            
+            case"approveCook" -> {
+                action = new ActionApproveCook();
+                serialisation = new SerialisationApproveCook();
+            }
             case "consultOffer" -> {
                 action = new ActionConsultOffer();
                 serialisation = new SerialisationOffer();
+                break;
+            }
+            case "consultCooksReviews" ->{
+                action = new ActionConsultCooksReviews();
+                serialisation = new SerialisationReviews();
                 break;
             }
             case "consultOffers" -> {
@@ -68,7 +97,6 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffer();
                 break;
             }
-           
             
             case "searchOffers" -> {
                 action = new ActionSearchOffers();
@@ -85,8 +113,23 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationReservation();
                 break;
             }
+            case "acceptRequest" -> {
+                action = new ActionAcceptRequest();
+                serialisation = new SerialisationAcceptRequest();
+                break;
+            }
+            case "rejectRequest" -> {
+                action = new ActionRejectRequest();
+                serialisation = new SerialisationRejectRequest();
+                break;
+            }
             case "createAccount" -> {
                 action = new ActionCreateAccount();
+                serialisation = new SerialisationUser();
+                break;
+            }
+            case "modifyAccount" -> {
+                action = new ActionModifyAccount();
                 serialisation = new SerialisationUser();
                 break;
             }
@@ -100,6 +143,44 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffers();
                 break;
             }
+            case "consultGuestsList"-> {
+                action = new ActionConsultGuestsList();
+                serialisation = new SerialisationUsers();
+                break;
+            }
+            case "viewReservationsList"-> {
+                action = new ActionViewReservationsList();
+                serialisation = new SerialisationReservations();
+                break;
+            }
+            case "viewReservationDetails"-> {
+                action = new ActionViewReservationDetails();
+                serialisation = new SerialisationReservation();
+                break;
+            }
+            case "seeCookRequests" -> {
+                action = new ActionSeeCookRequests();
+                serialisation = new SerialisationCookRequests();
+            }
+            case "cookRequestDetails" -> {
+                action = new ActionCookRequestDetails();
+                serialisation = new SerialisationCookRequest();
+            }
+            case "viewPurchasedMeals" -> {
+                action = new ActionViewPurchasedMeals();
+                serialisation = new SerialisationReservations();
+            }
+            case "evaluateMeal" -> {
+                action = new ActionEvaluateMeal();
+                serialisation = new SerialisationReview();
+            }
+            
+            case "becomeCook"-> {
+                action = new ActionBecomeCook();
+                serialisation = new SerialisationCookRequest();
+                break;
+            }
+            
         }
         
         if (action!=null&&serialisation!=null){

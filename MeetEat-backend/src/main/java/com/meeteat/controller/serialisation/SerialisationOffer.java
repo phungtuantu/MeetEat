@@ -10,6 +10,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.Preference.Diet;
 import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import java.io.IOException;
@@ -39,7 +41,7 @@ public class SerialisationOffer extends Serialisation{
         jsonCook.addProperty("lastName",offer.getCook().getLastName());
         jsonCook.addProperty("rating",offer.getCook().getRating());
         jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
-        jsonCook.addProperty("image", offer.getCook().getProfilePictureUrl());
+        jsonCook.addProperty("image", offer.getCook().getUser().getProfilePhotoPath());
         
         container.add("cook",jsonCook);
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -54,17 +56,21 @@ public class SerialisationOffer extends Serialisation{
         container.addProperty("totalPortion",offer.getTotalPortions());
         container.addProperty("details",offer.getDetails());
         
-        JsonArray jsonClassificationList = new JsonArray();
+        JsonArray jsonCuisineList = new JsonArray();
+        JsonArray jsonDietList = new JsonArray();
         List<PreferenceTag> classifications = offer.getClassifications();
-        classifications.stream().map(classification -> {
+        classifications.forEach(classification -> {
             JsonObject jsonPref = new JsonObject();
             jsonPref.addProperty("id", classification.getId());
             jsonPref.addProperty("name", classification.getName());
-            return jsonPref;
-        }).forEachOrdered(jsonPref -> {
-            jsonClassificationList.add(jsonPref);
+            if (classification instanceof Cuisine){
+                jsonCuisineList.add(jsonPref);
+            } else if (classification instanceof Diet){
+                jsonDietList.add(jsonPref);
+            }
         });
-        container.add("classifications",jsonClassificationList);
+        container.add("cuisines",jsonCuisineList);
+        container.add("diets",jsonDietList);
         
         JsonArray jsonIngredientList = new JsonArray();
         List<Ingredient> ingredients = offer.getIngredients();
@@ -83,6 +89,8 @@ public class SerialisationOffer extends Serialisation{
         container.addProperty("remainingPortions",offer.getRemainingPortions());
         container.addProperty("city", offer.getCity());
         container.addProperty("zipCode", offer.getZipCode());
+        container.addProperty("distanceToUser", offer.getDistanceToUser());
+        
         try (PrintWriter out = this.getWriter(response)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
             gson.toJson(container,out);
