@@ -160,21 +160,20 @@
         <button type="button" class="btn btn-dark" @click="seeBasket()">My basket</button>
       </div>
 
-      <div class="card">
+      <div class="card" v-for="offer in orders" :key="offer.id">
         <img class="card-img-top"
              src="../../assets/lasagne.jpg"/>
         <div class="card-body" style="text-align: left;">
-          <h5 class="card-title">Delicious Lasagna ! </h5>
+          <h5 class="card-title">{{offer.title}}</h5>
           <p class="card-text">
             <b>At 150m from your position</b><br/>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
+            {{offer.description }}
           </p>
           <br/>
 
 
           <div class="input-group w-auto">
-            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" value="5$">
+            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" v-bind:value="offer.price">
             <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
                    value="-">
             <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
@@ -183,60 +182,11 @@
                    value="+">
             <button class="btn btn-dark" type="button">Add to basket</button>
           </div>
-        </div>
-      </div>
 
-
-      <div class="card">
-        <img class="card-img-top"
-             src="https://codingyaar.com/wp-content/uploads/bootstrap-4-card-image-left-demo-image.jpg"/>
-        <div class="card-body" style="text-align: left;">
-          <h5 class="card-title">Couscous </h5>
-          <p class="card-text">
-            <b>At 200m from your position</b><br/>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </p>
           <br/>
 
+          <button class="btn btn-dark" type="button" @click="viewDetails(offer.id)">View details</button>
 
-          <div class="input-group w-auto">
-            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" value="5$">
-            <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
-                   value="-">
-            <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
-                   value="1">
-            <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
-                   value="+">
-            <button class="btn btn-dark" type="button">Add to basket</button>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="card">
-        <img class="card-img-top"
-             src="https://codingyaar.com/wp-content/uploads/bootstrap-4-card-image-left-demo-image.jpg"/>
-        <div class="card-body" style="text-align: left;">
-          <h5 class="card-title">Mexican Tacos</h5>
-          <p class="card-text">
-            <b>At 500m from your position</b><br/>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </p>
-          <br/>
-
-
-          <div class="input-group w-auto">
-            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" value="6$">
-            <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
-                   value="-">
-            <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
-                   value="1">
-            <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
-                   value="+">
-            <button class="btn btn-dark" type="button">Add to basket</button>
-          </div>
         </div>
       </div>
     </div>
@@ -249,10 +199,77 @@ import router from "@/router";
 
 export default {
   name: "Order_PageMain_Content",
+
+  data () {
+    return {
+      orders : [
+        {
+          id : 230,
+          title : 'Delicious lasagna   !',
+          nbPortions : 1,
+          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          dateOrdered : '01/01/2022',
+          dateDelivery : '02/04/2022',
+          options : [ 'noPork'],
+          price : 5,
+          evaluated : 0,
+          report : 0,
+          username : 'Ithan',
+
+        },
+        {
+          id : 231,
+          title : 'Couscous',
+          nbPortions : 5,
+          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          dateOrdered : '01/01/2022',
+          dateDelivery : '01/04/2022',
+          options : [],
+          price : 7,
+          evaluated : 0,
+          report : 0,
+          username : 'Ithan',
+
+        },
+        {
+          id : 232,
+          title : 'Mexican tacos',
+          nbPortions : 3,
+          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          dateOrdered : '01/01/2022',
+          dateDelivery : '28/03/2022',
+          options : [ 'noPork'],
+          price : 4,
+          evaluated : 1,
+          report : 0,
+          username : 'Ithan',
+
+        },
+        {
+          title : 'Peruvian ceviche',
+          nbPortions : 1,
+          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          dateOrdered : '01/01/2022',
+          dateDelivery : '21/03/2022',
+          options : [ 'pescoVegetarian'],
+          price : 6,
+          evaluated : 1,
+          report : 0,
+          username : 'Ithan',
+
+        },
+      ],
+    }
+  },
   methods : {
     seeBasket : function (){
       router.replace('/myBasket')
-    }
+    },
+
+    viewDetails : function (id){
+      localStorage.setItem("itemId", id);
+      router.replace('orderPage/'+id);
+    },
   },
 }
 </script>

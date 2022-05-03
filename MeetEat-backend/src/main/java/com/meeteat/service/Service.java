@@ -165,7 +165,6 @@ public class Service {
             System.out.println(password);
             System.out.println("password" + password);
             encryptedPassword = this.encryptPassword(password);
-            System.out.println("encrypted password" + encryptedPassword);
             user = userDao.SearchByMail(mail);
             System.out.println("user trouvé par la dao" + user);
 
