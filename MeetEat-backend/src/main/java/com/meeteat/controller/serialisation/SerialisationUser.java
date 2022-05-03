@@ -38,6 +38,7 @@ public class SerialisationUser extends Serialisation{
         container.addProperty("city",user.getCity());
         container.addProperty("zipCode",user.getZipCode());
         container.addProperty("noTelephone",user.getNoTelephone());
+        container.addProperty("photo",user.getProfilePhotoPath());
         JsonArray jsonPreferenceList = new JsonArray();
         List<PreferenceTag> preferences = user.getPreferences();
         preferences.stream().map(preference -> {

@@ -66,7 +66,7 @@ public class Offer implements Serializable {
     private List<Ingredient> ingredients;
     private String specifications;
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Reservation> reversations;
+    private List<Reservation> reservations;
     @OneToMany(mappedBy="associatedOffer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
     private String address;
@@ -212,12 +212,12 @@ public class Offer implements Serializable {
         this.specifications = specifications;
     }
 
-    public List<Reservation> getReversations() {
-        return reversations;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void addReversation(Reservation reservation) {
-        this.reversations.add(reservation);
+    public void addReservation(Reservation reservation) {
+        this.reservations.add(reservation);
         this.totalPortions-= reservation.getNbOfPortion();
     }
 
