@@ -8,6 +8,7 @@ package com.meeteat.controller;
 
 import com.meeteat.controller.action.Action;
 import com.meeteat.controller.action.ActionAuthentication;
+import com.meeteat.controller.action.ActionBecomeCook;
 import com.meeteat.controller.action.ActionConsultGuestsList;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
@@ -108,6 +109,12 @@ public class ActionServlet extends HttpServlet {
             }
             case "consultGuestsList"-> {
                 action = new ActionConsultGuestsList();
+                serialisation = new SerialisationUsers();
+                break;
+            }
+            
+            case "becomeCook"-> {
+                action = new ActionBecomeCook();
                 serialisation = new SerialisationUsers();
                 break;
             }

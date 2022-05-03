@@ -43,7 +43,7 @@ public class SerialisationOffers extends Serialisation{
             jsonCook.addProperty("lastName",offer.getCook().getLastName());
             jsonCook.addProperty("rating",offer.getCook().getRating());
             jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
-            jsonCook.addProperty("image", offer.getCook().getProfilePictureUrl());
+            jsonCook.addProperty("image", offer.getCook().getProfilePicturePath());
 
             jsonOffer.add("cook",jsonCook);
             if (offer.getPublicationDate()!=null){
