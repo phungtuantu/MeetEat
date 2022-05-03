@@ -31,7 +31,7 @@ public class SerialisationOffers extends Serialisation{
     public void serialise(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JsonObject container = new JsonObject();
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        PriorityQueue <Offer> offers = (PriorityQueue <Offer>)request.getAttribute("offers");
+        List <Offer> offers = (List <Offer>)request.getAttribute("offers");
         JsonArray jsonOfferList = new JsonArray();
         offers.stream().map(offer->{
             JsonObject jsonOffer = new JsonObject();
