@@ -22,11 +22,9 @@ import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.service.Service;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 /**
  *
