@@ -204,8 +204,14 @@ public class Service {
         }
         return res;
     }
-
-    public Long approveCook(Cook cook) {
+    
+    public Offer publishOffer(Long offerId){
+        Offer offer = getOfferFromId(offerId);
+        offer.publishOffer();
+        return updateOffer(offer);
+    }
+    
+    public Long approveCook(Cook cook){
         Long result = null;
         JpaTool.createPersistenceContext();
         try {
