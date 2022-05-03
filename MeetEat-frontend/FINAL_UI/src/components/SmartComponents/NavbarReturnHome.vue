@@ -24,8 +24,7 @@
                 <img src="../../assets/basket.png" alt="basket" width="40px">
             </button>
             <div class="dropdown">
-            <!--<button class="boutonmenuprincipal">Menu Principal</button>-->
-            <button type="button" class="btn2 btn-primary" @click="deroulerMenu()">
+            <button type="button" class="btn2 btn-primary"> <!-- menuDeroulant -->
                 <img src="../../assets/user.png" alt="user" width="40px">
             </button>
               <div class="dropdown-child">
@@ -56,6 +55,9 @@ export default {
     goHome : function(){
       router.replace('/');
     },
+    /*deroulerMenu : function(){
+      document.getElementsByClassName("dropdown-child").style.display = "block";
+    },*/
     becomeCook : function(){
       router.replace('/becomeCook');
     },
