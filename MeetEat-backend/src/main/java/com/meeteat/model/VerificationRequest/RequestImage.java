@@ -22,6 +22,13 @@ public class RequestImage implements Serializable{
     private Long id;
     private String imageReference;
 
+    public RequestImage() {
+    }
+
+    public RequestImage(String imageReference) {
+        this.imageReference = imageReference;
+    }
+
     public Long getId() {
         return id;
     }

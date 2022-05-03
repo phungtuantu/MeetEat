@@ -12,6 +12,7 @@ import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.MessageDao;
 import com.meeteat.dao.OfferDao;
 import com.meeteat.dao.PreferenceTagDao;
+import com.meeteat.dao.RequestImageDao;
 import com.meeteat.dao.ReservationDao;
 import com.meeteat.dao.ReviewDao;
 import com.meeteat.dao.UserDao;
@@ -52,6 +53,7 @@ public class Service {
     protected ReviewDao reviewDao = new ReviewDao();
     protected MessageDao messageDao = new MessageDao();
     protected CookRequestDao cookRequestDao = new CookRequestDao();
+    protected RequestImageDao requestImageDao = new RequestImageDao();
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
@@ -150,7 +152,7 @@ public class Service {
             result = encryptedPassword;
 
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling encryptPassword", ex);
             result = null;
         }
         return result;
@@ -391,6 +393,24 @@ public class Service {
         }
         return result;
     }
+    
+    public Long createRequestImage(RequestImage requestImage) {
+        Long result = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            requestImageDao.create(requestImage);
+            JpaTool.validateTransaction();
+            result = requestImage.getId();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
 
     public Long createReservation(Reservation reservation) {
         Long result = null;
@@ -419,7 +439,7 @@ public class Service {
             JpaTool.validateTransaction();
             result = review.getId();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createReview", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally {
@@ -437,7 +457,7 @@ public class Service {
             JpaTool.validateTransaction();
             result = message.getId();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createMessage", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally {
@@ -455,7 +475,7 @@ public class Service {
             cook = cookDao.searchById(cookId);
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchCookWithID", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling findCookById", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -507,7 +527,7 @@ public class Service {
             prefTag = preferenceTagDao.searchById(prefTagId);
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling findPreferanceTagById", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -523,7 +543,7 @@ public class Service {
             reservation = reservationDao.searchById(reservationId);
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling findReservationById", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -539,7 +559,7 @@ public class Service {
             review = reviewDao.searchById(reviewId);
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling findReviewById", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -555,7 +575,7 @@ public class Service {
             message = messageDao.searchById(messageId);
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling findMessageById", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -590,7 +610,7 @@ public class Service {
             }
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchOffers", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling consultOffers", ex);
             JpaTool.cancelTransaction();
             sortedByDistanceOffers = null;
         } finally {
@@ -699,7 +719,7 @@ public class Service {
             cookRequests = cookRequestDao.searchCookRequests();
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchPurchasedMeals", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchCookRequest", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -751,7 +771,7 @@ public class Service {
             cookRequest = cookRequestDao.searchById(cookRequestId);
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOffersHistory", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCookRequest", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -784,7 +804,7 @@ public class Service {
             JpaTool.validateTransaction();
             result = cookRequest.getIdCookRequest();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling becomeCook", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally {

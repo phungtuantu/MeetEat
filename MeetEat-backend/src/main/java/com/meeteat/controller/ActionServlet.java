@@ -162,7 +162,7 @@ public class ActionServlet extends HttpServlet {
             }
             case "viewPurchasedMeals" -> {
                 action = new ActionViewPurchasedMeals();
-                serialisation = new SerialisationReservation();
+                serialisation = new SerialisationReservations();
             }
             case "evaluateMeal" -> {
                 action = new ActionEvaluateMeal();
@@ -171,7 +171,7 @@ public class ActionServlet extends HttpServlet {
             
             case "becomeCook"-> {
                 action = new ActionBecomeCook();
-                serialisation = new SerialisationUsers();
+                serialisation = new SerialisationCookRequest();
                 break;
             }
             
