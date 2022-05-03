@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author taha
  */
-public class ActionViewReservations extends Action {
+public class ActionViewPurchasedMeals extends Action {
     @Override
     public void executer(HttpServletRequest request){
         Service service = new Service();
