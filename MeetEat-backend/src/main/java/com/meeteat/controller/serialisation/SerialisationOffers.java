@@ -10,6 +10,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Cuisine;
+import com.meeteat.model.Preference.Diet;
 import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class SerialisationOffers extends Serialisation{
             jsonCook.addProperty("lastName",offer.getCook().getLastName());
             jsonCook.addProperty("rating",offer.getCook().getRating());
             jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
+            jsonCook.addProperty("image", offer.getCook().getUser().getProfilePhotoPath());
 
             jsonOffer.add("cook",jsonCook);
             if (offer.getPublicationDate()!=null){
@@ -56,17 +59,21 @@ public class SerialisationOffers extends Serialisation{
             jsonOffer.addProperty("totalPortion",offer.getTotalPortions());
             jsonOffer.addProperty("details",offer.getDetails());
             
-            JsonArray jsonClassificationList = new JsonArray();
+            JsonArray jsonCuisineList = new JsonArray();
+            JsonArray jsonDietList = new JsonArray();
             List<PreferenceTag> classifications = offer.getClassifications();
-            classifications.stream().map(classification -> {
+            classifications.forEach(classification -> {
                 JsonObject jsonPref = new JsonObject();
                 jsonPref.addProperty("id", classification.getId());
                 jsonPref.addProperty("name", classification.getName());
-                return jsonPref;
-            }).forEachOrdered(jsonPref -> {
-                jsonClassificationList.add(jsonPref);
+                if (classification instanceof Cuisine){
+                    jsonCuisineList.add(jsonPref);
+                } else if (classification instanceof Diet){
+                    jsonDietList.add(jsonPref);
+                }
             });
-            jsonOffer.add("classifications",jsonClassificationList);
+            jsonOffer.add("cuisines",jsonCuisineList);
+            jsonOffer.add("diets",jsonDietList);
 
             JsonArray jsonIngredientList = new JsonArray();
             List<Ingredient> ingredients = offer.getIngredients();
@@ -85,6 +92,7 @@ public class SerialisationOffers extends Serialisation{
             jsonOffer.addProperty("remainingPortions",offer.getRemainingPortions());
             jsonOffer.addProperty("city", offer.getCity());
             jsonOffer.addProperty("zipCode", offer.getZipCode());
+            jsonOffer.addProperty("distanceToUser", offer.getDistanceToUser());
             
             return jsonOffer;
         }).forEachOrdered(jsonOffer -> {
