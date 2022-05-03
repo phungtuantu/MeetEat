@@ -250,6 +250,6 @@ public class DBPopulation {
     
     public static void main(String [] args){
         DBPopulation dbp = new DBPopulation();
-        dbp.populateDatabase(100, 30, 200, 20, 30, 2);
+        dbp.populateDatabase(100, 30, 200, 20, 30, 100);
     }
 }

@@ -427,16 +427,16 @@ public class Service {
         return result;
     }
 
-    public Long createMessage(Message message) {
-        Long result = null;
+    public Message createMessage(Message message) {
+        Message result = null;
         JpaTool.createPersistenceContext();
         try {
             JpaTool.openTransaction();
             messageDao.create(message);
             JpaTool.validateTransaction();
-            result = message.getId();
+            result = message;
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createMessage", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally {
