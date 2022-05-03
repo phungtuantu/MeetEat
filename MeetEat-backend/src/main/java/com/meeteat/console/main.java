@@ -40,8 +40,8 @@ public class main {
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
-//        testAuthenticate();
-        testCreateReview();
+        testAuthenticate();
+//        testCreateReview();
         JpaTool.destroy();
     }
     
@@ -150,16 +150,28 @@ public class main {
     }
     
     public static void testAuthenticate (){
+//        Service service = new Service();
+//        System.out.println("authenticate a user");
+//        long userId = 1;
+//        User user = service.findUserById(userId);
+//        System.out.println("Le user de test est: ");
+//        System.out.println(user);
+//        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+//        System.out.println("Avec le bon mdp : Le user connecté est: ");
+//        System.out.println(AuthenticatedUser);
+//        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+//        System.out.println("Avec le mauvais mdp : Le user connecté est: ");
+//        System.out.println(NonAuthenticatedUser);
         Service service = new Service();
         System.out.println("authenticate a user");
-        long userId = 1;
-        User user = service.findUserById(userId);
-        System.out.println("Le user de test est: ");
-        System.out.println(user);
-        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+//        long userId = 1;
+//        User user = service.findUserById(userId);
+//        System.out.println("Le user de test est: ");
+//        System.out.println(user);
+        User AuthenticatedUser=service.authenticate("lilou.gonzalez@yahoo.fr", "password");
         System.out.println("Avec le bon mdp : Le user connecté est: ");
         System.out.println(AuthenticatedUser);
-        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+        User NonAuthenticatedUser=service.authenticate("lilou.gonzalez@yahoo.fr", "hack");
         System.out.println("Avec le mauvais mdp : Le user connecté est: ");
         System.out.println(NonAuthenticatedUser);
     }

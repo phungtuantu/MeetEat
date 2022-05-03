@@ -24,7 +24,7 @@ public class ActionAuthentication extends Action{
         User user = service.authenticate(mail, password);
         if (user != null){
             HttpSession session = request.getSession();
-            session.setAttribute("userId", user.getId());
+            request.setAttribute("user", user);
             request.setAttribute("connection", true);
         }
         else{
