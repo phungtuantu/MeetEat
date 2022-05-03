@@ -24,7 +24,8 @@ public class ActionViewOffersHistory extends Action{
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-        Long userId = (Long)session.getAttribute("userId");
+//        Long userId = (Long)session.getAttribute("userId");
+        Long userId = Long.parseLong(request.getParameter("userId"));
         Cook cook = service.findCookByUserId(userId);
         List <Offer> offers=service.viewOffersHistory(cook);
         request.setAttribute("offers",offers);
