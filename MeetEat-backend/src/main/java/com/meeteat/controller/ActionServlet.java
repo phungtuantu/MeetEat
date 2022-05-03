@@ -9,6 +9,7 @@ package com.meeteat.controller;
 import com.meeteat.controller.action.Action;
 import com.meeteat.controller.action.ActionApproveCook;
 import com.meeteat.controller.action.ActionAuthentication;
+import com.meeteat.controller.action.ActionBecomeCook;
 import com.meeteat.controller.action.ActionConsultGuestsList;
 import com.meeteat.controller.action.ActionConsultOffer;
 import com.meeteat.controller.action.ActionConsultOffers;
@@ -22,12 +23,14 @@ import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSeeCookRequests;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewOffersHistory;
+import com.meeteat.controller.action.ActionViewReservationsList;
 import com.meeteat.controller.action.ActionViewPurchasedMeals;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationApproveCook;
 import com.meeteat.controller.serialisation.SerialisationCookRequest;
 import com.meeteat.controller.serialisation.SerialisationCookRequests;
 import com.meeteat.controller.serialisation.SerialisationOffer;
+import com.meeteat.controller.serialisation.SerialisationReservations;
 import com.meeteat.controller.serialisation.SerialisationOffers;
 import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationReview;
@@ -126,6 +129,11 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationUsers();
                 break;
             }
+            case "viewReservationsList"-> {
+                action = new ActionViewReservationsList();
+                serialisation = new SerialisationReservations();
+                break;
+            }
             case "seeCookRequests" -> {
                 action = new ActionSeeCookRequests();
                 serialisation = new SerialisationCookRequests();
@@ -141,6 +149,12 @@ public class ActionServlet extends HttpServlet {
             case "evaluateMeal" -> {
                 action = new ActionEvaluateMeal();
                 serialisation = new SerialisationReview();
+            }
+            
+            case "becomeCook"-> {
+                action = new ActionBecomeCook();
+                serialisation = new SerialisationUsers();
+                break;
             }
             
         }

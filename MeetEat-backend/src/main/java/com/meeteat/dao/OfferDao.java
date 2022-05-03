@@ -32,7 +32,7 @@ public class OfferDao extends AbstractDao<Offer>{
         
         //returns offers of a cook
         EntityManager em = JpaTool.obtainPersistenceContext();
-        TypedQuery<Offer> query = em.createQuery("SELECT o from offer o WHERE o.cook.id = :idCook ORDER BY DESC o.creationDate", Offer.class);
+        TypedQuery<Offer> query = em.createQuery("SELECT o from Offer o WHERE o.cook.id = :idCook ORDER BY o.creationDate DESC", Offer.class);
         query.setParameter("idCook",idCook);
         return query.getResultList();
     }

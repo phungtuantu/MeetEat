@@ -23,7 +23,7 @@ public class ReviewDao extends AbstractDao<Review>{
     public List<Review> getOffersReviews(Long idOffer) {
         //returns offers of a cook
         EntityManager em = JpaTool.obtainPersistenceContext();
-        TypedQuery<Review> query = em.createQuery("SELECT r from review r WHERE r.reservation.offer.id = :idOffer"
+        TypedQuery<Review> query = em.createQuery("SELECT r from Review r WHERE r.reservation.offer.id = :idOffer"
                 + "AND r.reviewingUser = r.reservation.customer ORDER BY DESC r.reservation.reservationDate", Review.class);
         query.setParameter("idOffer",idOffer);
         return query.getResultList();
