@@ -165,7 +165,6 @@ public class Service {
             System.out.println(password);
             System.out.println("password" + password);
             encryptedPassword = this.encryptPassword(password);
-            System.out.println("encrypted password" + encryptedPassword);
             user = userDao.SearchByMail(mail);
             System.out.println("user trouvé par la dao" + user);
 
@@ -440,6 +439,14 @@ public class Service {
         JpaTool.closePersistenceContext();
         return offer;
     }
+    
+    public Offer viewOfferDetails(Long offerId, String address){
+        Offer offer = this.findOfferById(offerId);
+        LatLng location = getLatLng(address);
+        Double distance = offer.getDistanceToUser();
+        offer.setDistanceToUser(distance);
+        return offer;
+    }
 
     public PreferenceTag findPreferanceTagById(Long prefTagId) {
         JpaTool.createPersistenceContext();
@@ -697,6 +704,7 @@ public class Service {
         }
         return guestsList;
     }
+    
     public CookRequest viewCookRequest(Long cookRequestId) {
         CookRequest cookRequest = null;
         JpaTool.createPersistenceContext();
@@ -710,7 +718,31 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
-        
+
         return cookRequest;
+    }
+
+    public List<Review> viewCooksReviews(Long cookId){
+        List<Review> result = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            List <Offer> madeOffers = offerDao.getOffers(cookId);
+            for (Offer offer : madeOffers){
+                if (result==null){
+                    result = reviewDao.getOffersReviews(offer.getId());
+                } else{
+                    result.addAll(reviewDao.getOffersReviews(offer.getId()));
+                }
+            }
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCooksReviews", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        
+        return result;
     }
 }

@@ -35,7 +35,6 @@ import com.meeteat.controller.serialisation.SerialisationUser;
 import com.meeteat.controller.serialisation.SerialisationUsers;
 import com.meeteat.dao.JpaTool;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -71,6 +70,9 @@ public class ActionServlet extends HttpServlet {
             case "consultOffer" -> {
                 action = new ActionConsultOffer();
                 serialisation = new SerialisationOffer();
+                break;
+            }
+            case "consultCooksReviews" ->{
                 break;
             }
             case "consultOffers" -> {

@@ -1,27 +1,37 @@
 <template>
   <div class="container">
+    <template v-if="offer !== null">
     <div class="card mb-3">
-      <img class="card-img-top" id="mainPicture"
+      <br/>
+      <div style="text-align: left; margin-bottom: 30px;">
+        <button type="button" class="btn btn-dark" style="width: 70px;" @click="back()">Back</button>
+      </div>
+
+        <img class="card-img-top" id="mainPicture"
            src="../../assets/lasagne.jpg"
            alt="Card image cap">
       <div class="card-body" style="text-align: left;">
-        <h5 class="card-title">Delicious Lasagna ! </h5>
+        <h5 class="card-title">{{offer.title}}</h5>
         <div class="row">
           <div class="col-4">
             <img src="../../assets/ithan.jpg" alt="Ithan" width="120px"> <!--  height="100px" -->
           </div>
           <div class="col-8">
             <div class="row">
-              Ithan
+              {{offer.cook.firstName}}  {{offer.cook.lastname}}
             </div>
             <div class="row">
-              <img src="../../assets/blackStar.png" alt="Ithan" width="20px" height="20px">
-              <img src="../../assets/blackStar.png" alt="Ithan" width="20px" height="20px">
-              <img src="../../assets/blackStar.png" alt="Ithan" width="20px" height="20px">
-              <img src="../../assets/blackStar.png" alt="Ithan" width="20px" height="20px">
-              <img src="../../assets/grayStar.png" alt="Ithan" width="20px" height="20px">
+              <template v-for="img in stars" >
+                <template v-if="img === 1">
+                  <img src="../../assets/blackStar.png" v-bind:key="img" alt="blackStar" width="20px" height="20px">
+                </template>
+                <template v-if="img === 0">
+                  <img src="../../assets/grayStar.png" v-bind:key="img" alt="grayStar" width="20px" height="20px">
 
-              4/5 (50 reviews)
+                </template>
+
+              </template>
+              {{offer.cook.rating}}/5 ({{offer.cook.numberOfReviews}}reviews)
             </div>
           </div>
         </div>
@@ -29,18 +39,14 @@
         <br/>
         <h5>List of ingredients : </h5>
         <ul class="list-group" style="padding-left: 30px;">
-          <li class="">Ground meat</li>
-          <li class="">Tomato sauce</li>
-          <li class="">Pasta</li>
-          <li class="">Bechamel</li>
-          <li class="">Shredded cheese</li>
+          <li class="" v-for="ingredient in offer.ingredients" :key="ingredient.id">{{ingredient.name}}</li>
         </ul>
         <br/>
         <div class="row">
           <div class="col-sm">
             <h5>More specifications : </h5>
             <ul class="list-group" style="padding-left: 30px;">
-              <li class="">French meat</li>
+              <li class="" v-for="specification in offer.specifications" :key="specification">{{specification}}</li>
             </ul>
           </div>
           <div class="col-sm">
@@ -55,14 +61,11 @@
 
         <p class="card-text">If you have any food allergies or special dietary requirements, please notify Ithan
           directly before placing your order.</p>
-        <p class="card-text"><small class="text-muted">4 portions left</small></p>
-        <div class="input-group w-auto" id="counter">
-          <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
-                 value="-">
-          <input class="quantity-field border-0 text-center w-25" max="10" min="1" name="quantity" step="1" type="number"
-                 value="1">
-          <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
-                 value="+">
+        <p class="card-text"><small class="text-muted">{{offer.remainingPortions}} portions left</small></p>
+        <div class="form-outline" id="counter">
+          <label for="qty" class="form-label">Quantity : </label>
+          <input class="form-control" min="1" name="quantity" step="1" type="number" id="qty"
+                 v-model="qtyOrdered">
         </div>
         <br/>
         <button type="button" class="btn btn-dark">Add to basket </button>
@@ -70,13 +73,51 @@
 
 
     </div>
-
+    </template>
   </div>
 </template>
 
 <script>
+import {urlAPI} from "@/variables";
+import axios from "axios";
+import router from "@/router";
+
 export default {
-  name: "Offer_PageMain_Content"
+  name: "Offer_PageMain_Content",
+  data (){
+    return {
+
+      idOffer: null,
+      offer : null,
+      stars : [],
+      qtyOrdered : 1,
+
+    }
+  },
+  methods : {
+    back : function ()
+    {
+      router.replace('/orderPage')
+    }
+  },
+
+  async mounted() {
+    this.idOffer = localStorage.getItem("itemId");
+    await axios.get(urlAPI + 'todo=consultOffer&offerId=' + this.idOffer)
+        .then(response => (this.offer = response.data));
+
+    for (let i = 0; i < 5; i++) {
+      this.stars[i] = 0;
+    }
+    for (let i = 0; i < this.offer.cook.rating; i++) {
+      this.stars[i] = 1;
+    }
+
+    this.offer.specifications = this.offer.specifications.split(',');
+
+    console.log(this.offer);
+
+  }
 }
 </script>
 

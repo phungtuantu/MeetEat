@@ -5,17 +5,11 @@
  */
 package com.meeteat.controller.action;
 
-import com.google.maps.model.LatLng;
-import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.security.NoSuchAlgorithmException;  
-import java.security.MessageDigest;  
+
 
 /**
  *
@@ -23,6 +17,7 @@ import java.security.MessageDigest;
  */
 public class ActionModifyAccount extends Action{
     
+    @Override
     public void executer(HttpServletRequest request){
         
         Service service = new Service();

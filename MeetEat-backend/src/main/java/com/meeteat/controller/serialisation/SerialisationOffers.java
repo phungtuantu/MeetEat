@@ -43,7 +43,7 @@ public class SerialisationOffers extends Serialisation{
             jsonCook.addProperty("lastName",offer.getCook().getLastName());
             jsonCook.addProperty("rating",offer.getCook().getRating());
             jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
-            jsonCook.addProperty("image", offer.getCook().getProfilePictureUrl());
+            jsonCook.addProperty("image", offer.getCook().getUser().getProfilePhotoPath());
 
             jsonOffer.add("cook",jsonCook);
             if (offer.getPublicationDate()!=null){
@@ -86,6 +86,7 @@ public class SerialisationOffers extends Serialisation{
             jsonOffer.addProperty("remainingPortions",offer.getRemainingPortions());
             jsonOffer.addProperty("city", offer.getCity());
             jsonOffer.addProperty("zipCode", offer.getZipCode());
+            jsonOffer.addProperty("distanceToUser", offer.getDistanceToUser());
             
             return jsonOffer;
         }).forEachOrdered(jsonOffer -> {
