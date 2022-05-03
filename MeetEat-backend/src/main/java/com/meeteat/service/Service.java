@@ -697,6 +697,7 @@ public class Service {
         }
         return guestsList;
     }
+    
     public CookRequest viewCookRequest(Long cookRequestId) {
         CookRequest cookRequest = null;
         JpaTool.createPersistenceContext();
@@ -710,7 +711,31 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
-        
+
         return cookRequest;
+    }
+
+    public List<Review> viewCooksReviews(Long cookId){
+        List<Review> result = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            List <Offer> madeOffers = offerDao.getOffers(cookId);
+            for (Offer offer : madeOffers){
+                if (result==null){
+                    result = reviewDao.getOffersReviews(offer.getId());
+                } else{
+                    result.addAll(reviewDao.getOffersReviews(offer.getId()));
+                }
+            }
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCooksReviews", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        
+        return result;
     }
 }
