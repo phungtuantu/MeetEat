@@ -5,7 +5,11 @@
  */
 package com.meeteat.dao;
 
+import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Offer.Review;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -14,5 +18,14 @@ import com.meeteat.model.Offer.Review;
 public class ReviewDao extends AbstractDao<Review>{
     public ReviewDao(){
         super(Review.class);
+    }
+    
+    public List<Review> getOffersReviews(Long idOffer) {
+        //returns offers of a cook
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        TypedQuery<Review> query = em.createQuery("SELECT r from review r WHERE r.reservation.offer.id = :idOffer"
+                + "AND r.reviewingUser = r.reservation.customer ORDER BY DESC r.reservation.reservationDate", Review.class);
+        query.setParameter("idOffer",idOffer);
+        return query.getResultList();
     }
 }
