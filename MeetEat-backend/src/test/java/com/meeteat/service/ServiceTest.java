@@ -44,6 +44,8 @@ public class ServiceTest {
     public void tearDown() {
     }
     
+    
+    
 //    @Test
 //    public void setPriceTest(){
 //        Offer offer = new Offer();
@@ -60,4 +62,14 @@ public class ServiceTest {
     //
     // @Test
     // public void hello() {}
+    
+    @Test
+    public void publishOfferTest(){
+        Offer offer = new Offer();
+        service.makeOffer(offer);
+        service.publishOffer(offer.getId());
+        Offer newOffer = service.getOfferFromId(offer.getId());
+        System.out.println(newOffer.getState());
+        assertEquals(newOffer.getState(), Offer.offerState.ONGOING);
+    }
 }

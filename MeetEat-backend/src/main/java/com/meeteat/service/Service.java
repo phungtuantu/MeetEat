@@ -7,6 +7,7 @@ package com.meeteat.service;
 
 import com.google.maps.model.LatLng;
 import com.meeteat.dao.CookDao;
+import com.meeteat.dao.CookRequestDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.MessageDao;
 import com.meeteat.dao.OfferDao;
@@ -24,6 +25,7 @@ import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
+import com.meeteat.model.VerificationRequest.CookRequest;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.security.MessageDigest;
 import java.util.Collections;
@@ -47,6 +49,7 @@ public class Service {
     protected ReservationDao reservationDao = new ReservationDao();
     protected ReviewDao reviewDao = new ReviewDao();
     protected MessageDao messageDao = new MessageDao();
+    protected CookRequestDao cookRequestDao = new CookRequestDao();
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
@@ -233,8 +236,14 @@ public class Service {
         }
         return res;
     }
-
-    public Long approveCook(Cook cook) {
+    
+    public Offer publishOffer(Long offerId){
+        Offer offer = getOfferFromId(offerId);
+        offer.publishOffer();
+        return updateOffer(offer);
+    }
+    
+    public Long approveCook(Cook cook){
         Long result = null;
         JpaTool.createPersistenceContext();
         try {
@@ -636,7 +645,23 @@ public class Service {
         }
         return purchasedMeals;
     }
-
+    
+    public List<CookRequest> searchCookRequests() {
+        JpaTool.createPersistenceContext();
+        List<CookRequest> cookRequests = new LinkedList<>();
+        try {
+            JpaTool.openTransaction();
+            cookRequests = cookRequestDao.searchCookRequests();
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchPurchasedMeals", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return cookRequests;
+    }
+    
     public List<Offer> viewOffersHistory(Cook cook) {
         //consult offers that have been created by a cook
         List<Offer> offersHistory = null;
@@ -653,5 +678,21 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return offersHistory;
+    }
+
+    public CookRequest viewCookRequest(Long cookRequestId) {
+        CookRequest cookRequest = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            cookRequest = cookRequestDao.searchById(cookRequestId);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOffersHistory", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return cookRequest;
     }
 }
