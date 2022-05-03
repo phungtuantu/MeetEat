@@ -18,7 +18,8 @@ public class ActionConsultOffer extends Action {
     public void executer(HttpServletRequest request){
         Service service = new Service();
         Long offerId = Long.parseLong(request.getParameter("offerId"));
-        Offer offer = service.findOfferById(offerId);
+        String address = request.getParameter("address");
+        Offer offer = service.viewOfferDetails(offerId, address);
         request.setAttribute("offer",offer);
     }
 }

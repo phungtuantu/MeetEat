@@ -440,6 +440,14 @@ public class Service {
         JpaTool.closePersistenceContext();
         return offer;
     }
+    
+    public Offer viewOfferDetails(Long offerId, String address){
+        Offer offer = this.findOfferById(offerId);
+        LatLng location = getLatLng(address);
+        Double distance = offer.getDistanceToUser();
+        offer.setDistanceToUser(distance);
+        return offer;
+    }
 
     public PreferenceTag findPreferanceTagById(Long prefTagId) {
         JpaTool.createPersistenceContext();
