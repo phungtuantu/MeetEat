@@ -20,8 +20,9 @@ public class ActionViewReservationsList extends Action{
     @Override
     public void executer(HttpServletRequest request){
         Service service = new Service();
-        HttpSession session = request.getSession();
-        Long userId = (Long)session.getAttribute("userId");
+//        HttpSession session = request.getSession();
+//        Long userId = (Long)session.getAttribute("userId");
+        Long userId = Long.parseLong(request.getParameter("userId"));
         User user= service.findUserById(userId);
         List<Reservation> reservations=service.viewReservationsList(user);
         request.setAttribute("reservations",reservations);
