@@ -444,7 +444,12 @@ public class Service {
     public Offer viewOfferDetails(Long offerId, String address){
         Offer offer = this.findOfferById(offerId);
         LatLng location = getLatLng(address);
-        Double distance = offer.getDistanceToUser();
+        Double distance;
+        if (offer.getLocation()!=null && location!=null){
+            distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
+        } else{
+            distance = Double.MAX_VALUE;
+        }
         offer.setDistanceToUser(distance);
         return offer;
     }
