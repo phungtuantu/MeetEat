@@ -25,16 +25,21 @@ public class SerialisationReview extends Serialisation{
     @Override
     public void serialise(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JsonObject container = new JsonObject();
-        Review review = (Review)request.getAttribute("reservation");
+        Review review = (Review)request.getAttribute("review");
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        
         container.addProperty("id",review.getId());
         
         container.addProperty("comment",review.getComment());
-        container.addProperty("nbOfStars",review.getNbOfStars());
-        container.addProperty("reviewedUser_id", review.getReviewedUser().getId());
-        container.addProperty("reviewingUser_id", review.getReviewingUser().getId());
-        container.addProperty("reviewingUser_photo", review.getReviewingUser().getProfilePhotoPath());
-        container.addProperty("sourceReservation_id", review.getSource().getId());
         
+        container.addProperty("nbOfStars",review.getNbOfStars());
+        container.addProperty("reviewedUser_firstName", review.getReviewedUser().getFirstName());
+        container.addProperty("reviewedUser_lastName", review.getReviewedUser().getLastName());
+        container.addProperty("reviewingUser_firstName", review.getReviewingUser().getFirstName());
+        container.addProperty("reviewingUser_lastName", review.getReviewingUser().getLastName());
+        container.addProperty("reviewingUser_photo", review.getReviewingUser().getProfilePhotoPath());
+        container.addProperty("orderName", review.getSource().getOffer().getTitle());
+        container.addProperty("reversationDate", df.format(review.getSource().getReservationDate()));
         
         try (PrintWriter out = this.getWriter(response)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
