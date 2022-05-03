@@ -55,7 +55,7 @@ public class SerialisationReservation extends Serialisation{
         container.addProperty("state",reservation.getState().name());
         
         JsonObject containerOffer = new JsonObject();
-        Offer offer = (Offer)request.getAttribute("offer");
+        Offer offer = reservation.getOffer();
         containerOffer.addProperty("id",offer.getId());
         containerOffer.addProperty("cookId",offer.getCook().getId());
         if (offer.getPublicationDate()!=null){

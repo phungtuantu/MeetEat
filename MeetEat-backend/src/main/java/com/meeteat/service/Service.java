@@ -18,6 +18,7 @@ import com.meeteat.dao.UserDao;
 import com.meeteat.model.Offer.Message;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Offer.Reservation;
+import com.meeteat.model.Offer.ReservationState;
 import com.meeteat.model.Offer.Review;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Diet;
@@ -192,7 +193,7 @@ public class Service {
             user = userDao.searchById(userId);
             JpaTool.validateTransaction();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling findUserById", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -278,6 +279,51 @@ public class Service {
         return offer;
     }
 
+    public Reservation acceptRequest(Long reservationId){
+        JpaTool.createPersistenceContext();
+        Reservation reservation = null;
+        
+        try {
+            JpaTool.openTransaction();
+            reservation = reservationDao.searchById(reservationId);
+            Offer offer = reservation.getOffer();
+            if (reservation.getNbOfPortion()<=offer.getRemainingPortions()){
+                reservation.setState(ReservationState.RESERVATION);
+                offer.setRemainingPortions(offer.getRemainingPortions()-reservation.getNbOfPortion());
+            }
+            reservationDao.merge(reservation);
+            offerDao.merge(offer);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling acceptRequest", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        
+        return reservation;
+    }
+    
+    public Reservation rejectRequest (Long reservationId){
+        JpaTool.createPersistenceContext();
+        Reservation reservation = null;
+        
+        try {
+            JpaTool.openTransaction();
+            reservation = reservationDao.searchById(reservationId);
+            reservation.setState(ReservationState.REJECTED);
+            reservationDao.merge(reservation);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling rejectRequest", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        
+        return reservation;
+    }
+    
     public User getUserFromId(Long id) {
         //Might not be needed in the future, currently used for testing
         JpaTool.createPersistenceContext();
@@ -354,7 +400,7 @@ public class Service {
             JpaTool.validateTransaction();
             result = reservation.getId();
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createReservation", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally {
@@ -381,16 +427,16 @@ public class Service {
         return result;
     }
 
-    public Long createMessage(Message message) {
-        Long result = null;
+    public Message createMessage(Message message) {
+        Message result = null;
         JpaTool.createPersistenceContext();
         try {
             JpaTool.openTransaction();
             messageDao.create(message);
             JpaTool.validateTransaction();
-            result = message.getId();
+            result = message;
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createMessage", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally {
@@ -432,7 +478,6 @@ public class Service {
         return cook;
     }
     
-
     public Offer findOfferById(Long offerId) {
         JpaTool.createPersistenceContext();
         Offer offer = offerDao.searchById(offerId);
@@ -443,7 +488,12 @@ public class Service {
     public Offer viewOfferDetails(Long offerId, String address){
         Offer offer = this.findOfferById(offerId);
         LatLng location = getLatLng(address);
-        Double distance = offer.getDistanceToUser();
+        Double distance;
+        if (offer.getLocation()!=null && location!=null){
+            distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
+        } else{
+            distance = Double.MAX_VALUE;
+        }
         offer.setDistanceToUser(distance);
         return offer;
     }
@@ -527,10 +577,12 @@ public class Service {
         try {
             JpaTool.openTransaction();
             ongoingOffers = offerDao.getOngoingOffers(20);
-
+            System.out.println("ok");
+            System.out.println(ongoingOffers.get(1));
             //check the preferences in ongoingOffers + distance to User
             double distance;
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
+                System.out.println(offer);
                 distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
                 offer.setDistanceToUser(distance);
                 sortedByDistanceOffers.add(offer); // insertion on O(log(n))   
@@ -718,8 +770,23 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
-
         return cookRequest;
+    }
+    
+    public List<Reservation> viewReservationsList(User user) {
+        //view the reservations made by a user
+        List<Reservation> reservationsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            reservationsList = reservationDao.getReservationsListByUserId(user.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewReservationsList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return reservationsList;
     }
 
     public List<Review> viewCooksReviews(Long cookId){
@@ -742,7 +809,6 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
-        
         return result;
     }
 }

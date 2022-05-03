@@ -23,7 +23,8 @@ public class ActionEvaluateMeal extends Action{
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-        Long userId = (Long)session.getAttribute("userId");
+        //Long userId = (Long)session.getAttribute("userId");
+          Long userId = Long.parseLong(request.getParameter("userid"));
         int nbOfStars = Integer.parseInt(request.getParameter("nbOfStars"));
         String comment = request.getParameter("comment");
         Long sourceReservation_id = Long.parseLong(request.getParameter("reservation_Id"));

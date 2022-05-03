@@ -21,7 +21,7 @@ public class CookRequestDao extends AbstractDao<CookRequest>{
     
     public List<CookRequest> searchCookRequests(){
         EntityManager em = JpaTool.obtainPersistenceContext();
-        String jpql="select r from cookRequest r";
+        String jpql="select r from CookRequest r";
         TypedQuery query=em.createQuery(jpql, CookRequest.class);
         List<CookRequest> cookRequests = query.getResultList();
         return cookRequests;
