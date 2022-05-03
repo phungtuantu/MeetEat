@@ -510,4 +510,38 @@ public class Service {
 //        return message;
 //    }
     
+    public List<Reservation> searchPurchasedMeals(User user){
+        JpaTool.createPersistenceContext();
+        List<Reservation> purchasedMeals = new LinkedList<>();
+        try{
+            JpaTool.openTransaction();
+            purchasedMeals = reservationDao.searchPurchasedMeals(user);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling searchPurchasedMeals", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return purchasedMeals;
+    }
+    
+    public Message sendMessage (Message message){
+        Message result = null;
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            messageDao.create(message);
+            JpaTool.validateTransaction();
+            result = message;
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling sendMessage", ex);
+            JpaTool.cancelTransaction();
+            result = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+        
 }

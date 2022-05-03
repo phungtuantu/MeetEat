@@ -56,16 +56,16 @@ public class Offer implements Serializable {
         UNAVAILABLE
     }
     private offerState state;
-    private String details;
+    private String details; //Free text for the cook, description of the offer
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name="offer_classifications")
-    private List<PreferenceTag> classifications;
+    private List<PreferenceTag> classifications; // Diet and cuisine of the offer, already on the db
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name="offer_ingredients")
     private List<Ingredient> ingredients;
-    private String specifications;
+    private String specifications; //Additionnal cuisines and diet, not present on our DB
     @OneToMany(mappedBy="offer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Reservation> reversations;
+    private List<Reservation> reversations; //Reservations, attribute mispelled
     @OneToMany(mappedBy="associatedOffer",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Message> messages;
     private String address;
@@ -73,7 +73,7 @@ public class Offer implements Serializable {
     private String zipCode;
     private LatLng location;
     @Transient
-    private transient double distanceToUser;
+    private double distanceToUser;
 
     public double getDistanceToUser() {
         return distanceToUser;

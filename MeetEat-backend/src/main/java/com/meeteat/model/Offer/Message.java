@@ -36,6 +36,14 @@ public class Message implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date sentDate;
 
+    public Message(String content, User sender, User receiver, Offer associatedOffer, Date sentDate) {
+        this.content = content;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.associatedOffer = associatedOffer;
+        this.sentDate = sentDate;
+    }
+
     public Long getId() {
         return id;
     }
