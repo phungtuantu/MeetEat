@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author ithan
  */
+
+/**
 public class ServiceTest {
     OfferDao offerDao = new OfferDao();
     Service service = new Service();
@@ -61,3 +63,4 @@ public class ServiceTest {
     // @Test
     // public void hello() {}
 }
+**/
