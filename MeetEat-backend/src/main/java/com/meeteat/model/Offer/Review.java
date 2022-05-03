@@ -7,6 +7,7 @@ package com.meeteat.model.Offer;
 
 import com.meeteat.model.User.User;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,6 +37,7 @@ public class Review implements Serializable {
     private String comment;
 
     public Review(Reservation source, User reviewedUser, User reviewingUser, int nbOfStars, String comment) {
+        assert(nbOfStars  <= 5);
         this.source = source;
         this.reviewedUser = reviewedUser;
         this.reviewingUser = reviewingUser;
@@ -78,6 +80,33 @@ public class Review implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Review other = (Review) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+    
+    
 
     @Override
     public String toString() {

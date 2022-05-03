@@ -35,6 +35,8 @@ public class Message implements Serializable {
     private Offer associatedOffer;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date sentDate;
+    
+    public Message(){}
 
     public Message(String content, User sender, User receiver, Offer associatedOffer, Date sentDate) {
         this.content = content;

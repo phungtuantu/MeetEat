@@ -307,7 +307,7 @@ public class Service {
             JpaTool.validateTransaction();
             result = reservation.getId();
         } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createIngredient", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createReservation", ex);
             JpaTool.cancelTransaction();
             result = null;
         } finally{
