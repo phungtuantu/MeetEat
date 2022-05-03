@@ -7,6 +7,9 @@ package com.meeteat.console;
 
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.Reservation;
+import com.meeteat.model.Offer.ReservationState;
+import com.meeteat.model.Offer.Review;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
@@ -16,7 +19,7 @@ import com.meeteat.service.Service;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import com.meeteat.DBpopulation.DBpopulation;
+//import com.meeteat.DBpopulation.DBpopulation;
 
 /**
  *
@@ -28,7 +31,18 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        DBPopulation dpb = new DBPopulation();
+        
+        JpaTool.init();
+//        testCreatePref();
+//        testCreateAccount();
+//        testApproveCook();
+//        testMakeOffer();
+//        testSpecifyPreferences();
+//        testViewPurchasedMeals();
+//        testMakeReservation();
+//        testAuthenticate();
+        testCreateReview();
+        JpaTool.destroy();
     }
     
     public static void testCreatePref(){
@@ -41,14 +55,30 @@ public class main {
         Service service = new Service();
         System.out.println("create an account");
         User user = new User("Bob", "Smith","here", "this city", "1010","0611","bobsmith@here.com");
-        service.createAccount(user);
+        service.createAccount(user, "password");
+    }
+    
+    public static void testCreateReview(){
+        Service service = new Service();
+        System.out.println("create a review");
+        User user = service.findUserById( (long) 2);
+        User user2 = service.findUserById( (long) 3);
+        Cook cook = service.findCookById( (long) 3);
+        List<PreferenceTag> classifications = new LinkedList<>();
+        List<Ingredient> ingredients = new LinkedList<>();
+        Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        service.makeOffer(offer);
+        Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
+        service.createReservation(res1);
+        Review rev = new Review(res1, user2, user, 4, "delicious" );
+        service.createReview(rev);
     }
     
     public static void testApproveCook(){
         Service service = new Service();
         System.out.println("create an account then make a cook");
         User user = new User("Bob the Second", "Smith","here","this city", "1010", "0611","bobthesecondsmith@here.com");
-        service.createAccount(user);
+        service.createAccount(user, "password");
         System.out.println("make him a cook");
         Cook cook = new Cook(user, new Date(), 0, "", "none");
         System.out.println(user);
@@ -57,10 +87,35 @@ public class main {
         System.out.println(cook);
     }
     
+    
+    public static void testViewPurchasedMeals(){
+        Service service = new Service();
+        System.out.println("View purchased meals");
+        User user2 = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith2@here.com","password","oh");
+//        service.createAccount(user2);
+        Cook cook = new Cook(user2, new Date(), 0, "", "none");
+//        service.approveCook(cook);
+        List<PreferenceTag> classifications = new LinkedList<>();
+        List<Ingredient> ingredients = new LinkedList<>();
+        Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password","ohoo");
+//        service.createAccount(user); 
+//        service.makeOffer(offer);
+        Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
+//        service.createReservation(res1);
+        Reservation res2 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 4, offer, user);
+//        service.createReservation(res2);
+        User user3 = service.findUserById( (long) 2);
+        List<Reservation> res = service.searchPurchasedMeals(user3);
+        res.forEach(r -> {
+            System.out.println(r.getNbOfPortion());
+        });
+    }
+    
     public static void testMakeOffer(){
         Service service = new Service();
         System.out.println("make a few offers");
-        long cookId = 2;
+        long cookId = 1;
         Cook cook = service.findCookById(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
@@ -68,10 +123,17 @@ public class main {
         service.makeOffer(offer);
     }
     
+    public static void testMakeReservation(){
+        Service service = new Service();
+        Reservation reservation = new Reservation(new Date(System.currentTimeMillis()),ReservationState.REQUEST,2, service.getOfferFromId(1l), service.getUserFromId(1l));
+        service.createReservation(reservation);
+    }
+    
     public static void testSpecifyPreferences(){
         Service service = new Service();
         System.out.println("specify preferences");
-        User user = new User("Bob the Second", "Smith","here","this city", "1010","0611","bobthesecondsmith@here.com");
+        User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password","oh");
+        service.createAccount(user, "password");
         PreferenceTag pref1 = new PreferenceTag("viande");
         PreferenceTag pref2 = new PreferenceTag("beurre");
         PreferenceTag pref3 = new PreferenceTag("riz");
@@ -86,6 +148,22 @@ public class main {
         System.out.println(user.getPreferences().get(0).getName());
         System.out.println(user.getPreferences().get(1).getName());
     }
+    
+    public static void testAuthenticate (){
+        Service service = new Service();
+        System.out.println("authenticate a user");
+        long userId = 1;
+        User user = service.findUserById(userId);
+        System.out.println("Le user de test est: ");
+        System.out.println(user);
+        User AuthenticatedUser=service.authenticate(user.getMail(), "password");
+        System.out.println("Avec le bon mdp : Le user connecté est: ");
+        System.out.println(AuthenticatedUser);
+        User NonAuthenticatedUser=service.authenticate(user.getMail(), "hack");
+        System.out.println("Avec le mauvais mdp : Le user connecté est: ");
+        System.out.println(NonAuthenticatedUser);
+    }
+    
     
 //    public static void initialiserClients() {
 //        

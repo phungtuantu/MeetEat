@@ -9,8 +9,7 @@
                       <input type="password" name="" placeholder="Password"> 
                       <input type="submit" name="" value="Login" href="#">
                       <div class="column">
-                        <a class="text-muted" href="#">Don't have an account yet ?</a>
-                        <button class="btn" type="button">Create an account</button>
+                        <button class="btn" type="button" @click="createAccount()">Create an account</button>
                       </div>
                   </form>
               </div>
@@ -20,8 +19,14 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
-  name: "Login" //même nom que le nom de fichier
+  name: "Login",
+   methods: {
+    createAccount : function(){
+      router.replace('/signup');
+    }
+  },
 }
 </script>
 

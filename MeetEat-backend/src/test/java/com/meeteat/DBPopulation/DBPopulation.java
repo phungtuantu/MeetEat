@@ -22,6 +22,7 @@ import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.service.Service;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,25 +42,32 @@ public class DBPopulation {
     LinkedList<Cuisine> cuisineList = new LinkedList<>();
     LinkedList<CookRequest> cookRequestList = new LinkedList<>();
     Locale locale = new Locale("fr");
+    int nbProfilePictures = 20;
+    int nbOfferPictures = 20;
     public DBPopulation(){
         faker = new Faker(locale);
         service = new Service();
     }
     
     public void createUsers(int nbUsers){
+        System.out.println("creatin users...");
         for(int i = 0; i<nbUsers; i++){
-            String email = faker.pokemon().name();
+            String email = faker.internet().emailAddress();
+            String profilePhoto = faker.internet().image();
             String payementInfo = faker.crypto().sha1();
             Address address = faker.address();
             Name name = faker.name();
             String phone = faker.phoneNumber().cellPhone();
+            String password = faker.lorem().fixedString(8);
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
-            userIdList.add(service.createAccount(user));
+            user.setProfilePhotoPath("./Images/profile_images/profile" + (i%nbProfilePictures + 1));
+            userIdList.add(service.createAccount(user, password));
         }
     }
     
     public void createCooks(int nbCooks){
         assert(nbCooks < userIdList.size());
+        System.out.println("creatin cooks...");
         for(int i = 0; i<nbCooks; i++){
             User user = service.findUserById(userIdList.get(i));
             DateAndTime dat = faker.date();
@@ -70,6 +78,7 @@ public class DBPopulation {
     }
     
     public void createIngedients(int nbIngredients){
+        System.out.println("creatin ingredients...");
         for(int i =0; i<(nbIngredients/2); i++){
             Food food = faker.food();
             Ingredient ingredient = new Ingredient(food.ingredient());
@@ -85,6 +94,7 @@ public class DBPopulation {
     }
     
     public void createDiets(){
+        System.out.println("creatin diets...");
         dietList.add(new Diet("Vegetarian"));
         dietList.add(new Diet("Vegan"));
         dietList.add(new Diet("Pesco Vegetarian"));
@@ -97,6 +107,7 @@ public class DBPopulation {
     }
     
     public void createCuisines(int nbCuisines){
+        System.out.println("creatin cuisines...");
         for(int i = 0; i<nbCuisines; i++){
             Country country = faker.country();
             String name = country.name();
@@ -108,6 +119,7 @@ public class DBPopulation {
     
     public void createOffers(int nbOffers){
         int min = 0;
+        System.out.println("creatin offers...");
         for(int i = 0; i<nbOffers; i++){
             Number number = faker.number();
             Address address = faker.address();
@@ -124,6 +136,7 @@ public class DBPopulation {
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
                                     details, classifications, ingredients, "", address.streetAddress(), address.city(), 
                                     address.zipCode());
+            offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             System.out.println(address.streetAddress());
             service.makeOffer(offer);
             //offer.setIngredients(ingredients);

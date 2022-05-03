@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Navbar></Navbar>
+    <NavbarReturnHome></NavbarReturnHome>
     <br/>
     <SelectPreferences/>
     <br/>
@@ -15,13 +15,13 @@ Obliger à décocher si je mange avec un ami
 
 <script>
 // @ is an alias to /src
-import Navbar from '@/components/SmartComponents/Navbar.vue'
+import NavbarReturnHome from '@/components/SmartComponents/NavbarReturnHome.vue'
 import SelectPreferences from '@/components/SmartComponents/SelectPreferences.vue'
 import Footer from "@/components/SmartComponents/Footer";
 export default {
-  name: 'Home',
+  name: 'SelectPreferencesPage',
   components: {
-    Navbar,
+    NavbarReturnHome,
     SelectPreferences,
     Footer,
   }

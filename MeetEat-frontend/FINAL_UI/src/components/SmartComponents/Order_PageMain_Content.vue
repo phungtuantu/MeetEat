@@ -156,9 +156,13 @@
 
 
     <div class="col-8">
+      <div style="text-align: right; margin-bottom: 30px;">
+        <button type="button" class="btn btn-dark" @click="seeBasket()">My basket</button>
+      </div>
+
       <div class="card">
         <img class="card-img-top"
-             src="https://codingyaar.com/wp-content/uploads/bootstrap-4-card-image-left-demo-image.jpg"/>
+             src="../../assets/lasagne.jpg"/>
         <div class="card-body" style="text-align: left;">
           <h5 class="card-title">Delicious Lasagna ! </h5>
           <p class="card-text">
@@ -170,10 +174,10 @@
 
 
           <div class="input-group w-auto">
-            <input class="quantity-field border-0 text-center w-25" disabled type="text" value="5$">
+            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" value="5$">
             <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
                    value="-">
-            <input class="quantity-field border-0 text-center w-25" max="10" name="quantity" step="1" type="number"
+            <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
                    value="1">
             <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
                    value="+">
@@ -197,10 +201,10 @@
 
 
           <div class="input-group w-auto">
-            <input class="quantity-field border-0 text-center w-25" disabled type="text" value="5$">
+            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" value="5$">
             <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
                    value="-">
-            <input class="quantity-field border-0 text-center w-25" max="10" name="quantity" step="1" type="number"
+            <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
                    value="1">
             <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
                    value="+">
@@ -224,10 +228,10 @@
 
 
           <div class="input-group w-auto">
-            <input class="quantity-field border-0 text-center w-25" disabled type="text" value="6$">
+            <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" value="6$">
             <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
                    value="-">
-            <input class="quantity-field border-0 text-center w-25" max="10" name="quantity" step="1" type="number"
+            <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
                    value="1">
             <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
                    value="+">
@@ -241,8 +245,15 @@
 </template>
 
 <script>
+import router from "@/router";
+
 export default {
-  name: "Order_PageMain_Content"
+  name: "Order_PageMain_Content",
+  methods : {
+    seeBasket : function (){
+      router.replace('/myBasket')
+    }
+  },
 }
 </script>
 
@@ -294,6 +305,11 @@ article {
   box-sizing: border-box;
 }
 
+.priceItem {
+  background-color: #191919;
+  color: white;
+}
+
 article div {
   width: 100%;
   height: 100%;
@@ -315,7 +331,7 @@ article input {
 }
 
 input[type=checkbox]:checked ~ div {
-  background-color: darkgrey;
+  background-color: #0077B5;
 }
 
 .social i:before {

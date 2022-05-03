@@ -5,10 +5,7 @@
  */
 package com.meeteat.service;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.maps.model.LatLng;
-import com.meeteat.service.GeoNetApi;
 import com.meeteat.dao.CookDao;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.dao.MessageDao;
@@ -28,11 +25,11 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import static com.meeteat.service.GeoNetApi.getLatLng;
+import java.security.MessageDigest;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,10 +66,12 @@ public class Service {
         return result;
     }
     
-    public Long createAccount(User user){
+    public Long createAccount(User user, String password){
         Long result = null;
         JpaTool.createPersistenceContext();
         try{
+            String encryptedPassword = this.encryptPassword(password);
+            user.setPassword(encryptedPassword);
             JpaTool.openTransaction();
             userDao.create(user);
             JpaTool.validateTransaction();
@@ -85,6 +84,65 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return result;
+    }
+    
+    public String encryptPassword(String password){
+        //The MD5 (Message Digest) is a very popular hashing algorithm. 
+        //It is a cryptographic hash function that generates a 128-bits hash value.
+        //This algorithm is defined under java.security package in Java programming.
+        String result = null;
+        try{
+            String encryptedPassword = null;
+             /* MessageDigest instance for MD5. */  
+            MessageDigest m = MessageDigest.getInstance("MD5");  
+              
+            /* Add plain-text password bytes to digest using MD5 update() method. */  
+            m.update(password.getBytes());  
+              
+            /* Convert the hash value into bytes */   
+            byte[] bytes = m.digest();  
+              
+            /* The bytes array has bytes in decimal form. Converting it into hexadecimal format. */  
+            StringBuilder s = new StringBuilder();  
+            for(int i=0; i< bytes.length ;i++)  
+            {  
+                s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));  
+            }  
+              
+            /* Complete hashed password in hexadecimal format */  
+            encryptedPassword = s.toString(); 
+            result = encryptedPassword;
+
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createAccount", ex);
+            result = null;
+        }
+        return result;
+    }
+    
+    public User authenticate (String mail, String password){
+        JpaTool.createPersistenceContext();
+        User user = null;
+        String verifiedPassword = null;
+        String encryptedPassword = null;
+        try{
+            JpaTool.openTransaction();
+            encryptedPassword = this.encryptPassword(password);
+            user = userDao.SearchByMail(mail);
+            verifiedPassword = user.getPassword();
+            if (!verifiedPassword.equals(encryptedPassword)){
+                user = null;
+            }
+            JpaTool.validateTransaction();
+            
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling authenticate", ex);
+            JpaTool.cancelTransaction();
+            user = null;
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
     }
     
     public User findUserById(Long userId){
@@ -173,6 +231,16 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return offer;
+    }
+    public User getUserFromId(Long id){
+        //Might not be needed in the future, currently used for testing
+        JpaTool.createPersistenceContext();
+        return userDao.searchById(id);
+    }
+    public Offer getOfferFromId(Long id){
+        //Might not be needed in the future, currently used for testing
+        JpaTool.createPersistenceContext();
+        return offerDao.searchById(id);
     }
     
     //Add entries to DB
@@ -303,17 +371,8 @@ public class Service {
     
     public Offer findOfferById(Long offerId){
         JpaTool.createPersistenceContext();
-        Offer offer = null;
-        try{
-            JpaTool.openTransaction();
-            offer = offerDao.searchById(offerId);
-            JpaTool.validateTransaction();
-        } catch (Exception ex){
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-            JpaTool.cancelTransaction();
-        } finally{
-            JpaTool.closePersistenceContext();
-        }
+        Offer offer = offerDao.searchById(offerId);
+        JpaTool.closePersistenceContext();
         return offer;
     }
     
@@ -392,12 +451,9 @@ public class Service {
                 return distance1.compareTo(distance2); //May be - instead
             }
         });
-
        JpaTool.createPersistenceContext(); 
        try {
            JpaTool.openTransaction();
-
-        
            ongoingOffers = offerDao.getOngoingOffers(20);
             
            //check the preferences in ongoingOffers + distance to User
@@ -417,22 +473,6 @@ public class Service {
        }
        return sortedByDistanceOffers;
    }
-    
-       public User specifyPreferences(List<PreferenceTag> listPref, User user){
-           JpaTool.createPersistenceContext();
-           user.setPreferences(listPref);
-           try{
-               JpaTool.openTransaction();
-               userDao.merge(user);
-               JpaTool.validateTransaction();
-           } catch (Exception ex){
-               Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
-               JpaTool.cancelTransaction();
-           } finally{
-               JpaTool.closePersistenceContext();
-           }
-           return user;
-       }
     
     public PriorityQueue <Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
        //SearchOffers according to :diet, cuisine, user's preferences, price and location
@@ -493,6 +533,22 @@ public class Service {
        }
        return sortedByDistanceOffers;
    }
+          
+    public User specifyPreferences(List<PreferenceTag> listPref, User user){
+        JpaTool.createPersistenceContext();
+        user.setPreferences(listPref);
+        try{
+            JpaTool.openTransaction();
+            userDao.merge(user);
+            JpaTool.validateTransaction();
+        } catch (Exception ex){
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling specifyPreferences", ex);
+            JpaTool.cancelTransaction();
+        } finally{
+            JpaTool.closePersistenceContext();
+        }
+        return user;
+    }
     
 //    public List<Reservation> findPurchasedMeals(Long userId){
 //        JpaTool.createPersistenceContext();
@@ -545,3 +601,7 @@ public class Service {
     }
         
 }
+
+
+
+

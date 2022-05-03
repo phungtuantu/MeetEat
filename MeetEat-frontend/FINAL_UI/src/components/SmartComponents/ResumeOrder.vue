@@ -1,0 +1,259 @@
+<template>
+  <div>
+    <div style="text-align: center">
+      <h1>Basket</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-7">
+        <h2>My shopping list ( {{orders.length}} product)</h2>
+      </div>
+      <div class="col-sm">
+        <button type="button" class="btn btn-dark" @click="backHome()">Continue my shopping </button>
+      </div>
+    </div>
+
+    <br/>
+    <br/>
+    <br/>
+
+
+    <div class="row">
+      <div class="col-sm">
+        <div class="card border border-secondary" v-for="order in orders" :key="order.title" style="background-color: lightgray">
+          <img class="card-img-top"
+               src="../../assets/lasagne.jpg" style="padding-left: 5px;"/>
+          <div class="card-body" style="text-align: left;">
+            <h5 class="card-title">{{order.title}}</h5>
+            <p class="card-text">
+              <b>Ordered : {{order.dateOrdered}} </b><br/>
+              <b>Delivery : {{order.dateDelivery}} </b><br/>
+              {{order.description}}<br/>
+            </p>
+            <p class="card-text" v-for="option in order.options" :key="option">
+              {{option}}
+            </p>
+            <div class="row">
+              <div class="col-sm">
+                <p class="card-text">
+                  <b>{{order.price}}$</b>
+                </p>
+              </div>
+              <div class="col-sm">
+                <p class="card-text">
+                  <b>Number of portions : {{order.nbPortions}}</b>
+                </p>
+              </div>
+            </div>
+
+            <br/>
+            <div class="input-group w-auto">
+              <button class="btn btn-dark" type="button" @click="viewDetails()">View details</button>
+            </div>
+          </div>
+        </div>
+
+        <br/>
+      </div>
+      <div class="col-sm border border-secondary rounded" style="background-color: lightgray;">
+          <h3>Summary</h3>
+          <hr class="my-4"/>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" v-for="order in orders" :key="order">
+              {{ order.title }} <br/>
+              <span class="badge badge-primary badge-pill">Number of portions {{ order.nbPortions }}</span>
+            </li>
+          </ul>
+        <hr class="my-4"/>
+
+        <div class="row">
+          <div class="col-sm">
+            <h4>Total</h4>
+          </div>
+          <div class="col-sm">
+              {{total}}$
+          </div>
+        </div>
+      </div>
+
+      <br/>
+      <br/>
+
+    </div>
+
+    <div class="container p-0" >
+      <p class="h8 py-3">Payment Details</p>
+
+      <div class="card px-4">
+        <div class="row gx-3">
+          <div class="col-12">
+            <div class="d-flex flex-column">
+              <p class="text mb-1">Person Name</p> <input class="form-control mb-3" type="text" placeholder="Name" value="Barry Allen">
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="d-flex flex-column">
+              <p class="text mb-1">Card Number</p> <input class="form-control mb-3" type="text" placeholder="1234 5678 435678">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex flex-column">
+              <p class="text mb-1">Expiry</p> <input class="form-control mb-3" type="text" placeholder="MM/YYYY">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex flex-column">
+              <p class="text mb-1">CVV/CVC</p> <input class="form-control mb-3 pt-2 " type="password" placeholder="***">
+            </div>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary mb-3" @click="pay()">
+              <span class="ps-3">Pay {{total}}$</span> <span class="fas fa-arrow-right"></span> </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import router from "@/router";
+
+export default {
+  name: "ResumeOrder",
+  data() { return {
+    orders : [
+        {
+          title : 'Delicious lasagna !',
+          nbPortions : 1,
+          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          dateOrdered : '01/01/2022',
+          dateDelivery : '03/01/2022',
+          options : [ 'noPork'],
+          price : 5
+        }],
+    total : 5,
+  }
+  },
+  methods : {
+    viewDetails : function ()
+    {
+      router.replace('/orderPage/1')
+    },
+
+    pay : function ()
+    {
+      console.log('pay');
+    },
+
+    backHome : function ()
+    {
+      router.replace('/orderPage')
+
+    },
+  }
+}
+</script>
+
+<style scoped>
+.card {
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+.card img {
+  width: 30%;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: calc(0.25rem - 1px);
+}
+
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0C4160;
+  padding: 30px 10px
+}
+
+.card {
+  max-width: 500px;
+  margin: auto;
+  color: black;
+  border-radius: 20 px
+}
+
+p {
+  margin: 0px
+}
+
+.container .h8 {
+  font-size: 30px;
+  font-weight: 800;
+  text-align: center
+}
+
+.btn.btn-primary {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
+  border: none;
+  transition: 0.5s;
+  background-size: 200% auto
+}
+
+.btn.btn.btn-primary:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none
+}
+
+.btn.btn-primary:hover .fas.fa-arrow-right {
+  transform: translate(15px);
+  transition: transform 0.2s ease-in
+}
+
+.form-control {
+  color: white;
+  background-color: #223C60;
+  border: 2px solid transparent;
+  height: 60px;
+  padding-left: 20px;
+  vertical-align: middle
+}
+
+.form-control:focus {
+  color: white;
+  background-color: #0C4160;
+  border: 2px solid #2d4dda;
+  box-shadow: none
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 600
+}
+
+::placeholder {
+  font-size: 14px;
+  font-weight: 600
+}
+</style>

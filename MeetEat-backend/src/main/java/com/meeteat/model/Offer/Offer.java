@@ -37,7 +37,7 @@ public class Offer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Cook cook;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date creationDate;
@@ -49,6 +49,7 @@ public class Offer implements Serializable {
     private double price;
     private int totalPortions;
     private int remainingPortions;
+    private String offerPhotoPath;
     enum offerState {
         PENDING,
         ONGOING,
@@ -119,6 +120,14 @@ public class Offer implements Serializable {
         return creationDate;
     }
 
+    public String getOfferPhotoPath() {
+        return offerPhotoPath;
+    }
+
+    public void setOfferPhotoPath(String offerPhotoPath) {
+        this.offerPhotoPath = offerPhotoPath;
+    }
+    
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }

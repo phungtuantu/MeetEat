@@ -1,7 +1,6 @@
 <template>
   <div>
-
-
+    
     <!-- Carousel wrapper -->
     <div
         id="carouselBasicExample"
@@ -21,7 +20,7 @@
             <div class="input-group input-group-lg mb-3">
               <input type="text" class="form-control" placeholder="Type you address" aria-label="Recipient's username" aria-describedby="basic-addon2">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button">View offers</button>
+                <button class="btn btn-outline-secondary" type="button" @click="seeOffers()">View offers</button>
               </div>
             </div>
             <h3>Sign in to see your last researches</h3>
@@ -175,8 +174,15 @@
 </template>
 
 <script>
+import router from "@/router";
+
 export default {
-  name: "HomePage"
+  name: "HomePage",
+  methods : {
+    seeOffers : function (){
+      router.replace('/orderPage');
+    }
+  }
 }
 </script>
 

@@ -8,9 +8,12 @@ package com.meeteat.model.Offer;
 import com.meeteat.model.User.User;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +24,7 @@ import javax.persistence.Temporal;
 
 /**
  *
- * @author gvnge
+ * @author gvnge, johanbonnedahl
  */
 @Entity
 public class Reservation implements Serializable {
@@ -32,21 +35,27 @@ public class Reservation implements Serializable {
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date reservationDate;
-    enum reservationState {
-        REQUEST,
-        RESERVATION,
-        REJECTED,
-        CANCELLED,
-        PURCHASEDMEAL
-    }
-    private reservationState state;
+    @Enumerated(EnumType.STRING)
+    private ReservationState state;
     private int nbOfPortion;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Offer offer;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private User customer;
     @OneToMany(mappedBy="source",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Review> reviews;
+
+    public Reservation() {
+    }
+
+    public Reservation(Date reservationDate, ReservationState state, int nbOfPortion, Offer offer, User customer) {
+        this.reservationDate = reservationDate;
+        this.state = state;
+        this.nbOfPortion = nbOfPortion;
+        this.offer = offer;
+        this.customer = customer;
+        this.reviews = new LinkedList();
+    }
 
     public Long getId() {
         return id;
@@ -55,17 +64,36 @@ public class Reservation implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public void addReview(Review review){
+        for(Review r: reviews){
+            if(r.getId().equals(review.getId())){
+                reviews.remove(r);
+                reviews.add(review);
+                return;
+            }
+        }
+        this.reviews.add(review);
+    }
 
     public Date getReservationDate() {
         return reservationDate;
     }
 
-    public void setReservationDate(Date reservationDate) {
-        this.reservationDate = reservationDate;
+    public ReservationState getState() {
+        return state;
+    }
+
+    public void setState(ReservationState state) {
+        this.state = state;
     }
 
     public int getNbOfPortion() {
         return nbOfPortion;
+    }
+
+    public void setNbOfPortion(int nbOfPortion) {
+        this.nbOfPortion = nbOfPortion;
     }
 
     public void setCustomer(User customer) {
@@ -74,10 +102,6 @@ public class Reservation implements Serializable {
 
     public User getCustomer() {
         return customer;
-    }
-
-    public void setNbOfPortion(int nbOfPortion) {
-        this.nbOfPortion = nbOfPortion;
     }
 
     public Offer getOffer() {
