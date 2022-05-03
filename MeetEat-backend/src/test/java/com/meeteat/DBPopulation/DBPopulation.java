@@ -14,6 +14,8 @@ import com.github.javafaker.RickAndMorty;
 import com.github.javafaker.Number;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.Reservation;
+import com.meeteat.model.Offer.ReservationState;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Diet;
 import com.meeteat.model.Preference.Ingredient;
@@ -22,6 +24,8 @@ import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.service.Service;
+import java.nio.file.Paths;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,10 +43,12 @@ public class DBPopulation {
     LinkedList<Diet> dietList = new LinkedList<>();
     LinkedList<Cuisine> cuisineList = new LinkedList<>();
     LinkedList<CookRequest> cookRequestList = new LinkedList<>();
+    LinkedList<Offer> offerList = new LinkedList<>();
+    LinkedList<Reservation> reservationList = new LinkedList<>();
     Locale locale = new Locale("fr");
     int nbProfilePictures = 20;
     int nbOfferPictures = 20;
-    String [] specifications = {"noPork", "pescoVegetarian", "vegetarian", "vegan", "dairyFree", "glutenFree"};
+    
     public DBPopulation(){
         
         faker = new Faker(locale);
@@ -50,7 +56,7 @@ public class DBPopulation {
     }
     
     public void createUsers(int nbUsers){
-        System.out.println("creatin users...");
+        System.out.println("creating users...");
         for(int i = 0; i<nbUsers; i++){
             String email = faker.internet().emailAddress();
             String profilePhoto = faker.internet().image();
@@ -61,7 +67,10 @@ public class DBPopulation {
             String password = "password";
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
             user.setProfilePhotoPath("./Images/profile_images/profile" + (i%nbProfilePictures + 1));
-            userIdList.add(service.createAccount(user, password));
+            Long created = service.createAccount(user, password);
+            if(created != null){
+                userIdList.add(created);
+            }
         }
     }
     
@@ -73,7 +82,10 @@ public class DBPopulation {
             DateAndTime dat = faker.date();
             Date validationDate = dat.birthday(0, 2);
             Cook cook = new Cook(user, validationDate, faker.number().numberBetween(1, 6), faker.university().name(), faker.job().keySkills());
-            cookIdList.add(service.approveCook(cook));
+            Long created = service.approveCook(cook);
+            if(created != null){
+                cookIdList.add(created);
+            }
         }
     }
     
@@ -82,14 +94,18 @@ public class DBPopulation {
         for(int i =0; i<(nbIngredients/2); i++){
             Food food = faker.food();
             Ingredient ingredient = new Ingredient(food.ingredient());
-            service.createPreferenceTag(ingredient);
-            ingredientsList.add(ingredient);
+            Long created = service.createPreferenceTag(ingredient);
+            if(created != null){
+               ingredientsList.add(ingredient); 
+            }
         }
         for(int i =0; i<(nbIngredients/2); i++){
             Food food = faker.food();
             Ingredient ingredient = new Ingredient(food.spice());
-            service.createPreferenceTag(ingredient);
-            ingredientsList.add(ingredient);
+            Long created = service.createPreferenceTag(ingredient);
+            if(created != null){
+               ingredientsList.add(ingredient); 
+            }
         }
     }
     
@@ -112,8 +128,10 @@ public class DBPopulation {
             Country country = faker.country();
             String name = country.name();
             Cuisine cuisine = new Cuisine(name);
-            service.createPreferenceTag(cuisine);
-            cuisineList.add(cuisine);
+            Long created = service.createPreferenceTag(cuisine);
+            if(created != null){
+                cuisineList.add(cuisine);
+            }
         }
     }
     
@@ -133,37 +151,58 @@ public class DBPopulation {
             double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
             String details = ram.quote();
-            String specs = createSpecifications();
+            String specifications = faker.backToTheFuture().quote();
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
-                                    details, classifications, ingredients, specs, address.streetAddress(), address.city(), 
+                                    details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
                                     address.zipCode());
             offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
-            System.out.println(address.streetAddress());
-            service.makeOffer(offer);
-            //offer.setIngredients(ingredients);
-            for(Ingredient ing : ingredients){
-                //System.out.println(ing);
+            Long created = service.makeOffer(offer);
+            if(created != null){
+                offerList.add(offer);
             }
-            //offer.setClassifications(classifications);
-            for(PreferenceTag ing : classifications){
-                //System.out.println(ing);
-            }
-            //service.updateOffer(offer);
         }
     }
     
-    private String createSpecifications(){
+    public void createReservations(int nbReservations){
+        System.out.println("creating reservations...");
+        int reservationsMade = 0;
         Number number = faker.number();
-        int minSpecs = number.numberBetween(0, specifications.length);
-        int maxSpecs = number.numberBetween(minSpecs, specifications.length);
-        String res = specifications[minSpecs];
-        for(int i = minSpecs+1; i<maxSpecs; i++){
-            res = res + ", " + specifications[i];
+        DateAndTime dateAndTime = faker.date();
+        while(reservationsMade < nbReservations){
+            int offerNumber = number.numberBetween(0, offerList.size()-1);
+            Offer offer = offerList.get(offerNumber);
+            int reservationsToBeMade = number.numberBetween(0, (nbReservations - reservationsMade));
+            for(int reservationNumber = 0; reservationNumber <= reservationsToBeMade; reservationNumber++){
+                //Find a random user
+                int userNumber = number.numberBetween(0, userIdList.size()-1);
+                User customer = service.findUserById(userIdList.get(offerNumber));
+                assert(customer != null);
+                //Find a random date
+                Date publicationDate = offer.getCreationDate();
+                //Date expirationDate = offer.getExpirationDate();
+                Calendar cal = Calendar.getInstance();
+                Date today = cal.getTime();
+                Date reservationDate = dateAndTime.between(publicationDate, today);
+                //Assign a random state to the reservation
+                ReservationState state = ReservationState.values()[number.numberBetween(0, ReservationState.values().length)];
+                //Assign a random number of portions
+                int nbPortions = number.numberBetween(1, offer.getRemainingPortions());
+                Reservation reservation = new Reservation(reservationDate, state, nbPortions, offer, customer);
+                Long created = service.createReservation(reservation);
+                if(created != null){
+                    reservationList.add(reservation);
+                    reservationsMade++;
+                    System.out.println(reservationsMade);
+                }
+            }
         }
-        return res;
     }
     
-    public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, int nbOffers){
+    public void createReviews(int nbReviews){
+        
+    }
+    
+    public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, int nbOffers, int nbReservations){
         JpaTool.init();
         createUsers(nbUsers);
         createCooks(nbCooks);
@@ -171,6 +210,7 @@ public class DBPopulation {
         createDiets();
         createCuisines(nbCuisines);
         createOffers(nbOffers);
+        createReservations(nbReservations);
         JpaTool.destroy();
     }
     private List<Ingredient> getIngredientsForOffer(){
@@ -210,6 +250,6 @@ public class DBPopulation {
     
     public static void main(String [] args){
         DBPopulation dbp = new DBPopulation();
-        dbp.populateDatabase(100, 30, 200, 20, 30);
+        dbp.populateDatabase(100, 30, 200, 20, 30, 100);
     }
 }
