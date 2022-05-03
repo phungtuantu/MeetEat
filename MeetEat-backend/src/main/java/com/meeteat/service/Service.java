@@ -710,7 +710,23 @@ public class Service {
         } finally {
             JpaTool.closePersistenceContext();
         }
-        
         return cookRequest;
+    }
+    
+    public List<Reservation> viewReservationsList(User user) {
+        //view the reservations made by a user
+        List<Reservation> reservationsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            reservationsList = reservationDao.getReservationsListByUserId(user.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewReservationsList", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return reservationsList;
     }
 }

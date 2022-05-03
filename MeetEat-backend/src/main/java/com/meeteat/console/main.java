@@ -43,6 +43,7 @@ public class main {
 //        testMakeReservation();
 //        testAuthenticate();
 //        testCreateReview();
+          testViewOffersHistory();
         JpaTool.destroy();
     }
     
@@ -186,6 +187,26 @@ public class main {
         System.out.println(NonAuthenticatedUser);
     }
     
+    public static void testViewOffersHistory(){
+        Service service = new Service();
+        System.out.println("View offers history");
+        User user2 = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith2@here.com","password","oh");
+//        service.createAccount(user2);
+        Cook cook = new Cook(user2, new Date(), 0, "", "none");
+//        service.approveCook(cook);
+        List<PreferenceTag> classifications = new LinkedList<>();
+        List<Ingredient> ingredients = new LinkedList<>();
+        Offer offer1 = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        Offer offer2 = new Offer(cook, new Date(), "teest3",5.52, 11, "bery goood food", classifications, ingredients, "noone","address2","city3","zipcode4");
+        
+        System.out.println("the test offers are:");
+        System.out.println(offer1);
+        System.out.println(offer2);
+        List<Offer> offers = service.viewOffersHistory(cook);
+        offers.forEach(o -> {
+            System.out.println(o);
+        });
+    }
     
 //    public static void initialiserClients() {
 //        

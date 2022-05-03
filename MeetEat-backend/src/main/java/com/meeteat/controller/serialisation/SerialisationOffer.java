@@ -39,7 +39,6 @@ public class SerialisationOffer extends Serialisation{
         jsonCook.addProperty("lastName",offer.getCook().getLastName());
         jsonCook.addProperty("rating",offer.getCook().getRating());
         jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
-        jsonCook.addProperty("image", offer.getCook().getProfilePictureUrl());
         
         container.add("cook",jsonCook);
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");

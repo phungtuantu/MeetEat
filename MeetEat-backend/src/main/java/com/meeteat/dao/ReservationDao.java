@@ -22,7 +22,6 @@ public class ReservationDao extends AbstractDao<Reservation> {
     }
     
     public List<Reservation> searchPurchasedMeals(User user){
-        Reservation result = null;
         EntityManager em = JpaTool.obtainPersistenceContext();
         String jpql="select r from Reservation r where r.customer= :customer and r.state = :purchasedState";
         TypedQuery query=em.createQuery(jpql, Reservation.class);
@@ -31,5 +30,12 @@ public class ReservationDao extends AbstractDao<Reservation> {
         List<Reservation> purchasedMeals = query.getResultList();
         return purchasedMeals;
     }
-
+    public List<Reservation> getReservationsListByUserId(Long userId){
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        String jpql="select r from Reservation r where r.customer.id= :userId";
+        TypedQuery query=em.createQuery(jpql, Reservation.class);
+        query.setParameter("userId",userId);
+        List<Reservation> reservations = query.getResultList();
+        return reservations;
+    }
 }

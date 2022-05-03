@@ -18,8 +18,10 @@ import com.meeteat.controller.action.ActionModifyAccount;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewOffersHistory;
+import com.meeteat.controller.action.ActionViewReservationsList;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationOffer;
+import com.meeteat.controller.serialisation.SerialisationReservations;
 import com.meeteat.controller.serialisation.SerialisationOffers;
 import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationUser;
@@ -112,7 +114,11 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationUsers();
                 break;
             }
-            
+            case "viewReservationsList"-> {
+                action = new ActionViewReservationsList();
+                serialisation = new SerialisationReservations();
+                break;
+            }
         }
         
         if (action!=null&&serialisation!=null){
