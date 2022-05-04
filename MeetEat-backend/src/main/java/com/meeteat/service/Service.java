@@ -675,7 +675,7 @@ public class Service {
         return sortedByDistanceOffers;
     }
 
-    public List<Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
+    public List<Offer> searchOffers(List<Long> requestPreferences, int priceLimit, User user) {
         //SearchOffers according to :diet, cuisine, user's preferences, price and location
 
         List<Offer> ongoingOffers;
@@ -692,16 +692,6 @@ public class Service {
         try {
             JpaTool.openTransaction();
 
-            //priceRange
-            int priceLimit;
-            switch (priceRange) {
-                case 1 ->
-                    priceLimit = 5;
-                case 2 ->
-                    priceLimit = 9;
-                default ->
-                    priceLimit = 20;
-            }
             ongoingOffers = offerDao.getOngoingOffers(priceLimit);
             //generate preferences list
             List<Long> preferences = new ArrayList<>();

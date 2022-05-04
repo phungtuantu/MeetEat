@@ -48,6 +48,7 @@ public class DBPopulation {
     LinkedList<Offer> createdOfferList = new LinkedList<>();
     LinkedList<Offer> ongoingOfferList = new LinkedList<>();
     LinkedList<Offer> expiredOfferList = new LinkedList<>();
+    LinkedList<Offer> soldoutOfferList = new LinkedList<>();
     LinkedList<Reservation> reservationList = new LinkedList<>();
     Locale locale = new Locale("fr");
     int nbProfilePictures = 20;
@@ -153,13 +154,14 @@ public class DBPopulation {
             List<Ingredient> ingredients = getIngredientsForOffer();
             List<PreferenceTag> classifications = getPreferenceTagForOffer();
             Cook cook = service.findCookById(cookIdList.get(number.numberBetween(min, cookIdList.size())));
-            HarryPotter hp = faker.harryPotter();
+            Food food = faker.food();
+            Ingredient ingredient = new Ingredient(food.ingredient());
             dat = faker.date();
             Date creationDate = dat.between(minDate, maxDate);
-            String title = hp.character();
+            String title = food.dish();
             double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
-            String details = hp.quote();
+            String details = food.spice();
             String specifications = faker.backToTheFuture().quote();
             Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
                                     details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
@@ -204,6 +206,12 @@ public class DBPopulation {
             Offer offer = ongoingOfferList.get(offerNumber);
             int reservationsToBeMade = number.numberBetween(0, (nbReservations - reservationsMade));
             for(int reservationNumber = 0; reservationNumber <= reservationsToBeMade; reservationNumber++){
+                if(offer.getRemainingPortions()==0){
+                    offer.setState(Offer.offerState.SOLDOUT);
+                    soldoutOfferList.add(offer);
+                    assert(ongoingOfferList.remove(offer));
+                    break;
+                }
                 //Find a random user
                 int userNumber = number.numberBetween(0, userIdList.size()-1);
                 User customer = service.findUserById(userIdList.get(offerNumber));

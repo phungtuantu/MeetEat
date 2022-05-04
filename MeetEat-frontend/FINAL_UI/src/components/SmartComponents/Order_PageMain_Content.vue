@@ -35,7 +35,7 @@
       <div class="row">
         <div class="lblMaxprice">
           <label id="lblMaxprice"> Max price </label>
-          <input type="number" id="maxPrice" name="maxPrice" min="1" max="20">
+          <input type="number" id="maxPrice" name="maxPrice" min="1" max="20" v-model="priceLimit">
         </div>
       </div>
 
@@ -173,6 +173,9 @@ export default {
     return {
       city : "",
       orders : [],
+      priceLimit : 20,
+      preferences : [],
+      searchOffersUrl : "",
     }
   },
   methods : {
@@ -184,9 +187,13 @@ export default {
       localStorage.setItem("itemId", id);
       router.replace('orderPage/'+id);
     },
-    searchOffers : function (){
-      
-    },
+    // searchOffers : function (){
+    //   this.searchOffersUrl = urlAPI + 'todo=searchOffers&priceLimit=' + this.priceLimit + 'requestPreference=';
+    //   await axios.get(this.searchOffersUrl)
+    //     .then(response => (this.orders = response.data));
+
+    //   this.orders = this.orders.offers
+    // },
 
   },
   async mounted() {
@@ -195,8 +202,6 @@ export default {
         .then(response => (this.orders = response.data));
 
     this.orders = this.orders.offers
-    console.log(this.orders);
-    console.log(this.city);
 
   }
 }
