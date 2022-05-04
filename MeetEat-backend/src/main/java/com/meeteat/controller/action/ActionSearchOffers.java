@@ -10,7 +10,6 @@ import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -28,7 +27,7 @@ public class ActionSearchOffers extends Action {
         Long userId = (Long)session.getAttribute("userId");
 //        Long userId = Long.parseLong(request.getParameter("userId"));
         User user = service.findUserById(userId);
-        int priceRange = Integer.parseInt(request.getParameter("priceRange"));
+        int priceLimit = Integer.parseInt(request.getParameter("priceLimit"));
         List<Long> requestPreferences = new LinkedList<>();
         for (String preferenceId : request.getParameterValues("requestPreferences")){
             if(!preferenceId.isEmpty()){
@@ -44,7 +43,7 @@ public class ActionSearchOffers extends Action {
 //        for (String preferenceId : request.getParameterValues("requestPreferences")){
 //            requestPreferences.add(Long.parseLong(preferenceId));
 //        }
-        List <Offer> offers=service.searchOffers(requestPreferences, priceRange, user);
+        List <Offer> offers=service.searchOffers(requestPreferences, priceLimit, user);
         request.setAttribute("offers",offers);
     }
     

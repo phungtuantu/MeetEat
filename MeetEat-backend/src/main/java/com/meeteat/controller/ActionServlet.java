@@ -18,6 +18,7 @@ import com.meeteat.controller.action.ActionConsultOffers;
 import com.meeteat.controller.action.ActionCookRequestDetails;
 import com.meeteat.controller.action.ActionCreateAccount;
 import com.meeteat.controller.action.ActionCreateReservation;
+import com.meeteat.controller.action.ActionEstimatePrice;
 import com.meeteat.controller.action.ActionEvaluateMeal;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionModifyAccount;
@@ -26,6 +27,9 @@ import com.meeteat.controller.action.ActionRejectRequest;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSeeCookRequests;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
+import com.meeteat.controller.action.ActionViewCuisines;
+import com.meeteat.controller.action.ActionViewDiets;
+import com.meeteat.controller.action.ActionViewIngredients;
 import com.meeteat.controller.action.ActionViewOffersHistory;
 import com.meeteat.controller.action.ActionViewOngoingOffersList;
 import com.meeteat.controller.action.ActionViewReservationsList;
@@ -34,12 +38,15 @@ import com.meeteat.controller.action.ActionViewReservationDetails;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationAcceptRequest;
 import com.meeteat.controller.serialisation.SerialisationApproveCook;
+import com.meeteat.controller.serialisation.SerialisationAuthenticate;
 import com.meeteat.controller.serialisation.SerialisationCookRequest;
 import com.meeteat.controller.serialisation.SerialisationCookRequests;
 import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationReservations;
 import com.meeteat.controller.serialisation.SerialisationOffers;
+import com.meeteat.controller.serialisation.SerialisationPreferenceTags;
 import com.meeteat.controller.serialisation.SerialisationPublishOffer;
+import com.meeteat.controller.serialisation.SerialisationPriceEstimate;
 import com.meeteat.controller.serialisation.SerialisationRejectRequest;
 import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationReview;
@@ -143,7 +150,7 @@ public class ActionServlet extends HttpServlet {
             }
             case "authenticate" -> {
                 action = new ActionAuthentication();
-                serialisation = new SerialisationUser();
+                serialisation = new SerialisationAuthenticate();
                 break;
             }
             case "viewOffersHistory"-> {
@@ -195,7 +202,26 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffers();
                 break;
             }
-            
+            case "viewDiets"-> {
+                action = new ActionViewDiets();
+                serialisation = new SerialisationPreferenceTags();
+                break;
+            }
+            case "viewCuisines"-> {
+                action = new ActionViewCuisines();
+                serialisation = new SerialisationPreferenceTags();
+                break;
+            }
+            case "viewIngredients"-> {
+                action = new ActionViewIngredients();
+                serialisation = new SerialisationPreferenceTags();
+                break;
+            }
+            case "estimatePrice" ->{
+                action = new ActionEstimatePrice();
+                serialisation = new SerialisationPriceEstimate();
+                break;
+            }
         }
         
         if (action!=null&&serialisation!=null){

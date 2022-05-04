@@ -224,7 +224,8 @@ public class Offer implements Serializable {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
-        this.totalPortions -= reservation.getNbOfPortion();
+        this.remainingPortions -= reservation.getNbOfPortion();
+        assert(this.remainingPortions>=0);
     }
     
     public void publishOffer() {
