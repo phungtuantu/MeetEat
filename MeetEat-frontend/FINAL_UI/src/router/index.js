@@ -21,8 +21,8 @@ import ModificationOfferPage from "@/views/ModificationOfferPage";
 import ResumeOrderPage from "@/views/ResumeOrderPage";
 import BecomeCookPage from "@/views/BecomeCookPage";
 import VerificationCookPage from "@/views/VerificationCookPage";
+import PendingRequestsPage from "@/views/PendingRequestsPage";
 import HistoricPage from "@/views/HistoricPage";
-
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("auth-token")}`;
 axios.interceptors.response.use(response => response, error => {
@@ -132,7 +132,11 @@ const routes = [
     name: 'HistoricPage',
     component: HistoricPage
   },
-
+  {
+    path: '/pendingrequests',
+    name: 'PendingRequestsPage',
+    component: PendingRequestsPage
+  },
 
 ]
 

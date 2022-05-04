@@ -868,7 +868,7 @@ public class Service {
     }
     
     public List<Offer> viewOngoingOffersList(Cook cook) {
-        //view the reservations made by a user
+        //view the ongoing offers made by a cook
         List<Offer> offersList = null;
         JpaTool.createPersistenceContext();
         try {
