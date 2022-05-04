@@ -31,10 +31,12 @@ import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.model.VerificationRequest.RequestImage;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.security.MessageDigest;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
@@ -241,10 +243,54 @@ public class Service {
         return res;
     }
     
-    public Offer publishOffer(Long offerId){
+    public Offer publishOffer(Long offerId, Date expirationDate){
         Offer offer = getOfferFromId(offerId);
-        offer.publishOffer();
-        return updateOffer(offer);
+        Offer res = null;
+        try{
+            offer.publishOffer(expirationDate);
+            res = updateOffer(offer);
+        }catch(Exception e){
+            System.out.println("Expiration date is before the publication date");
+        }
+        return res;
+    }
+    
+    public Offer publishOffer(Long offerId, Date publicationDate, Date expirationDate){
+        Offer offer = getOfferFromId(offerId);
+        Offer res = null;
+        try{
+            offer.publishOffer(publicationDate, expirationDate);
+            res = updateOffer(offer);
+        }catch(Exception e){
+            System.out.println("Expiration date is before the publication date");
+        }
+        return res;
+    }
+
+    
+    public int checkOffersExpirationDate(){
+        int cleanedOffers = 0;
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        List<Offer> offers = new LinkedList<>();
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            offers = offerDao.getOngoingByStatus(Offer.offerState.ONGOING);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling checkOffersExpirationDate", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        for(Offer offer : offers){
+            if(offer.expired(today)){
+                updateOffer(offer);
+                cleanedOffers++;
+            }
+        }
+        return cleanedOffers;
     }
     
     public Long approveCook(Cook cook){
@@ -819,5 +865,21 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return result;
+    }
+    
+    public List<Offer> viewOngoingOffersList(Cook cook) {
+        //view the ongoing offers made by a cook
+        List<Offer> offersList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            offersList = offerDao.getOngoingOffers(cook.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOngoingOffersList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return offersList;
     }
 }
