@@ -227,7 +227,7 @@ public class DBPopulation {
                 //Assign a random state to the reservation
                 ReservationState state = ReservationState.values()[number.numberBetween(0, ReservationState.values().length)];
                 //Assign a random number of portions
-                int nbPortions = number.numberBetween(1, offer.getRemainingPortions()/4);
+                int nbPortions = number.numberBetween(1, offer.getRemainingPortions()/5);
                 Reservation reservation = new Reservation(reservationDate, state, nbPortions, offer, customer);
                 Long created = service.createReservation(reservation);
                 if(created != null){
@@ -294,6 +294,6 @@ public class DBPopulation {
     
     public static void main(String [] args){
         DBPopulation dbp = new DBPopulation();
-        dbp.populateDatabase(100, 30, 200, 20, 30, 10, 50);
+        dbp.populateDatabase(100, 30, 200, 20, 50, 30, 40);
     }
 }
