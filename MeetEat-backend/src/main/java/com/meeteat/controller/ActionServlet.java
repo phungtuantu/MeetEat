@@ -28,6 +28,7 @@ import com.meeteat.controller.action.ActionSeeCookRequests;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewCuisines;
 import com.meeteat.controller.action.ActionViewDiets;
+import com.meeteat.controller.action.ActionViewIngredients;
 import com.meeteat.controller.action.ActionViewOffersHistory;
 import com.meeteat.controller.action.ActionViewOngoingOffersList;
 import com.meeteat.controller.action.ActionViewReservationsList;
@@ -207,7 +208,11 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationPreferenceTags();
                 break;
             }
-            
+            case "viewIngredients"-> {
+                action = new ActionViewIngredients();
+                serialisation = new SerialisationPreferenceTags();
+                break;
+            }
         }
         
         if (action!=null&&serialisation!=null){

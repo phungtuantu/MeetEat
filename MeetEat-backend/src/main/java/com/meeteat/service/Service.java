@@ -908,7 +908,6 @@ public class Service {
         return offersList;
     }
     public List<Diet> viewDiets() {
-        
         List<Diet> dietsList = null;
         JpaTool.createPersistenceContext();
         try {
@@ -923,7 +922,6 @@ public class Service {
         return dietsList;
     }
     public List<Cuisine> viewCuisines() {
-        
         List<Cuisine> cuisinesList = null;
         JpaTool.createPersistenceContext();
         try {
@@ -936,5 +934,20 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return cuisinesList;
+    }
+    
+    public List<Ingredient> viewIngredients() {
+        List<Ingredient> ingredientsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            ingredientsList = preferenceTagDao.getIngredients();
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewIngredients", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return ingredientsList;
     }
 }
