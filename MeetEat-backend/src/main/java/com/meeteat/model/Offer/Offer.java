@@ -42,7 +42,7 @@ public class Offer implements Serializable {
     @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Cook cook;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date creationDate;
+    private Date availableFrom;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date publicationDate;
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -123,7 +123,7 @@ public class Offer implements Serializable {
     }
 
     public Date getCreationDate() {
-        return creationDate;
+        return availableFrom;
     }
 
     public String getOfferPhotoPath() {
@@ -135,7 +135,7 @@ public class Offer implements Serializable {
     }
     
     public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+        this.availableFrom = creationDate;
     }
 
     public Date getPublicationDate() {
@@ -224,36 +224,13 @@ public class Offer implements Serializable {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
-        this.totalPortions -= reservation.getNbOfPortion();
+        this.remainingPortions -= reservation.getNbOfPortion();
+        assert(this.remainingPortions>=0);
     }
     
-    public void publishOffer(Date expirationDate) throws Exception{
+    public void publishOffer() {
         this.state = offerState.ONGOING;
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        if(expirationDate.before(today)){
-            throw Exception("Expiration date can't be before today");
-        }
-        this.publicationDate = today;
-        this.expirationDate = expirationDate;
-    }
-    
-    public void publishOffer(Date publicationDate, Date expirationDate) throws Exception{
-        this.state = offerState.ONGOING;
-        if(expirationDate.before(publicationDate)){
-            throw Exception("Expiration date can't be before today");
-        }
-        this.publicationDate = publicationDate;
-        this.expirationDate = expirationDate;
-    }
-    
-    public boolean expired(Date today){
-        boolean w = false;
-        if(expirationDate.before(today)){
-            this.state = offerState.UNAVAILABLE;
-            w = true;
-        }
-        return w;
+        this.publicationDate = new Date();
     }
 
     public List<Message> getMessages() {
@@ -284,13 +261,12 @@ public class Offer implements Serializable {
     public Offer() {
     }
 
-    public Offer(Cook cook, Date creationDate, String title, double price, int totalPortions,
+    public Offer(Cook cook, Date availableFrom, String title, int totalPortions,
             String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications,
-            String address, String city, String zipCode) {
+            String address, String city, String zipCode, Date expirationDate, String offerPhotoPath) {
         this.cook = cook;
-        this.creationDate = creationDate;
+        this.availableFrom = availableFrom;
         this.title = title;
-        this.price = price;
         this.totalPortions = totalPortions;
         this.remainingPortions = totalPortions;
         this.details = details;
@@ -302,8 +278,9 @@ public class Offer implements Serializable {
         this.location = getLatLng(address + ", " + city);
         this.classifications = classifications;
         this.ingredients = ingredients;
-        this.offerPhotoPath = "";
         this.reservations = new LinkedList<>();
+        this.expirationDate = expirationDate;
+        this.offerPhotoPath = offerPhotoPath;
     }
     
     

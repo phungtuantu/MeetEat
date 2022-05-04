@@ -5,20 +5,20 @@
  */
 package com.meeteat.controller.action;
 
-import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Preference.Diet;
 import com.meeteat.service.Service;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author taha
+ * @author yousr
  */
-public class ActionPublishOffer extends Action{
+public class ActionViewDiets extends Action{
     @Override
     public void executer(HttpServletRequest request){
         Service service = new Service();
-        Long offerId = Long.parseLong(request.getParameter("offerId"));
-        Offer offer = service.publishOffer(offerId);
-        request.setAttribute("offer", offer);
+        List<Diet> diets=service.viewDiets();
+        request.setAttribute("preferenceTags",diets);
     }
 }

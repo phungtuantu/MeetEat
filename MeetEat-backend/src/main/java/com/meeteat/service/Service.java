@@ -5,6 +5,8 @@
  */
 package com.meeteat.service;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.maps.model.LatLng;
 import com.meeteat.dao.CookDao;
 import com.meeteat.dao.CookRequestDao;
@@ -18,6 +20,7 @@ import com.meeteat.dao.ReviewDao;
 import com.meeteat.dao.UserDao;
 import com.meeteat.model.Offer.Message;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.PriceEstimate;
 import com.meeteat.model.Offer.Reservation;
 import com.meeteat.model.Offer.ReservationState;
 import com.meeteat.model.Offer.Review;
@@ -30,6 +33,12 @@ import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.model.VerificationRequest.RequestImage;
 import static com.meeteat.service.GeoNetApi.getLatLng;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.ArrayList;
@@ -243,40 +252,13 @@ public class Service {
         return res;
     }
     
-    public Offer publishOffer(Long offerId, Date expirationDate){
+    public Offer publishOffer(Long offerId){
         Offer offer = getOfferFromId(offerId);
-        Offer res = null;
-        if(expirationDate == null){
-            System.out.println("Expiration date is null");
-            return null;
-        }
-        try{
-            offer.publishOffer(expirationDate);
-            res = updateOffer(offer);
-        }catch(Exception e){
-            System.out.println("Expiration date is before the publication date");
-        }
-        return res;
+        offer.publishOffer();
+        return updateOffer(offer);
     }
     
-    public Offer publishOffer(Long offerId, Date publicationDate, Date expirationDate){
-        Offer offer = getOfferFromId(offerId);
-        Offer res = null;
-        if(publicationDate == null || expirationDate == null){
-            System.out.println("Expiration date or publication date is null");
-            return null;
-        }
-        try{
-            offer.publishOffer(publicationDate, expirationDate);
-            res = updateOffer(offer);
-        }catch(Exception e){
-            System.out.println("Expiration date is before the publication date");
-        }
-        return res;
-    }
-
-    
-    public int checkOffersExpirationDate(){
+    /*public int checkOffersExpirationDate(){
         int cleanedOffers = 0;
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
@@ -299,7 +281,7 @@ public class Service {
             }
         }
         return cleanedOffers;
-    }
+    }*/
     
     public Long approveCook(Cook cook){
         Long result = null;
@@ -675,7 +657,7 @@ public class Service {
         return sortedByDistanceOffers;
     }
 
-    public List<Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
+    public List<Offer> searchOffers(List<Long> requestPreferences, int priceLimit, User user) {
         //SearchOffers according to :diet, cuisine, user's preferences, price and location
 
         List<Offer> ongoingOffers;
@@ -692,16 +674,6 @@ public class Service {
         try {
             JpaTool.openTransaction();
 
-            //priceRange
-            int priceLimit;
-            switch (priceRange) {
-                case 1 ->
-                    priceLimit = 5;
-                case 2 ->
-                    priceLimit = 9;
-                default ->
-                    priceLimit = 20;
-            }
             ongoingOffers = offerDao.getOngoingOffers(priceLimit);
             //generate preferences list
             List<Long> preferences = new ArrayList<>();
@@ -718,8 +690,13 @@ public class Service {
             }
             //check the preferences in ongoingOffers + distance to User
             double distance;
+            List<Long> offerClassifications = new ArrayList<>();
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
-                if (offer.getClassifications().containsAll(preferences) && Collections.disjoint(offer.getClassifications(), ingredients)) {
+                offerClassifications.clear();
+                offer.getClassifications().forEach(classification ->{
+                    offerClassifications.add(classification.getId());
+                });
+                if (offerClassifications.containsAll(preferences) && Collections.disjoint(offerClassifications, ingredients)) {
                     distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
                     offer.setDistanceToUser(distance);
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
@@ -811,7 +788,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             for(Reservation reservation : offer.getReservations()){
-                guestsList.add(reservation.getCustomer());
+                if(!guestsList.contains(reservation.getCustomer())){
+                    guestsList.add(reservation.getCustomer());
+                }
             }
             JpaTool.validateTransaction();
         } catch (Exception ex) {
@@ -901,7 +880,7 @@ public class Service {
         JpaTool.createPersistenceContext();
         try {
             JpaTool.openTransaction();
-            offersList = offerDao.getOngoingOffers(cook.getId());
+            offersList = offerDao.getOngoingOffersByCookId(cook.getId());
             JpaTool.validateTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOngoingOffersList", ex);
@@ -909,5 +888,98 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return offersList;
+    }
+    public List<Diet> viewDiets() {
+        List<Diet> dietsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            dietsList = preferenceTagDao.getDiets();
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewDiets", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return dietsList;
+    }
+    public List<Cuisine> viewCuisines() {
+        List<Cuisine> cuisinesList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            cuisinesList = preferenceTagDao.getCuisines();
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCuisines", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return cuisinesList;
+    }
+    
+    public List<Ingredient> viewIngredients() {
+        List<Ingredient> ingredientsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            ingredientsList = preferenceTagDao.getIngredients();
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewIngredients", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return ingredientsList;
+    }
+    
+    public PriceEstimate getMinMaxPrice(List<Ingredient> ingredients){
+        String urlString = "";
+        for(int i=0; i<ingredients.size(); i++){
+            urlString+=ingredients.get(i).getName();
+            if(i<ingredients.size()-1){
+                urlString+=",+";
+            }
+        }
+        JsonObject json = getRequestAsJsonObject("https://api.spoonacular.com/recipes/findByIngredients?ingredients="
+                    +urlString+"&number=1&apiKey=86fb15aafb0d4d7486e024e094d9705d");
+        Long id = Long.parseLong(json.get("id").getAsString());
+        String title = json.get("title").getAsString();
+        JsonObject json2 = getRequestAsJsonObject("https://api.spoonacular.com/recipes/"
+                +id+"/priceBreakdownWidget.json?apiKey=86fb15aafb0d4d7486e024e094d9705d");
+        System.out.println(json2);
+        Double price = Double.parseDouble(json2.get("totalCostPerServing").getAsString())/100.0;
+        PriceEstimate estimate = new PriceEstimate(price, price*2, title);
+        return estimate;
+    }
+    
+    private JsonObject getRequestAsJsonObject(String urlString){
+        URL url;
+        JsonObject json = null;
+        try {
+            url = new URL(urlString);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            
+            int status = con.getResponseCode();
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            String temp = content.toString();
+            if(temp.startsWith("[") && temp.endsWith("]")){
+                temp = temp.substring(1, temp.length()-1);
+            }
+            json = new JsonParser().parse(temp).getAsJsonObject(); 
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
     }
 }

@@ -24,6 +24,7 @@
       <div class="input-group">
         <input id="form1" class="form-control" placeholder="Keyword" type="search"/>
         <button class="btn btn-primary" type="button">
+        <!-- <button class="btn btn-primary" type="button" @click="searchOffers"> -->
           Search
         </button>
       </div>
@@ -33,32 +34,10 @@
       <h4>Price Range</h4>
 
       <div class="row">
-        <article class=" col-sm">
-          <input id="price1" type="checkbox"/>
-          <div>
-      <span>
-        $
-      </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="price2" type="checkbox"/>
-          <div>
-      <span>
-        $$
-      </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="price3" type="checkbox"/>
-          <div>
-              <span>
-                $$$
-              </span>
-          </div>
-        </article>
+        <div class="lblMaxprice">
+          <label id="lblMaxprice"> Max price </label>
+          <input type="number" id="maxPrice" name="maxPrice" min="1" max="20" v-model="priceLimit">
+        </div>
       </div>
 
 
@@ -194,63 +173,10 @@ export default {
   data () {
     return {
       city : "",
-      orders : [
-        // {
-        //   id : 227,
-        //   title : 'Delicious lasagna   !',
-        //   nbPortions : 1,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '02/04/2022',
-        //   options : [ 'noPork'],
-        //   price : 5,
-        //   evaluated : 0,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-        // {
-        //   id : 231,
-        //   title : 'Couscous',
-        //   nbPortions : 5,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '01/04/2022',
-        //   options : [],
-        //   price : 7,
-        //   evaluated : 0,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-        // {
-        //   id : 232,
-        //   title : 'Mexican tacos',
-        //   nbPortions : 3,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '28/03/2022',
-        //   options : [ 'noPork'],
-        //   price : 4,
-        //   evaluated : 1,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-        // {
-        //   title : 'Peruvian ceviche',
-        //   nbPortions : 1,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '21/03/2022',
-        //   options : [ 'pescoVegetarian'],
-        //   price : 6,
-        //   evaluated : 1,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-      ],
+      orders : [],
+      priceLimit : 20,
+      preferences : [],
+      searchOffersUrl : "",
     }
   },
   methods : {
@@ -262,6 +188,13 @@ export default {
       localStorage.setItem("itemId", id);
       router.replace('orderPage/'+id);
     },
+    // searchOffers : function (){
+    //   this.searchOffersUrl = urlAPI + 'todo=searchOffers&priceLimit=' + this.priceLimit + 'requestPreference=';
+    //   await axios.get(this.searchOffersUrl)
+    //     .then(response => (this.orders = response.data));
+
+    //   this.orders = this.orders.offers
+    // },
 
   },
   async mounted() {
@@ -269,7 +202,7 @@ export default {
     await axios.get(urlAPI + 'todo=consultOffers&address=' + this.city)
         .then(response => (this.orders = response.data));
 
-    this.orders = this.orders.offers
+    this.orders = this.orders.offers;
     console.log(this.orders);
     console.log(this.city);
 
@@ -300,6 +233,8 @@ export default {
     padding: 0.5em 1.2em;
   }
 
+  .lbl
+
   .card-body .card-text {
     margin: 0;
   }
@@ -314,6 +249,19 @@ export default {
     width: 40%;
   }
 }
+
+.lblMaxprice{
+  margin-left: 20px;
+  font-style: oblique;
+  font-size: 18px;
+}
+
+.lblMaxprice input[type=number]{
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+}
+
 
 
 article {
