@@ -803,7 +803,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             for(Reservation reservation : offer.getReservations()){
-                guestsList.add(reservation.getCustomer());
+                if(!guestsList.contains(reservation.getCustomer())){
+                    guestsList.add(reservation.getCustomer());
+                }
             }
             JpaTool.validateTransaction();
         } catch (Exception ex) {
@@ -893,7 +895,7 @@ public class Service {
         JpaTool.createPersistenceContext();
         try {
             JpaTool.openTransaction();
-            offersList = offerDao.getOngoingOffers(cook.getId());
+            offersList = offerDao.getOngoingOffersByCookId(cook.getId());
             JpaTool.validateTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOngoingOffersList", ex);

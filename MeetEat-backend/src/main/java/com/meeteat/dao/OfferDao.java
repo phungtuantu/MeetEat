@@ -45,12 +45,13 @@ public class OfferDao extends AbstractDao<Offer>{
         return query.getResultList();
     }
     
-    public List<Offer> getOngoingOffers(long idCook) {
+    public List<Offer> getOngoingOffersByCookId(long idCook) {
         
         //returns offers of a cook
         EntityManager em = JpaTool.obtainPersistenceContext();
-        TypedQuery<Offer> query = em.createQuery("SELECT o from Offer o WHERE o.cook.id = :idCook AND o.state=OfferState.ONGOING ORDER BY o.creationDate DESC", Offer.class);
+        TypedQuery<Offer> query = em.createQuery("SELECT o from Offer o WHERE o.cook.id = :idCook AND o.state= :status ORDER BY o.creationDate DESC", Offer.class);
         query.setParameter("idCook",idCook);
+        query.setParameter("status",offerState.ONGOING);
         return query.getResultList();
     }
     
