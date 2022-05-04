@@ -33,32 +33,10 @@
       <h4>Price Range</h4>
 
       <div class="row">
-        <article class=" col-sm">
-          <input id="price1" type="checkbox"/>
-          <div>
-      <span>
-        $
-      </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="price2" type="checkbox"/>
-          <div>
-      <span>
-        $$
-      </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="price3" type="checkbox"/>
-          <div>
-              <span>
-                $$$
-              </span>
-          </div>
-        </article>
+        <div class="lblMaxprice">
+          <label id="lblMaxprice"> Max price </label>
+          <input type="number" id="maxPrice" name="maxPrice" min="1" max="20">
+        </div>
       </div>
 
 
@@ -247,6 +225,8 @@ export default {
     padding: 0.5em 1.2em;
   }
 
+  .lbl
+
   .card-body .card-text {
     margin: 0;
   }
@@ -261,6 +241,19 @@ export default {
     width: 40%;
   }
 }
+
+.lblMaxprice{
+  margin-left: 20px;
+  font-style: oblique;
+  font-size: 18px;
+}
+
+.lblMaxprice input[type=number]{
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+}
+
 
 
 article {
