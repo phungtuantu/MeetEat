@@ -6,12 +6,13 @@
  */
 package com.meeteat.controller.action;
 
-import com.meeteat.model.Offer.Offer;
-import com.meeteat.model.Offer.Reservation;
-import com.meeteat.model.Offer.ReservationState;
 import com.meeteat.model.User.User;
+import com.meeteat.model.VerificationRequest.CookRequest;
+import com.meeteat.model.VerificationRequest.RequestImage;
 import com.meeteat.service.Service;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -23,19 +24,31 @@ public class ActionBecomeCook extends Action{
 
     @Override
     public void executer(HttpServletRequest request) {
-//        Service service = new Service();
-//        HttpSession session = request.getSession();
-////        Long userId = (Long)session.getAttribute("userId");
-//        Long userId = Long.parseLong(request.getParameter("userId"));
-//        
-//        User customer = service.findUserById(customerId);
-//        Long offerId = Long.parseLong(request.getParameter("offerId"));
-//        Offer offer = service.findOfferById(offerId);
-//        Date reservationDate = new Date();
-//        Integer nbOfPortions = Integer.parseInt(request.getParameter("nbOfPortions"));
-//        Reservation reservation=new Reservation(reservationDate, ReservationState.REQUEST, nbOfPortions, offer, customer);
-//        service.createReservation(reservation);
-//        request.setAttribute("reservation",reservation);
+        Service service = new Service();
+        HttpSession session = request.getSession();
+//        Long userId = (Long)session.getAttribute("userId");
+        Long userId = Long.parseLong(request.getParameter("userId"));
+        User user = service.findUserById(userId);
+        String id_ImagePath = request.getParameter("idImagePath");
+        String certificationImagePath = request.getParameter("certificationImagePath");
+        RequestImage id_Image = new RequestImage(id_ImagePath);    
+        RequestImage certificationImage = new RequestImage(certificationImagePath); 
+        service.createRequestImage(id_Image);
+        service.createRequestImage(certificationImage);
+        List<RequestImage> equipmentImages = new LinkedList<>();
+        for (String equipmentImagePath : request.getParameterValues("equipmentImagePath")){
+            //equipmentImages.add((service.createRequestImage(Long.parseLong(equipmentImageId))));
+            RequestImage equipmentImage = new RequestImage(equipmentImagePath);
+            equipmentImages.add(equipmentImage);
+            service.createRequestImage(equipmentImage);
+        }
+        
+        Date requestDate = new Date();
+        CookRequest cookRequest = new CookRequest(requestDate, user, equipmentImages, id_Image, certificationImage);
+        
+        service.becomeCook(cookRequest);
+        System.out.println(cookRequest.getIdCookRequest());
+        request.setAttribute("cookRequest",cookRequest);
     }
     
 }

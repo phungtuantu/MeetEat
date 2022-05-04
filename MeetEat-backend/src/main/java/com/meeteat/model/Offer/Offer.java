@@ -13,6 +13,7 @@ import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -302,6 +303,7 @@ public class Offer implements Serializable {
         this.classifications = classifications;
         this.ingredients = ingredients;
         this.offerPhotoPath = "";
+        this.reservations = new LinkedList<>();
     }
     
     

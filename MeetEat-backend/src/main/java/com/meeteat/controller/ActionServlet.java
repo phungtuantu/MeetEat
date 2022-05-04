@@ -26,8 +26,10 @@ import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSeeCookRequests;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewOffersHistory;
+import com.meeteat.controller.action.ActionViewOngoingOffersList;
 import com.meeteat.controller.action.ActionViewReservationsList;
 import com.meeteat.controller.action.ActionViewPurchasedMeals;
+import com.meeteat.controller.action.ActionViewReservationDetails;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationAcceptRequest;
 import com.meeteat.controller.serialisation.SerialisationApproveCook;
@@ -152,6 +154,11 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationReservations();
                 break;
             }
+            case "viewReservationDetails"-> {
+                action = new ActionViewReservationDetails();
+                serialisation = new SerialisationReservation();
+                break;
+            }
             case "seeCookRequests" -> {
                 action = new ActionSeeCookRequests();
                 serialisation = new SerialisationCookRequests();
@@ -162,7 +169,7 @@ public class ActionServlet extends HttpServlet {
             }
             case "viewPurchasedMeals" -> {
                 action = new ActionViewPurchasedMeals();
-                serialisation = new SerialisationReservation();
+                serialisation = new SerialisationReservations();
             }
             case "evaluateMeal" -> {
                 action = new ActionEvaluateMeal();
@@ -171,7 +178,13 @@ public class ActionServlet extends HttpServlet {
             
             case "becomeCook"-> {
                 action = new ActionBecomeCook();
-                serialisation = new SerialisationUsers();
+                serialisation = new SerialisationCookRequest();
+                break;
+            }
+            
+            case "viewOngoingOffersList"-> {
+                action = new ActionViewOngoingOffersList();
+                serialisation = new SerialisationOffers();
                 break;
             }
             
