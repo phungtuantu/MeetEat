@@ -908,7 +908,7 @@ public class Service {
         return offersList;
     }
     public List<Diet> viewDiets() {
-        //view the ongoing offers made by a cook
+        
         List<Diet> dietsList = null;
         JpaTool.createPersistenceContext();
         try {
@@ -923,7 +923,7 @@ public class Service {
         return dietsList;
     }
     public List<Cuisine> viewCuisines() {
-        //view the ongoing offers made by a cook
+        
         List<Cuisine> cuisinesList = null;
         JpaTool.createPersistenceContext();
         try {

@@ -19,6 +19,6 @@ public class ActionViewCuisines extends Action{
     public void executer(HttpServletRequest request){
         Service service = new Service();
         List<Cuisine> cuisines=service.viewCuisines();
-        request.setAttribute("cuisines",cuisines);
+        request.setAttribute("preferenceTags",cuisines);
     }
 }

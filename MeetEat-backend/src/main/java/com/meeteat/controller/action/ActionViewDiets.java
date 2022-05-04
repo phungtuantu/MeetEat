@@ -19,6 +19,6 @@ public class ActionViewDiets extends Action{
     public void executer(HttpServletRequest request){
         Service service = new Service();
         List<Diet> diets=service.viewDiets();
-        request.setAttribute("diets",diets);
+        request.setAttribute("preferenceTags",diets);
     }
 }
