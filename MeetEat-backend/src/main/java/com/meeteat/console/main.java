@@ -135,19 +135,19 @@ public class main {
         });
     }
     
-    public static void testMakeOffer(){
-        Service service = new Service();
-        System.out.println("make a few offers");
-        long cookId = 1;
-        Cook cook = service.findCookById(cookId);
-        List<PreferenceTag> classifications = new LinkedList<>();
-        List<Ingredient> ingredients = new LinkedList<>();
-        ingredients.add(new Ingredient("pork chops"));
-        ingredients.add(new Ingredient("potatoes"));
-        ingredients.add(new Ingredient("cream"));
-        Offer offer = new Offer(cook, new Date(), "My pork chops",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
-        service.makeOffer(offer);
-    }
+//    public static void testMakeOffer(){
+//        Service service = new Service();
+//        System.out.println("make a few offers");
+//        long cookId = 1;
+//        Cook cook = service.findCookById(cookId);
+//        List<PreferenceTag> classifications = new LinkedList<>();
+//        List<Ingredient> ingredients = new LinkedList<>();
+//        ingredients.add(new Ingredient("pork chops"));
+//        ingredients.add(new Ingredient("potatoes"));
+//        ingredients.add(new Ingredient("cream"));
+//        Offer offer = new Offer(cook, new Date(), "My pork chops",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
+//        service.makeOffer(offer);
+//    }
     
     public static void testMakeReservation(){
         Service service = new Service();
