@@ -675,7 +675,7 @@ public class Service {
         return sortedByDistanceOffers;
     }
 
-    public List<Offer> searchOffers(List<Long> requestPreferences, int priceRange, User user) {
+    public List<Offer> searchOffers(List<Long> requestPreferences, int priceLimit, User user) {
         //SearchOffers according to :diet, cuisine, user's preferences, price and location
 
         List<Offer> ongoingOffers;
@@ -692,16 +692,6 @@ public class Service {
         try {
             JpaTool.openTransaction();
 
-            //priceRange
-            int priceLimit;
-            switch (priceRange) {
-                case 1 ->
-                    priceLimit = 5;
-                case 2 ->
-                    priceLimit = 9;
-                default ->
-                    priceLimit = 20;
-            }
             ongoingOffers = offerDao.getOngoingOffers(priceLimit);
             //generate preferences list
             List<Long> preferences = new ArrayList<>();
@@ -718,8 +708,13 @@ public class Service {
             }
             //check the preferences in ongoingOffers + distance to User
             double distance;
+            List<Long> offerClassifications = new ArrayList<>();
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
-                if (offer.getClassifications().containsAll(preferences) && Collections.disjoint(offer.getClassifications(), ingredients)) {
+                offerClassifications.clear();
+                offer.getClassifications().forEach(classification ->{
+                    offerClassifications.add(classification.getId());
+                });
+                if (offerClassifications.containsAll(preferences) && Collections.disjoint(offerClassifications, ingredients)) {
                     distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
                     offer.setDistanceToUser(distance);
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
@@ -811,7 +806,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             for(Reservation reservation : offer.getReservations()){
-                guestsList.add(reservation.getCustomer());
+                if(!guestsList.contains(reservation.getCustomer())){
+                    guestsList.add(reservation.getCustomer());
+                }
             }
             JpaTool.validateTransaction();
         } catch (Exception ex) {
@@ -901,7 +898,7 @@ public class Service {
         JpaTool.createPersistenceContext();
         try {
             JpaTool.openTransaction();
-            offersList = offerDao.getOngoingOffers(cook.getId());
+            offersList = offerDao.getOngoingOffersByCookId(cook.getId());
             JpaTool.validateTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOngoingOffersList", ex);

@@ -34,6 +34,7 @@ import com.meeteat.controller.action.ActionViewReservationDetails;
 import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationAcceptRequest;
 import com.meeteat.controller.serialisation.SerialisationApproveCook;
+import com.meeteat.controller.serialisation.SerialisationAuthenticate;
 import com.meeteat.controller.serialisation.SerialisationCookRequest;
 import com.meeteat.controller.serialisation.SerialisationCookRequests;
 import com.meeteat.controller.serialisation.SerialisationOffer;
@@ -142,7 +143,7 @@ public class ActionServlet extends HttpServlet {
             }
             case "authenticate" -> {
                 action = new ActionAuthentication();
-                serialisation = new SerialisationUser();
+                serialisation = new SerialisationAuthenticate();
                 break;
             }
             case "viewOffersHistory"-> {
