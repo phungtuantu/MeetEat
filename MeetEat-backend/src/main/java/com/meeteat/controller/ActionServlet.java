@@ -189,13 +189,7 @@ public class ActionServlet extends HttpServlet {
                 action = new ActionBecomeCook();
                 serialisation = new SerialisationCookRequest();
                 break;
-            }
-            case "publishOffer"-> {
-                action = new ActionPublishOffer();
-                serialisation = new SerialisationOffer();
-                break;
-            }
-            
+            }            
             case "viewOngoingOffersList"-> {
                 action = new ActionViewOngoingOffersList();
                 serialisation = new SerialisationOffers();

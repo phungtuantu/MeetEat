@@ -53,7 +53,8 @@ public class ActionMakeOffer extends Action {
         String specifications = (String)session.getAttribute("specifications");
         String address = request.getParameter("address");
         String city = request.getParameter("city");
-        String zipCode = request.getParameter("zipCode");
+        String zipCode = request.getParameter("zipcode");
+        //System.out.println(specifications);
         Date expirationDate;
         try {
             expirationDate = getDate(request.getParameter("expDate"));

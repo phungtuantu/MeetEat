@@ -243,40 +243,13 @@ public class Service {
         return res;
     }
     
-    public Offer publishOffer(Long offerId, Date expirationDate){
+    public Offer publishOffer(Long offerId){
         Offer offer = getOfferFromId(offerId);
-        Offer res = null;
-        if(expirationDate == null){
-            System.out.println("Expiration date is null");
-            return null;
-        }
-        try{
-            offer.publishOffer(expirationDate);
-            res = updateOffer(offer);
-        }catch(Exception e){
-            System.out.println("Expiration date is before the publication date");
-        }
-        return res;
+        offer.publishOffer();
+        return updateOffer(offer);
     }
     
-    public Offer publishOffer(Long offerId, Date publicationDate, Date expirationDate){
-        Offer offer = getOfferFromId(offerId);
-        Offer res = null;
-        if(publicationDate == null || expirationDate == null){
-            System.out.println("Expiration date or publication date is null");
-            return null;
-        }
-        try{
-            offer.publishOffer(publicationDate, expirationDate);
-            res = updateOffer(offer);
-        }catch(Exception e){
-            System.out.println("Expiration date is before the publication date");
-        }
-        return res;
-    }
-
-    
-    public int checkOffersExpirationDate(){
+    /*public int checkOffersExpirationDate(){
         int cleanedOffers = 0;
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
@@ -299,7 +272,7 @@ public class Service {
             }
         }
         return cleanedOffers;
-    }
+    }*/
     
     public Long approveCook(Cook cook){
         Long result = null;

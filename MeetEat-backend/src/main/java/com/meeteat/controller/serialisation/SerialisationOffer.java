@@ -88,7 +88,7 @@ public class SerialisationOffer extends Serialisation{
         container.addProperty("address", offer.getAddress());
         container.addProperty("remainingPortions",offer.getRemainingPortions());
         container.addProperty("city", offer.getCity());
-        container.addProperty("zipCode", offer.getZipCode());
+        container.addProperty("zipcode", offer.getZipCode());
         container.addProperty("distanceToUser", offer.getDistanceToUser());
         
         try (PrintWriter out = this.getWriter(response)) {
