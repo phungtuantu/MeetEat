@@ -917,4 +917,34 @@ public class Service {
         }
         return offersList;
     }
+    public List<Diet> viewDiets() {
+        //view the ongoing offers made by a cook
+        List<Diet> dietsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            dietsList = preferenceTagDao.getDiets();
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewDiets", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return dietsList;
+    }
+    public List<Cuisine> viewCuisines() {
+        //view the ongoing offers made by a cook
+        List<Cuisine> cuisinesList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            cuisinesList = preferenceTagDao.getCuisines();
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCuisines", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return cuisinesList;
+    }
 }
