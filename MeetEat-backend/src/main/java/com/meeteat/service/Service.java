@@ -603,12 +603,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             ongoingOffers = offerDao.getOngoingOffers(20);
-            System.out.println("ok");
-            System.out.println(ongoingOffers.get(1));
             //check the preferences in ongoingOffers + distance to User
             double distance;
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
-                System.out.println(offer);
                 distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
                 offer.setDistanceToUser(distance);
                 sortedByDistanceOffers.add(offer); // insertion on O(log(n))   
@@ -815,6 +812,29 @@ public class Service {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling becomeCook", ex);
             JpaTool.cancelTransaction();
             result = null;
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public List<Review> viewCooksReviews(Long cookId){
+        List<Review> result = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            List <Offer> madeOffers = offerDao.getOffers(cookId);
+            for (Offer offer : madeOffers){
+                if (result==null){
+                    result = reviewDao.getOffersReviews(offer.getId());
+                } else{
+                    result.addAll(reviewDao.getOffersReviews(offer.getId()));
+                }
+            }
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCooksReviews", ex);
+            JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
         }
