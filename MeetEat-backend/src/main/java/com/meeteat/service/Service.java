@@ -246,6 +246,10 @@ public class Service {
     public Offer publishOffer(Long offerId, Date expirationDate){
         Offer offer = getOfferFromId(offerId);
         Offer res = null;
+        if(expirationDate == null){
+            System.out.println("Expiration date is null");
+            return null;
+        }
         try{
             offer.publishOffer(expirationDate);
             res = updateOffer(offer);
@@ -258,6 +262,10 @@ public class Service {
     public Offer publishOffer(Long offerId, Date publicationDate, Date expirationDate){
         Offer offer = getOfferFromId(offerId);
         Offer res = null;
+        if(publicationDate == null || expirationDate == null){
+            System.out.println("Expiration date or publication date is null");
+            return null;
+        }
         try{
             offer.publishOffer(publicationDate, expirationDate);
             res = updateOffer(offer);
