@@ -7,6 +7,7 @@ package com.meeteat.console;
 
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.PriceEstimate;
 import com.meeteat.model.Offer.Reservation;
 import com.meeteat.model.Offer.ReservationState;
 import com.meeteat.model.Offer.Review;
@@ -16,11 +17,9 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 //import com.meeteat.DBpopulation.DBpopulation;
 
 /**
@@ -37,7 +36,7 @@ public class main {
         JpaTool.init();
 //        testCreatePref();
 //        testCreateAccount();
-//          testModifyAccount();
+//        testModifyAccount();
 //        testApproveCook();
 //        testMakeOffer();
 //        testSpecifyPreferences();
@@ -46,8 +45,18 @@ public class main {
 //        testAuthenticate();
 //        testCreateReview();
 //          testViewOffersHistory();
-           testSearchOffers();
+//           testSearchOffers();
+//        testGetPrice();
         JpaTool.destroy();
+    }
+    
+    public static void testGetPrice(){
+        Service service = new Service();
+        Offer offer = service.getOfferFromId(101l);
+        PriceEstimate e = service.getMinMaxPrice(offer.getIngredients());
+        System.out.println("We think that you are cooking: " + e.getRecipeGuess() 
+                + " and suggest a price between " + e.getMinPrice() + " and " + e.getMaxPrice());
+        
     }
     
     public static void testCreatePref(){
@@ -80,7 +89,7 @@ public class main {
         Cook cook = service.findCookById( (long) 3);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
-        Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        Offer offer = new Offer(cook, new Date(), "teest2", 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3", new Date(), "path");
         service.makeOffer(offer);
         Reservation res1 = new Reservation(new Date(), ReservationState.PURCHASEDMEAL , 6, offer, user);
         service.createReservation(res1);
@@ -111,7 +120,7 @@ public class main {
 //        service.approveCook(cook);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
-        Offer offer = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        Offer offer = new Offer(cook, new Date(), "teest2", 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3", new Date(), "path");
         User user = new User("Bob the Second", "Smith","here","0611","bobthesecondsmith@here.com","password","ohoo");
 //        service.createAccount(user); 
 //        service.makeOffer(offer);
@@ -133,7 +142,10 @@ public class main {
         Cook cook = service.findCookById(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
-        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
+        ingredients.add(new Ingredient("pork chops"));
+        ingredients.add(new Ingredient("potatoes"));
+        ingredients.add(new Ingredient("cream"));
+        Offer offer = new Offer(cook, new Date(), "My pork chops",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
         service.makeOffer(offer);
     }
     
@@ -196,9 +208,9 @@ public class main {
         Cook cook = service.findCookById(Long.parseLong("1"));
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
-        Offer offer1 = new Offer(cook, new Date(), "teest2",5.52, 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3");
+        Offer offer1 = new Offer(cook, new Date(), "teest2", 11, "bery goood food", classifications, ingredients, "noone","address1","city2","zipcode3", new Date(), "path");
         service.makeOffer(offer1);
-        Offer offer2 = new Offer(cook, new Date(), "teest3",5.52, 11, "bery goood food", classifications, ingredients, "noone","address2","city3","zipcode4");
+        Offer offer2 = new Offer(cook, new Date(), "teest3", 11, "bery goood food", classifications, ingredients, "noone","address10","city2","zipcode3", new Date(), "path");
         service.makeOffer(offer2);
         System.out.println("the test offers are:");
         System.out.println(offer1);

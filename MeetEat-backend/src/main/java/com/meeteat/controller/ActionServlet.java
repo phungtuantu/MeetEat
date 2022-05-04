@@ -18,6 +18,7 @@ import com.meeteat.controller.action.ActionConsultOffers;
 import com.meeteat.controller.action.ActionCookRequestDetails;
 import com.meeteat.controller.action.ActionCreateAccount;
 import com.meeteat.controller.action.ActionCreateReservation;
+import com.meeteat.controller.action.ActionEstimatePrice;
 import com.meeteat.controller.action.ActionEvaluateMeal;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionModifyAccount;
@@ -28,6 +29,7 @@ import com.meeteat.controller.action.ActionSeeCookRequests;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewCuisines;
 import com.meeteat.controller.action.ActionViewDiets;
+import com.meeteat.controller.action.ActionViewIngredients;
 import com.meeteat.controller.action.ActionViewOffersHistory;
 import com.meeteat.controller.action.ActionViewOngoingOffersList;
 import com.meeteat.controller.action.ActionViewReservationsList;
@@ -44,6 +46,7 @@ import com.meeteat.controller.serialisation.SerialisationReservations;
 import com.meeteat.controller.serialisation.SerialisationOffers;
 import com.meeteat.controller.serialisation.SerialisationPreferenceTags;
 import com.meeteat.controller.serialisation.SerialisationPublishOffer;
+import com.meeteat.controller.serialisation.SerialisationPriceEstimate;
 import com.meeteat.controller.serialisation.SerialisationRejectRequest;
 import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationReview;
@@ -83,6 +86,7 @@ public class ActionServlet extends HttpServlet {
             case"approveCook" -> {
                 action = new ActionApproveCook();
                 serialisation = new SerialisationApproveCook();
+                break;
             }
             case "consultOffer" -> {
                 action = new ActionConsultOffer();
@@ -172,26 +176,27 @@ public class ActionServlet extends HttpServlet {
             case "seeCookRequests" -> {
                 action = new ActionSeeCookRequests();
                 serialisation = new SerialisationCookRequests();
+                break;
             }
             case "cookRequestDetails" -> {
                 action = new ActionCookRequestDetails();
                 serialisation = new SerialisationCookRequest();
+                break;
             }
             case "viewPurchasedMeals" -> {
                 action = new ActionViewPurchasedMeals();
                 serialisation = new SerialisationReservations();
+                break;
             }
             case "evaluateMeal" -> {
                 action = new ActionEvaluateMeal();
                 serialisation = new SerialisationReview();
             }
-            
             case "becomeCook"-> {
                 action = new ActionBecomeCook();
                 serialisation = new SerialisationCookRequest();
                 break;
-            }
-            
+            }            
             case "viewOngoingOffersList"-> {
                 action = new ActionViewOngoingOffersList();
                 serialisation = new SerialisationOffers();
@@ -207,7 +212,16 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationPreferenceTags();
                 break;
             }
-            
+            case "viewIngredients"-> {
+                action = new ActionViewIngredients();
+                serialisation = new SerialisationPreferenceTags();
+                break;
+            }
+            case "estimatePrice" ->{
+                action = new ActionEstimatePrice();
+                serialisation = new SerialisationPriceEstimate();
+                break;
+            }
         }
         
         if (action!=null&&serialisation!=null){

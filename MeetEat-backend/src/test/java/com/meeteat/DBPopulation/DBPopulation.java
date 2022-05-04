@@ -25,7 +25,6 @@ import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.service.Service;
-import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -157,15 +156,17 @@ public class DBPopulation {
             Food food = faker.food();
             Ingredient ingredient = new Ingredient(food.ingredient());
             dat = faker.date();
-            Date creationDate = dat.between(minDate, maxDate);
             String title = food.dish();
-            double price = number.randomDouble(2, 0, 20);
+            Date availableFrom = dat.between(minDate, maxDate);
+            Date expDate = dat.between(availableFrom, dat.future(10, TimeUnit.DAYS, availableFrom));
+            String imagePath = faker.internet().avatar();
+            //double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
             String details = food.spice();
             String specifications = faker.backToTheFuture().quote();
-            Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
+            Offer offer = new Offer(cook, availableFrom, title, totalPortions, 
                                     details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
-                                    address.zipCode());
+                                    address.zipCode(), expDate, imagePath);
             offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             Long created = service.makeOffer(offer);
             if(created != null){
@@ -178,13 +179,10 @@ public class DBPopulation {
         assert(nbOffersToPublish < createdOfferList.size());
         Number number = faker.number();
         for(int i = 0; i<nbOffersToPublish; i++){
-            DateAndTime dat = faker.date();
             int chosenOffer = number.numberBetween(0, createdOfferList.size());
             Offer offerToPublish = createdOfferList.remove(chosenOffer);
-            Date expirationDate = dat.future(10, TimeUnit.DAYS, offerToPublish.getCreationDate());
-            Date publishDate = dat.between(offerToPublish.getCreationDate(), expirationDate);
             try{
-                offerToPublish = service.publishOffer(offerToPublish.getId(), publishDate, expirationDate);
+                offerToPublish = service.publishOffer(offerToPublish.getId());
             }catch(Exception e){
                 System.out.println("Dates are incoherent");
                 offerToPublish = null;
@@ -249,8 +247,8 @@ public class DBPopulation {
         createOffers(nbOffers);
         publishOffers(nbOffersToPublish);
         createReservations(nbReservations);
-        int expired = service.checkOffersExpirationDate();
-        System.out.println(expired + " offers expired today");
+        //int expired = service.checkOffersExpirationDate();
+        //System.out.println(expired + " offers expired today");
         JpaTool.destroy();
     }
     private List<Ingredient> getIngredientsForOffer(){

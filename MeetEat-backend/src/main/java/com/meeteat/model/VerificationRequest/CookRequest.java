@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -34,7 +35,8 @@ public class CookRequest implements Serializable{
     private Date requestDate;
     @ManyToOne
     private User user;
-    @OneToMany(mappedBy="cookRequest",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @JoinTable(name="equipment_images")
     private List<RequestImage> equipmentImages;
     @OneToOne
     private RequestImage idImage;

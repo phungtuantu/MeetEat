@@ -7,6 +7,7 @@ package com.meeteat.dao;
 
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Diet;
+import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -34,4 +35,10 @@ public class PreferenceTagDao extends AbstractDao<PreferenceTag>{
         return query.getResultList();
     }
     
+    public List<Ingredient> getIngredients() {
+        
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        TypedQuery<Ingredient> query = em.createQuery("SELECT i from Ingredient i", Ingredient.class);
+        return query.getResultList();
+    }
 }
