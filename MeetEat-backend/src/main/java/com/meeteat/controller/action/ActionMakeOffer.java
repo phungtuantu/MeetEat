@@ -10,9 +10,12 @@ import com.meeteat.model.Preference.Ingredient;
 import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.service.Service;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -26,11 +29,17 @@ public class ActionMakeOffer extends Action {
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-        Long cookId = (Long)session.getAttribute("userId");
-        Cook cook = service.findCookById(cookId);
-        Date currentTime = new Date();
+        //Long userId = (Long)session.getAttribute("userId");
+          Long userId = Long.parseLong(request.getParameter("userId"));
+        Cook cook = service.findCookByUserId(userId);
+        Date availableFrom;
+        try {
+            availableFrom = getDate(request.getParameter("fromDate"));
+        } catch (Exception ex) {
+            Logger.getLogger(ActionMakeOffer.class.getName()).log(Level.SEVERE, null, ex);
+            availableFrom = null;
+        }
         String title = request.getParameter("title");
-        Double price = Double.parseDouble(request.getParameter("price"));
         Integer totalPortions = Integer.parseInt(request.getParameter("totalPortions"));
         String details = request.getParameter("details");
         List<Ingredient> ingredients = new LinkedList<>();
@@ -45,10 +54,22 @@ public class ActionMakeOffer extends Action {
         String address = request.getParameter("address");
         String city = request.getParameter("city");
         String zipCode = request.getParameter("zipCode");
-        Offer offer = new Offer(cook, currentTime, title, price, totalPortions, details,
-                classifications, ingredients, specifications,address,city,zipCode);
+        Date expirationDate;
+        try {
+            expirationDate = getDate(request.getParameter("expDate"));
+        } catch (Exception ex) {
+            Logger.getLogger(ActionMakeOffer.class.getName()).log(Level.SEVERE, null, ex);
+            expirationDate = null;
+        }
+        String offerPhotoPath = request.getParameter("photoPath");
+        Offer offer = new Offer(cook, availableFrom, title, totalPortions, details,
+                classifications, ingredients, specifications,address,city,zipCode, expirationDate, offerPhotoPath);
         service.makeOffer(offer);
         request.setAttribute("offer",offer);
     }
     
+    private Date getDate(String dateString) throws Exception{
+        Date expirationDate = new SimpleDateFormat("dd-MM-yyyy").parse(dateString);
+        return expirationDate ;
+    }
 }

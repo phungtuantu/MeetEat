@@ -147,14 +147,15 @@ public class DBPopulation {
             RickAndMorty ram = faker.rickAndMorty();
             DateAndTime dat = faker.date();
             Date creationDate = dat.birthday(0, 2);
+            Date expDate = dat.birthday(0, 2);
             String title = ram.character();
-            double price = number.randomDouble(2, 0, 20);
+            //double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
             String details = ram.quote();
             String specifications = faker.backToTheFuture().quote();
-            Offer offer = new Offer(cook, creationDate, title, price, totalPortions, 
+            Offer offer = new Offer(cook, creationDate, title, /*price,*/ totalPortions, 
                                     details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
-                                    address.zipCode());
+                                    address.zipCode(), expDate);
             offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             Long created = service.makeOffer(offer);
             if(created != null){

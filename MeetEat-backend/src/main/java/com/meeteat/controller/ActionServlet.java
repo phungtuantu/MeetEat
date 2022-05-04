@@ -21,6 +21,7 @@ import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionEvaluateMeal;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionModifyAccount;
+import com.meeteat.controller.action.ActionPublishOffer;
 import com.meeteat.controller.action.ActionRejectRequest;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSeeCookRequests;
@@ -76,6 +77,7 @@ public class ActionServlet extends HttpServlet {
             case"approveCook" -> {
                 action = new ActionApproveCook();
                 serialisation = new SerialisationApproveCook();
+                break;
             }
             case "consultOffer" -> {
                 action = new ActionConsultOffer();
@@ -161,23 +163,30 @@ public class ActionServlet extends HttpServlet {
             case "seeCookRequests" -> {
                 action = new ActionSeeCookRequests();
                 serialisation = new SerialisationCookRequests();
+                break;
             }
             case "cookRequestDetails" -> {
                 action = new ActionCookRequestDetails();
                 serialisation = new SerialisationCookRequest();
+                break;
             }
             case "viewPurchasedMeals" -> {
                 action = new ActionViewPurchasedMeals();
                 serialisation = new SerialisationReservations();
+                break;
             }
             case "evaluateMeal" -> {
                 action = new ActionEvaluateMeal();
                 serialisation = new SerialisationReview();
             }
-            
             case "becomeCook"-> {
                 action = new ActionBecomeCook();
                 serialisation = new SerialisationCookRequest();
+                break;
+            }
+            case "publishOffer"-> {
+                action = new ActionPublishOffer();
+                serialisation = new SerialisationOffer();
                 break;
             }
             

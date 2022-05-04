@@ -20,7 +20,7 @@ public class ActionApproveCook extends Action{
     @Override
     public void executer(HttpServletRequest request){
         Service service = new Service();        
-        Long cookRequestId = Long.parseLong(request.getParameter("CookRequestId"));
+        Long cookRequestId = Long.parseLong(request.getParameter("cookRequestId"));
         CookRequest cookRequest = service.viewCookRequest(cookRequestId);
         User user = cookRequest.getUser();
         Date date = new Date();
