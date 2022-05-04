@@ -215,6 +215,22 @@ public class Service {
         }
         return user;
     }
+    
+    public PreferenceTag findPreferenceById(Long preferenceId) {
+        PreferenceTag preference = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            preference = preferenceTagDao.searchById(preferenceId);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling findPreferenceById", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return preference;
+    }
 
     public Long makeOffer(Offer offer) {
         Long result = null;
@@ -253,7 +269,7 @@ public class Service {
     }
     
     public Offer publishOffer(Long offerId){
-        Offer offer = getOfferFromId(offerId);
+        Offer offer = getOfferById(offerId);
         offer.publishOffer();
         return updateOffer(offer);
     }
@@ -364,16 +380,36 @@ public class Service {
         return reservation;
     }
     
-    public User getUserFromId(Long id) {
-        //Might not be needed in the future, currently used for testing
+    public User getUserById(Long id) {
         JpaTool.createPersistenceContext();
-        return userDao.searchById(id);
+        User user = null;
+        try {
+            JpaTool.openTransaction();
+            user = userDao.searchById(id);;
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling getUserFromId", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return user;
     }
 
-    public Offer getOfferFromId(Long id) {
-        //Might not be needed in the future, currently used for testing
+    public Offer getOfferById(Long id) {
         JpaTool.createPersistenceContext();
-        return offerDao.searchById(id);
+        Offer offer = null;
+        try {
+            JpaTool.openTransaction();
+            offer = offerDao.searchById(id);;
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling getOfferFromId", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return offer;
     }
 
     //Add entries to DB

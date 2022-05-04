@@ -40,15 +40,15 @@ public class DBPopulation {
     Service service;
     LinkedList<Long> userIdList = new LinkedList<>();
     LinkedList<Long> cookIdList = new LinkedList<>();
-    LinkedList<Ingredient> ingredientsList = new LinkedList<>();
-    LinkedList<Diet> dietList = new LinkedList<>();
-    LinkedList<Cuisine> cuisineList = new LinkedList<>();
-    LinkedList<CookRequest> cookRequestList = new LinkedList<>();
-    LinkedList<Offer> createdOfferList = new LinkedList<>();
-    LinkedList<Offer> ongoingOfferList = new LinkedList<>();
-    LinkedList<Offer> expiredOfferList = new LinkedList<>();
-    LinkedList<Offer> soldoutOfferList = new LinkedList<>();
-    LinkedList<Reservation> reservationList = new LinkedList<>();
+    LinkedList<Long> ingredientsList = new LinkedList<>();
+    LinkedList<Long> dietList = new LinkedList<>();
+    LinkedList<Long> cuisineList = new LinkedList<>();
+    LinkedList<Long> cookRequestList = new LinkedList<>();
+    LinkedList<Long> createdOfferList = new LinkedList<>();
+    LinkedList<Long> ongoingOfferList = new LinkedList<>();
+    LinkedList<Long> expiredOfferList = new LinkedList<>();
+    LinkedList<Long> soldoutOfferList = new LinkedList<>();
+    LinkedList<Long> reservationList = new LinkedList<>();
     Locale locale = new Locale("fr");
     int nbProfilePictures = 20;
     int nbOfferPictures = 20;
@@ -100,7 +100,7 @@ public class DBPopulation {
             Ingredient ingredient = new Ingredient(food.ingredient());
             Long created = service.createPreferenceTag(ingredient);
             if(created != null){
-               ingredientsList.add(ingredient); 
+               ingredientsList.add(created); 
             }
         }
         for(int i =0; i<(nbIngredients/2); i++){
@@ -108,21 +108,25 @@ public class DBPopulation {
             Ingredient ingredient = new Ingredient(food.spice());
             Long created = service.createPreferenceTag(ingredient);
             if(created != null){
-               ingredientsList.add(ingredient); 
+               ingredientsList.add(created); 
             }
         }
     }
     
     public void createDiets(){
         System.out.println("creatin diets...");
-        dietList.add(new Diet("Vegetarian"));
-        dietList.add(new Diet("Vegan"));
-        dietList.add(new Diet("Pesco Vegetarian"));
-        dietList.add(new Diet("Diary-free"));
-        dietList.add(new Diet("Gluten free"));
-        dietList.add(new Diet("No pork"));
-        for(Diet diet : dietList){
-            service.createPreferenceTag(diet);
+        LinkedList<Diet> dietList1 = new LinkedList<>();
+        dietList1.add(new Diet("Vegetarian"));
+        dietList1.add(new Diet("Vegan"));
+        dietList1.add(new Diet("Pesco Vegetarian"));
+        dietList1.add(new Diet("Diary-free"));
+        dietList1.add(new Diet("Gluten free"));
+        dietList1.add(new Diet("No pork"));
+        for(Diet diet : dietList1){
+            Long created = service.createPreferenceTag(diet);
+            if(created != null){
+                dietList.add(created);
+            }
         }
     }
     
@@ -134,7 +138,7 @@ public class DBPopulation {
             Cuisine cuisine = new Cuisine(name);
             Long created = service.createPreferenceTag(cuisine);
             if(created != null){
-                cuisineList.add(cuisine);
+                cuisineList.add(created);
             }
         }
     }
@@ -142,8 +146,7 @@ public class DBPopulation {
     public void createOffers(int nbOffers){
         int min = 0;
         DateAndTime dat = faker.date();
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
+        Date today = new Date();
         System.out.println("creatin offers...");
         Date minDate = dat.past(10, TimeUnit.DAYS, today);
         Date maxDate = dat.future(10, TimeUnit.DAYS, today);
@@ -154,14 +157,13 @@ public class DBPopulation {
             List<PreferenceTag> classifications = getPreferenceTagForOffer();
             Cook cook = service.findCookById(cookIdList.get(number.numberBetween(min, cookIdList.size())));
             Food food = faker.food();
-            Ingredient ingredient = new Ingredient(food.ingredient());
             dat = faker.date();
             String title = food.dish();
             Date availableFrom = dat.between(minDate, maxDate);
             Date expDate = dat.between(availableFrom, dat.future(10, TimeUnit.DAYS, availableFrom));
             String imagePath = faker.internet().avatar();
             //double price = number.randomDouble(2, 0, 20);
-            int totalPortions = number.numberBetween(0, 30);
+            int totalPortions = number.numberBetween(1, 30);
             String details = food.spice();
             String specifications = faker.backToTheFuture().quote();
             Offer offer = new Offer(cook, availableFrom, title, totalPortions, 
@@ -170,17 +172,18 @@ public class DBPopulation {
             offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             Long created = service.makeOffer(offer);
             if(created != null){
-                createdOfferList.add(offer);
+                createdOfferList.add(created);
             }
         }
     }
     
     public void publishOffers(int nbOffersToPublish){
+        System.out.println("Publishing offers");
         assert(nbOffersToPublish < createdOfferList.size());
         Number number = faker.number();
         for(int i = 0; i<nbOffersToPublish; i++){
             int chosenOffer = number.numberBetween(0, createdOfferList.size());
-            Offer offerToPublish = createdOfferList.remove(chosenOffer);
+            Offer offerToPublish = service.getOfferById(createdOfferList.get(chosenOffer));
             try{
                 offerToPublish = service.publishOffer(offerToPublish.getId());
             }catch(Exception e){
@@ -188,7 +191,7 @@ public class DBPopulation {
                 offerToPublish = null;
             }finally{
                 if(offerToPublish != null){
-                    ongoingOfferList.add(offerToPublish);
+                    ongoingOfferList.add(offerToPublish.getId());
                 }
             }
         }
@@ -200,32 +203,35 @@ public class DBPopulation {
         Number number = faker.number();
         DateAndTime dateAndTime = faker.date();
         while(reservationsMade < nbReservations){
+            if(ongoingOfferList.isEmpty()){
+                break;
+            }
             int offerNumber = number.numberBetween(0, ongoingOfferList.size()-1);
-            Offer offer = ongoingOfferList.get(offerNumber);
+            Offer offer = service.getOfferById(ongoingOfferList.get(offerNumber));
             int reservationsToBeMade = number.numberBetween(0, (nbReservations - reservationsMade));
             for(int reservationNumber = 0; reservationNumber <= reservationsToBeMade; reservationNumber++){
-                if(offer.getRemainingPortions()==0){
-                    offer.setState(Offer.offerState.SOLDOUT);
-                    soldoutOfferList.add(offer);
-                    assert(ongoingOfferList.remove(offer));
+                if(offer.getState() == Offer.offerState.SOLDOUT){
+                    soldoutOfferList.add(offer.getId());
+                    boolean found = ongoingOfferList.remove(offer.getId());
+                    assert(found);
                     break;
                 }
                 //Find a random user
                 int userNumber = number.numberBetween(0, userIdList.size()-1);
-                User customer = service.findUserById(userIdList.get(offerNumber));
+                User customer = service.findUserById(userIdList.get(userNumber));
                 assert(customer != null);
                 //Find a random date
-                Date publicationDate = offer.getPublicationDate();
+                Date availableFrom = offer.getAvailableFrom();
                 Date expirationDate = offer.getExpirationDate();
-                Date reservationDate = dateAndTime.between(publicationDate, expirationDate);
+                Date reservationDate = dateAndTime.between(availableFrom, expirationDate);
                 //Assign a random state to the reservation
                 ReservationState state = ReservationState.values()[number.numberBetween(0, ReservationState.values().length)];
                 //Assign a random number of portions
-                int nbPortions = number.numberBetween(1, offer.getRemainingPortions());
+                int nbPortions = number.numberBetween(1, offer.getRemainingPortions()/4);
                 Reservation reservation = new Reservation(reservationDate, state, nbPortions, offer, customer);
                 Long created = service.createReservation(reservation);
                 if(created != null){
-                    reservationList.add(reservation);
+                    reservationList.add(created);
                     reservationsMade++;
                 }
             }
@@ -259,7 +265,7 @@ public class DBPopulation {
         int upper = number.numberBetween(lower, max);
         List<Ingredient> ll = new LinkedList<>();
         for(int i = lower; i<upper; i++){
-            ll.add(ingredientsList.get(i));
+            ll.add((Ingredient) service.findPreferenceById(ingredientsList.get(i)));
         }
         return ll;
     }
@@ -278,10 +284,10 @@ public class DBPopulation {
             startDiet = number.numberBetween(0, dietList.size());
         }
         for(int i = startCuisine; i<(startCuisine + nbCuisines); i++){
-            ll.add(cuisineList.get(i));
+            ll.add(service.findPreferenceById(cuisineList.get(i)));
         }
         for(int i = startDiet; i<(startDiet + nbDiets); i++){
-            ll.add(dietList.get(i));
+            ll.add(service.findPreferenceById(dietList.get(i)));
         }
         return ll;
     }
