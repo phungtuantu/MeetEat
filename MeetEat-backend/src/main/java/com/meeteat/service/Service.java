@@ -274,10 +274,9 @@ public class Service {
         return updateOffer(offer);
     }
     
-    /*public int checkOffersExpirationDate(){
+    public int checkOffersExpirationDate(){
         int cleanedOffers = 0;
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
+        Date today = new Date();
         List<Offer> offers = new LinkedList<>();
         JpaTool.createPersistenceContext();
         try{
@@ -297,7 +296,7 @@ public class Service {
             }
         }
         return cleanedOffers;
-    }*/
+    }
     
     public Long approveCook(Cook cook){
         Long result = null;
@@ -333,6 +332,24 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return offer;
+    }
+    
+    public boolean cancelOffer(Long offerId) {
+        JpaTool.createPersistenceContext();
+        boolean canceled = false;
+        try {
+            JpaTool.openTransaction();
+            Offer offer = offerDao.searchById(offerId);
+            offerDao.delete(offer);
+            JpaTool.validateTransaction();
+            canceled = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return canceled;
     }
 
     public Reservation acceptRequest(Long reservationId){
