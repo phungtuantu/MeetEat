@@ -26,6 +26,7 @@ import com.meeteat.controller.action.ActionPublishOffer;
 import com.meeteat.controller.action.ActionRejectRequest;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSeeCookRequests;
+import com.meeteat.controller.action.ActionSetPrice;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewCuisines;
 import com.meeteat.controller.action.ActionViewDiets;
@@ -220,6 +221,11 @@ public class ActionServlet extends HttpServlet {
             case "estimatePrice" ->{
                 action = new ActionEstimatePrice();
                 serialisation = new SerialisationPriceEstimate();
+                break;
+            }
+            case "setPrice" ->{
+                action = new ActionSetPrice();
+                serialisation = new SerialisationOffer();
                 break;
             }
         }
