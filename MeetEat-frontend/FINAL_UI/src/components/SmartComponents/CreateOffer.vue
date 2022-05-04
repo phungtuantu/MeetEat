@@ -141,7 +141,7 @@
       </div>
 
       <div class="form-group row">
-        <label for="portions" class="col-sm-2 col-form-label">Expiration date</label>
+        <label for="portions" class="col-sm-2 col-form-label">Sale date</label>
         <div class="col-sm-10">
           <input type="date" class="form-control-plaintext" id="portions" v-model="portions">
         </div>
@@ -155,11 +155,6 @@
         <div class="form-group row">
         <label for="portions" class="col-sm-2 col-form-label">Zip code </label>
         <input type="text" name="" placeholder="Zip code">
-        </div>
-
-        <div class="form-group row">
-        <label for="portions" class="col-sm-2 col-form-label">City </label>
-            <input type="text" name="" placeholder="City">
         </div>
 
         <div class="form-group row">
@@ -213,12 +208,6 @@
           </div>
         </div>
 
-        <div class="form-group row">
-          <label for="date" class="col-sm-2 col-form-label">Date</label>
-          <div class="col-sm-10">
-            <input type="date" class="form-control-plaintext" id="date" v-model="date">
-          </div>
-        </div>
       </form>
 
       <button type="button" class="btn btn-success2" id="saveBtn" @click='save()'>Publish</button>
