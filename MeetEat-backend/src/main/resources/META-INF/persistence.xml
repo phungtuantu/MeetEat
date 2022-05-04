@@ -7,6 +7,7 @@
     <class>com.meeteat.model.Preference.Ingredient</class>
     <class>com.meeteat.model.Preference.PreferenceTag</class>
     <class>com.meeteat.model.Offer.Message</class>
+    <class>com.meeteat.model.Offer.Offer</class>
     <class>com.meeteat.model.Offer.Reservation</class>
     <class>com.meeteat.model.Offer.Review</class>
     <class>com.meeteat.model.User.Cook</class>
