@@ -927,6 +927,7 @@ public class Service {
     }
     
     public List<Ingredient> viewIngredients() {
+        //
         List<Ingredient> ingredientsList = null;
         JpaTool.createPersistenceContext();
         try {
