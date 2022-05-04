@@ -205,7 +205,6 @@ export default {
     this.orders = this.orders.offers;
     console.log(this.orders);
     console.log(this.city);
-
   }
 }
 </script>
@@ -330,5 +329,9 @@ input[type="checkbox"]{
     margin: 0%;
     width: 100%;
   }
+}
+
+.btn{
+  margin-left: 15px;
 }
 </style>

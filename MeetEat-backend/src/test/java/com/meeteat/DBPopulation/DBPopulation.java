@@ -164,8 +164,8 @@ public class DBPopulation {
             int totalPortions = number.numberBetween(0, 30);
             String details = food.spice();
             String specifications = faker.backToTheFuture().quote();
-            Offer offer = new Offer(cook, availableFrom, title, totalPortions, 
-                                    details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
+            Offer offer = new Offer(cook, availableFrom, title, totalPortions,
+                                  details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
                                     address.zipCode(), expDate, imagePath);
             offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             Long created = service.makeOffer(offer);
