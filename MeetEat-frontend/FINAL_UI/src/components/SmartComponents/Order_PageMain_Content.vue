@@ -23,7 +23,7 @@
 
       <div class="input-group">
         <input id="form1" class="form-control" placeholder="Keyword" type="search"/>
-        <button class="btn btn-primary" type="button">
+        <button class="btn btn-primary" type="button" @click="searchOffers">
           Search
         </button>
       </div>
@@ -33,32 +33,10 @@
       <h4>Price Range</h4>
 
       <div class="row">
-        <article class=" col-sm">
-          <input id="price1" type="checkbox"/>
-          <div>
-      <span>
-        $
-      </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="price2" type="checkbox"/>
-          <div>
-      <span>
-        $$
-      </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="price3" type="checkbox"/>
-          <div>
-              <span>
-                $$$
-              </span>
-          </div>
-        </article>
+        <div class="lblMaxprice">
+          <label id="lblMaxprice"> Max price </label>
+          <input type="number" id="maxPrice" name="maxPrice" min="1" max="20">
+        </div>
       </div>
 
 
@@ -166,25 +144,12 @@
         <div class="card-body" style="text-align: left;">
           <h5 class="card-title">{{offer.title}}</h5>
           <p class="card-text">
-            <b>At 150m from your position</b><br/>
+            <b>At {{offer.distanceToUser}}m from your position</b><br/>
             {{offer.description }}
           </p>
           <p class="">
             <b>Price : {{offer.price }}$</b><br/>
           </p>
-          <!--
-                   <div class="input-group w-auto">
-
-                    <input class="quantity-field border-0 text-center w-25 priceItem" disabled type="text" v-bind:value="offer.price">
-                      <input class="button-minus border rounded-circle  icon-shape icon-sm mx-1 " data-field="quantity" type="button"
-                             value="-">
-                      <input class="quantity-field border-0 text-center w-25 " max="10" name="quantity" step="1" type="number"
-                             value="1">
-                      <input class="button-plus border rounded-circle icon-shape icon-sm lh-0" data-field="quantity" type="button"
-                             value="+">
-                      <button class="btn btn-dark" type="button" @click="addToBasket(offer.id)">Add to basket</button>X
-          </div>
- -->
           <br/>
 
           <button class="btn btn-dark" type="button" @click="viewDetails(offer.id)">View details</button>
@@ -197,6 +162,8 @@
 </template>
 
 <script>
+import {urlAPI} from "@/variables";
+import axios from "axios";
 import router from "@/router";
 
 export default {
@@ -204,63 +171,8 @@ export default {
 
   data () {
     return {
-      orders : [
-        {
-          id : 229,
-          title : 'Delicious lasagna   !',
-          nbPortions : 1,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '02/04/2022',
-          options : [ 'noPork'],
-          price : 5,
-          evaluated : 0,
-          report : 0,
-          username : 'Ithan',
-
-        },
-        {
-          id : 231,
-          title : 'Couscous',
-          nbPortions : 5,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '01/04/2022',
-          options : [],
-          price : 7,
-          evaluated : 0,
-          report : 0,
-          username : 'Ithan',
-
-        },
-        {
-          id : 232,
-          title : 'Mexican tacos',
-          nbPortions : 3,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '28/03/2022',
-          options : [ 'noPork'],
-          price : 4,
-          evaluated : 1,
-          report : 0,
-          username : 'Ithan',
-
-        },
-        {
-          title : 'Peruvian ceviche',
-          nbPortions : 1,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '21/03/2022',
-          options : [ 'pescoVegetarian'],
-          price : 6,
-          evaluated : 1,
-          report : 0,
-          username : 'Ithan',
-
-        },
-      ],
+      city : "",
+      orders : [],
     }
   },
   methods : {
@@ -272,8 +184,21 @@ export default {
       localStorage.setItem("itemId", id);
       router.replace('orderPage/'+id);
     },
+    searchOffers : function (){
+      
+    },
 
   },
+  async mounted() {
+    this.city = sessionStorage.getItem("city");
+    await axios.get(urlAPI + 'todo=consultOffers&address=' + this.city)
+        .then(response => (this.orders = response.data));
+
+    this.orders = this.orders.offers
+    console.log(this.orders);
+    console.log(this.city);
+
+  }
 }
 </script>
 
@@ -300,6 +225,8 @@ export default {
     padding: 0.5em 1.2em;
   }
 
+  .lbl
+
   .card-body .card-text {
     margin: 0;
   }
@@ -314,6 +241,19 @@ export default {
     width: 40%;
   }
 }
+
+.lblMaxprice{
+  margin-left: 20px;
+  font-style: oblique;
+  font-size: 18px;
+}
+
+.lblMaxprice input[type=number]{
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+}
+
 
 
 article {

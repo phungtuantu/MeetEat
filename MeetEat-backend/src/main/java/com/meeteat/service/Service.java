@@ -31,10 +31,12 @@ import com.meeteat.model.VerificationRequest.CookRequest;
 import com.meeteat.model.VerificationRequest.RequestImage;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.security.MessageDigest;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
@@ -241,10 +243,62 @@ public class Service {
         return res;
     }
     
-    public Offer publishOffer(Long offerId){
+    public Offer publishOffer(Long offerId, Date expirationDate){
         Offer offer = getOfferFromId(offerId);
-        offer.publishOffer();
-        return updateOffer(offer);
+        Offer res = null;
+        if(expirationDate == null){
+            System.out.println("Expiration date is null");
+            return null;
+        }
+        try{
+            offer.publishOffer(expirationDate);
+            res = updateOffer(offer);
+        }catch(Exception e){
+            System.out.println("Expiration date is before the publication date");
+        }
+        return res;
+    }
+    
+    public Offer publishOffer(Long offerId, Date publicationDate, Date expirationDate){
+        Offer offer = getOfferFromId(offerId);
+        Offer res = null;
+        if(publicationDate == null || expirationDate == null){
+            System.out.println("Expiration date or publication date is null");
+            return null;
+        }
+        try{
+            offer.publishOffer(publicationDate, expirationDate);
+            res = updateOffer(offer);
+        }catch(Exception e){
+            System.out.println("Expiration date is before the publication date");
+        }
+        return res;
+    }
+
+    
+    public int checkOffersExpirationDate(){
+        int cleanedOffers = 0;
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        List<Offer> offers = new LinkedList<>();
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            offers = offerDao.getOngoingByStatus(Offer.offerState.ONGOING);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling checkOffersExpirationDate", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        for(Offer offer : offers){
+            if(offer.expired(today)){
+                updateOffer(offer);
+                cleanedOffers++;
+            }
+        }
+        return cleanedOffers;
     }
     
     public Long approveCook(Cook cook){
@@ -603,12 +657,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             ongoingOffers = offerDao.getOngoingOffers(20);
-            System.out.println("ok");
-            System.out.println(ongoingOffers.get(1));
             //check the preferences in ongoingOffers + distance to User
             double distance;
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
-                System.out.println(offer);
                 distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
                 offer.setDistanceToUser(distance);
                 sortedByDistanceOffers.add(offer); // insertion on O(log(n))   
@@ -667,8 +718,13 @@ public class Service {
             }
             //check the preferences in ongoingOffers + distance to User
             double distance;
+            List<Long> offerClassifications = new ArrayList<>();
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
-                if (offer.getClassifications().containsAll(preferences) && Collections.disjoint(offer.getClassifications(), ingredients)) {
+                offerClassifications.clear();
+                offer.getClassifications().forEach(classification ->{
+                    offerClassifications.add(classification.getId());
+                });
+                if (offerClassifications.containsAll(preferences) && Collections.disjoint(offerClassifications, ingredients)) {
                     distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
                     offer.setDistanceToUser(distance);
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
@@ -760,7 +816,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             for(Reservation reservation : offer.getReservations()){
-                guestsList.add(reservation.getCustomer());
+                if(!guestsList.contains(reservation.getCustomer())){
+                    guestsList.add(reservation.getCustomer());
+                }
             }
             JpaTool.validateTransaction();
         } catch (Exception ex) {
@@ -819,5 +877,44 @@ public class Service {
             JpaTool.closePersistenceContext();
         }
         return result;
+    }
+    
+    public List<Review> viewCooksReviews(Long cookId){
+        List<Review> result = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            List <Offer> madeOffers = offerDao.getOffers(cookId);
+            for (Offer offer : madeOffers){
+                if (result==null){
+                    result = reviewDao.getOffersReviews(offer.getId());
+                } else{
+                    result.addAll(reviewDao.getOffersReviews(offer.getId()));
+                }
+            }
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCooksReviews", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public List<Offer> viewOngoingOffersList(Cook cook) {
+        //view the ongoing offers made by a cook
+        List<Offer> offersList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            offersList = offerDao.getOngoingOffersByCookId(cook.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOngoingOffersList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return offersList;
     }
 }

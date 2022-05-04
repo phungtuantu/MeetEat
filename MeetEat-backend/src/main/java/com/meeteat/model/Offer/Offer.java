@@ -11,6 +11,7 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +52,10 @@ public class Offer implements Serializable {
     private int totalPortions;
     private int remainingPortions;
     private String offerPhotoPath;
+
+    private Exception Exception(String expiration_date_cant_be_before_today) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     public enum offerState {
         PENDING,
         ONGOING,
@@ -219,9 +224,10 @@ public class Offer implements Serializable {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
+        this.totalPortions -= reservation.getNbOfPortion();
     }
     
-    public void publishOffer(){
+    public void publishOffer() {
         this.state = offerState.ONGOING;
         this.publicationDate = new Date();
     }
