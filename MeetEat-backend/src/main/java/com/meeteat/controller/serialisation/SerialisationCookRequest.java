@@ -32,13 +32,13 @@ public class SerialisationCookRequest extends Serialisation{
         container.addProperty("id",cookRequest.getIdCookRequest());
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         if (cookRequest.getRequestDate()!=null){
-            container.addProperty("reservationDate",df.format(cookRequest.getRequestDate()));
+            container.addProperty("requestDate",df.format(cookRequest.getRequestDate()));
         }
         container.addProperty("userId",cookRequest.getUser().getId());
         container.addProperty("id_imageId", cookRequest.getIdImage().getId());
         container.addProperty("id_imageReference", cookRequest.getIdImage().getImageReference());
         container.addProperty("certificationImageId", cookRequest.getCertificationImage().getId());
-        container.addProperty("certifiv=cationImageReference", cookRequest.getCertificationImage().getImageReference());
+        container.addProperty("certificationImageReference", cookRequest.getCertificationImage().getImageReference());
         JsonArray jsonEquipmentImagesList = new JsonArray();
         List<RequestImage> equipmentImages = cookRequest.getEquipmentImages();
         equipmentImages.stream().map(image -> {

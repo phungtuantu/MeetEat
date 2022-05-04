@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container" @load="load()">
     <div class="row">
         <div class="col-6">
             <img src="../../assets/ithan.jpg" width="500px">
@@ -17,6 +17,7 @@
                 <input type="text" name="" v-model="tel">
                 <label>Current password</label><br>
                 <input type="password" name="" v-model="password">
+
             </div>
         </div>
         <div class="col-3">
@@ -117,7 +118,7 @@ export default {
     this.address = this.user.address;
     this.id = this.user.id;
 
-  }
+  },
 }
 </script>
 
@@ -132,15 +133,23 @@ export default {
 }
 
 .col-3 .btn{
-    margin-top: 105px;
+    margin-top: 100px;
     margin-bottom: 20px;
     width: 200px;
+    margin-left: -50px;
 }
 
-.column input{
+input[type="text"], input[type="password"]{
     margin-bottom: 20px;
-    background-color: #e0dfdf;
     border-radius: 5px;
+}
+
+.enableInput{
+    background-color: #f8f8f8;
+}
+
+.disableInput{
+    background-color: #e8e8e8;
 }
 
 .column{

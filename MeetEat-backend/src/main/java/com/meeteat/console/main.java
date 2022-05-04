@@ -16,9 +16,11 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 //import com.meeteat.DBpopulation.DBpopulation;
 
 /**
@@ -37,13 +39,14 @@ public class main {
 //        testCreateAccount();
 //          testModifyAccount();
 //        testApproveCook();
-        testMakeOffer();
+//        testMakeOffer();
 //        testSpecifyPreferences();
 //        testViewPurchasedMeals();
 //        testMakeReservation();
 //        testAuthenticate();
 //        testCreateReview();
-          testViewOffersHistory();
+//          testViewOffersHistory();
+           testSearchOffers();
         JpaTool.destroy();
     }
     
@@ -205,6 +208,16 @@ public class main {
             System.out.println(o);
         });
     }
+    
+    public static void testSearchOffers(){
+        Service service = new Service();
+        User user = service.findUserById(Long.parseLong("2"));
+        List<Long> requestPreferences = null;
+        List <Offer> offers = service.searchOffers(requestPreferences, 2 , user);
+        System.out.println(offers);
+    }
+
+    
     
 //    public static void initialiserClients() {
 //        
