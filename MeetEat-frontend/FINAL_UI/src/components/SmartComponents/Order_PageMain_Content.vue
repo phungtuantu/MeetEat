@@ -23,8 +23,8 @@
 
       <div class="input-group">
         <input id="form1" class="form-control" placeholder="Keyword" type="search"/>
-        <button class="btn btn-primary" type="button">
-        <!-- <button class="btn btn-primary" type="button" @click="searchOffers"> -->
+        <!-- <button class="btn btn-primary" type="button"> -->
+        <button class="btn btn-primary" type="button" @click="searchOffers()">
           Search
         </button>
       </div>
@@ -45,60 +45,13 @@
 
       <h4>Diets</h4>
 
-      <div class="">
-        <article class=" col-sm">
-          <input id="diet1" type="checkbox"/>
+      <div class="" v-for="diet in diets" :key="diet.id">
+        <article class="col-sm dietcol">
+          <input id="diet" type="checkbox" v-bind:value="diet.id"/>
           <div>
-      <span>
-        Vegeterian
-      </span>
-          </div>
-        </article>
-
-
-        <article class=" col-sm">
-          <input id="diet2" type="checkbox"/>
-          <div>
-      <span>
-        Vegan
-      </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="diet3" type="checkbox"/>
-          <div>
-              <span>
-                Pesco vegetarian
-              </span>
-          </div>
-        </article>
-
-
-        <article class=" col-sm">
-          <input id="diet4" type="checkbox"/>
-          <div>
-              <span>
-                Dairy-free
-              </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="diet5" type="checkbox"/>
-          <div>
-              <span>
-                Gluten free
-              </span>
-          </div>
-        </article>
-
-        <article class=" col-sm">
-          <input id="diet6" type="checkbox"/>
-          <div>
-              <span>
-                No pork
-              </span>
+            <span>
+              {{diet.name}}
+            </span>
           </div>
         </article>
 
@@ -109,22 +62,10 @@
       <h4>Food type</h4>
 
 
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="foodType1">
-        <label class="form-check-label" for="foodType1">
-          Asian food
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="foodType2">
-        <label class="form-check-label" for="foodType2">
-          Italian food
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="foodType3">
-        <label class="form-check-label" for="foodType3">
-          Fast food
+      <div class="form-check" v-for="cuisine in cuisines" :key="cuisine.id">
+        <input class="form-check-input cuisinecheckbox" type="checkbox" v-bind:value="cuisine.id">
+        <label class="form-check-label" for="foodType">
+          {{cuisine.name}}
         </label>
       </div>
 
@@ -174,9 +115,9 @@ export default {
     return {
       city : "",
       orders : [],
+      diets : [],
+      cuisines : [],
       priceLimit : 20,
-      preferences : [],
-      searchOffersUrl : "",
     }
   },
   methods : {
@@ -188,21 +129,50 @@ export default {
       localStorage.setItem("itemId", id);
       router.replace('orderPage/'+id);
     },
-    // searchOffers : function (){
-    //   this.searchOffersUrl = urlAPI + 'todo=searchOffers&priceLimit=' + this.priceLimit + 'requestPreference=';
-    //   await axios.get(this.searchOffersUrl)
-    //     .then(response => (this.orders = response.data));
+    searchOffers : async function (){
+      var searchOffersUrl = urlAPI + 'todo=searchOffers&priceLimit=' + this.priceLimit + '&requestPreferences=';
+      let preferences = [];
+      let cuisinecheckboxes = document.getElementsByClassName("form-check-input cuisinecheckbox");
+      let dietcheckboxes = document.getElementsByClassName("col-sm dietcol")
 
-    //   this.orders = this.orders.offers
-    // },
+      for (var i=0; i< dietcheckboxes.length; i++){
+          if (dietcheckboxes[i].getElementsByTagName("input")[0].checked){
+              preferences.push(dietcheckboxes[i].getElementsByTagName("input")[0].value);
+          }
+      }
+      for (i=0; i< cuisinecheckboxes.length; i++){
+          if (cuisinecheckboxes[i].checked){
+              preferences.push(cuisinecheckboxes[i].value);
+          }
+      }
+
+      console.log(preferences);
+
+      for (i=0; i<preferences.length-1; i++){
+          searchOffersUrl+=preferences[i]+'&requestPreferences=';
+      }
+      if (preferences.length!==0){
+          searchOffersUrl+=preferences[preferences.length-1];
+      }
+
+      console.log(searchOffersUrl)
+
+      await axios.get(searchOffersUrl)
+        .then(response => (this.orders = response.data));
+
+      this.orders = this.orders.offers
+    },
 
   },
   async mounted() {
     this.city = sessionStorage.getItem("city");
     await axios.get(urlAPI + 'todo=consultOffers&address=' + this.city)
-        .then(response => (this.orders = response.data));
+        .then(response => (this.orders = response.data.offers));
+    await axios.get(urlAPI + 'todo=viewDiets')
+        .then(response => (this.diets = response.data.preferenceTags));
+    await axios.get(urlAPI + 'todo=viewCuisines')
+        .then(response => (this.cuisines = response.data.preferenceTags));
 
-    this.orders = this.orders.offers;
     console.log(this.orders);
     console.log(this.city);
 
