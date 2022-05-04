@@ -1,7 +1,7 @@
 <template>
 <div class="container" >
     <div class = "card" v-for="offer in offers" :key="offer.id">
-        <template v-if= "offer.state === 'SOLDOUT' || offer.state ==='UNAVAILABLE'">
+        <template v-if= "offer.state === 'SOLDOUT' || offer.state ==='UNAVAILABLE' || offer.state ==='PENDING'">
             <div class="row" >
                 <div class="col-6">
                     <img v-bind:src= "offer.image" width="300px">
