@@ -20,9 +20,11 @@
       <h2>Upload pictures</h2>
       <div class="input-group">
         <div class="custom-file">
-          <input type="file" class="custom-file-input" id="inputGroupFile01"
-                 aria-describedby="inputGroupFileAddon01">
-          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+          <input type="file" class="custom-file-input" id="kitchenPhotos"
+                 accept=".jpg">
+          <label class="custom-file-label" for="kitchenPhotos">Choose file</label>
+          <p id="fileDisplayArea1"></p>
+
         </div>
       </div>
     </div>
@@ -42,9 +44,11 @@
       <h2>Upload pictures</h2>
       <div class="input-group">
         <div class="custom-file">
-          <input type="file" class="custom-file-input" id="inputGroupFile02"
-                 aria-describedby="inputGroupFileAddon01">
-          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+          <input type="file" class="custom-file-input" id="identityPhotos"
+                 aria-describedby="inputGroupFileAddon02" accept=".jpg">
+          <label class="custom-file-label" for="identityPhotos">Choose file</label>
+          <p id="fileDisplayArea2"></p>
+
         </div>
       </div>
     </div>
@@ -63,9 +67,11 @@
       <h2>Upload pictures</h2>
       <div class="input-group">
         <div class="custom-file">
-          <input type="file" class="custom-file-input" id="inputGroupFile03"
-                 aria-describedby="inputGroupFileAddon01">
-          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+          <input type="file" class="custom-file-input" id="chefCertificationPhoto"
+                 aria-describedby="inputGroupFileAddon03" accept=".jpg">
+          <label class="custom-file-label" for="chefCertificationPhoto">Choose file</label>
+          <p id="fileDisplayArea3"></p>
+
         </div>
       </div>
     </div>
@@ -88,7 +94,7 @@
 
   </div>
 
-  <button class="btn btn-success" @click="submitData()">Submit</button>
+  <button class="btn btn-success" @click="readFile()">Submit</button>
 
 </div>
 </template>
@@ -103,7 +109,33 @@ export default {
     submitData : function() {
       console.log('submit');
       router.replace('/orderPage')
-    }
+    },
+
+    readFile : function () {
+      var textType = /.jpg/;
+      var doc1 = document.getElementById("kitchenPhotos").files[0];
+      var doc2 = document.getElementById("identityPhotos").files[0];
+      var doc3 = document.getElementById("chefCertificationPhoto").files[0];
+
+      if (doc1.type.match(textType) && doc2.type.match(textType) && doc3.type.match(textType)) {
+
+        //todo=approveCook
+        //axios.put(urlAPI + 'insertTeamInfo')
+          //        .then();
+        console.log('send certification');
+
+      }else{
+        var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+        var fileDisplayArea2 = document.getElementById('fileDisplayArea2');
+        var fileDisplayArea3 = document.getElementById('fileDisplayArea3');
+
+        fileDisplayArea1.innerText = 'File not supported';
+        fileDisplayArea2.innerText = 'File not supported';
+        fileDisplayArea3.innerText = 'File not supported';
+
+      }
+
+    },
   }
 }
 </script>

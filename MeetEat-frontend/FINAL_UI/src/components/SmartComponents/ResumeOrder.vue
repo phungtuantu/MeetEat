@@ -52,15 +52,15 @@
 
             <br/>
             <div class="input-group w-auto">
-              <button class="btn btn-dark" type="button" @click="viewDetails()">View details</button>
+              <button class="btn btn-dark" type="button" @click="viewDetails(order.order.id)">View details</button>
             </div>
           </div>
         </div>
 
         <br/>
       </div>
-      <div class="col-sm border border-secondary rounded" style="background-color: lightgray;">
-          <h3>Summary</h3>
+      <div class="col-sm border border-secondary rounded" style="background-color: lightgray; padding: 15px;">
+          <h3 >Summary</h3>
           <hr class="my-4"/>
           <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-center" v-for="order in orders" :key="order.order.id">
@@ -92,27 +92,27 @@
         <div class="row gx-3">
           <div class="col-12">
             <div class="d-flex flex-column">
-              <p class="text mb-1">Person Name</p> <input class="form-control mb-3" type="text" placeholder="Name" value="Barry Allen">
+              <p class="text mb-1">Person Name</p> <input class="form-control mb-3" type="text" placeholder="Name" v-model="name">
             </div>
           </div>
           <div class="col-12">
             <div class="d-flex flex-column">
-              <p class="text mb-1">Card Number</p> <input class="form-control mb-3" type="text" placeholder="1234 5678 435678">
+              <p class="text mb-1">Card Number</p> <input class="form-control mb-3" type="text" placeholder="1234 5678 435678" v-model="cardNumber">
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex flex-column">
-              <p class="text mb-1">Expiry</p> <input class="form-control mb-3" type="text" placeholder="MM/YYYY">
+              <p class="text mb-1">Expiry</p> <input class="form-control mb-3" type="text" placeholder="MM/YYYY" v-model="expiry">
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex flex-column">
-              <p class="text mb-1">CVV/CVC</p> <input class="form-control mb-3 pt-2 " type="password" placeholder="***">
+              <p class="text mb-1">CVV/CVC</p> <input class="form-control mb-3 pt-2 " type="password" placeholder="***" v-model="cvv">
             </div>
           </div>
           <div class="col-12">
             <button class="btn btn-primary mb-3" @click="pay()">
-              <span class="ps-3">Pay {{total}}$</span> <span class="fas fa-arrow-right"></span> </button>
+              <span class="ps-3">Pay {{totalPrice}}$</span> <span class="fas fa-arrow-right"></span> </button>
           </div>
         </div>
       </div>
@@ -130,20 +130,38 @@ export default {
   name: "ResumeOrder",
   data() { return {
     orders : [],
-    total : 5,
     totalQty : 0,
     totalPrice : 0,
+    name : '',
+    cardNumber : '',
+    expiry : '',
+    cvv : '',
+    user : '',
+
   }
   },
   methods : {
-    viewDetails : function ()
+    viewDetails : function (id)
     {
-      router.replace('/orderPage/1')
+      router.replace('/orderPage/'+id)
     },
 
-    pay : function ()
-    {
+    pay : async function () {
+      //createReservation
       console.log('pay');
+      for(let i=0; i<this.orders.length; i++){
+        let order = this.orders[i].order;
+        let qty = this.orders[i].qty;
+        await axios.get(urlAPI + 'todo=createReservation&userId='+this.user.id+'&offerId='+order.id+'&nbOfPortions='+qty)
+            .then(response => (response.data));
+      }
+
+      router.replace('/orderPage');
+
+
+
+
+
     },
 
     backHome : function ()
@@ -170,7 +188,9 @@ export default {
         this.totalQty += arr[i].qty;
       }
 
-        console.log(this.orders);
+      console.log(this.orders);
+      this.user = JSON.parse(sessionStorage.getItem("user"));
+      console.log(JSON.parse(sessionStorage.getItem("user")));
     }
   }
 }
@@ -214,7 +234,7 @@ body {
   max-width: 500px;
   margin: auto;
   color: black;
-  border-radius: 20 px
+  border-radius: 20px;
 }
 
 p {

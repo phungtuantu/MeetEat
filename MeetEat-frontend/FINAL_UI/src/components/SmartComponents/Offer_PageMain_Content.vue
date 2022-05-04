@@ -18,7 +18,7 @@
           </div>
           <div class="col-8">
             <div class="row">
-              {{offer.cook.firstName}}  {{offer.cook.lastname}}
+              {{offer.cook.firstName}}  {{offer.cook.lastName}}
             </div>
             <div class="row">
               <template v-for="img in stars" >
@@ -59,7 +59,7 @@
 
         <br/>
 
-        <p class="card-text">If you have any food allergies or special dietary requirements, please notify Ithan
+        <p class="card-text">If you have any food allergies or special dietary requirements, please notify {{offer.cook.firstName}}
           directly before placing your order.</p>
         <p class="card-text"><small class="text-muted">{{offer.remainingPortions}} portions left</small></p>
         <div class="form-outline" id="counter">
