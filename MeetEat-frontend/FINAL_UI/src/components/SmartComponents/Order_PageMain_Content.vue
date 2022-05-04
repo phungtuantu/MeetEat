@@ -23,7 +23,8 @@
 
       <div class="input-group">
         <input id="form1" class="form-control" placeholder="Keyword" type="search"/>
-        <button class="btn btn-primary" type="button" @click="searchOffers">
+        <button class="btn btn-primary" type="button">
+        <!-- <button class="btn btn-primary" type="button" @click="searchOffers"> -->
           Search
         </button>
       </div>
@@ -201,7 +202,9 @@ export default {
     await axios.get(urlAPI + 'todo=consultOffers&address=' + this.city)
         .then(response => (this.orders = response.data));
 
-    this.orders = this.orders.offers
+    this.orders = this.orders.offers;
+    console.log(this.orders);
+    console.log(this.city);
 
   }
 }
