@@ -820,4 +820,20 @@ public class Service {
         }
         return result;
     }
+    
+    public List<Reservation> viewOngoingOffersList(Cook cook) {
+        //view the reservations made by a user
+        List<Offer> offersList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            offersList = offerDao.getOngoingOffers(cook.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewOngoingOffersList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return offersList;
+    }
 }
