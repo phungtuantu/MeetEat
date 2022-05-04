@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 /**
  *
  * @author ithan
@@ -44,7 +45,9 @@ public class DBPopulation {
     LinkedList<Diet> dietList = new LinkedList<>();
     LinkedList<Cuisine> cuisineList = new LinkedList<>();
     LinkedList<CookRequest> cookRequestList = new LinkedList<>();
-    LinkedList<Offer> offerList = new LinkedList<>();
+    LinkedList<Offer> createdOfferList = new LinkedList<>();
+    LinkedList<Offer> ongoingOfferList = new LinkedList<>();
+    LinkedList<Offer> expiredOfferList = new LinkedList<>();
     LinkedList<Reservation> reservationList = new LinkedList<>();
     Locale locale = new Locale("fr");
     int nbProfilePictures = 20;
@@ -138,7 +141,12 @@ public class DBPopulation {
     
     public void createOffers(int nbOffers){
         int min = 0;
+        DateAndTime dat = faker.date();
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
         System.out.println("creatin offers...");
+        Date minDate = dat.past(10, TimeUnit.DAYS, today);
+        Date maxDate = dat.future(10, TimeUnit.DAYS, today);
         for(int i = 0; i<nbOffers; i++){
             Number number = faker.number();
             Address address = faker.address();
@@ -146,8 +154,8 @@ public class DBPopulation {
             List<PreferenceTag> classifications = getPreferenceTagForOffer();
             Cook cook = service.findCookById(cookIdList.get(number.numberBetween(min, cookIdList.size())));
             HarryPotter hp = faker.harryPotter();
-            DateAndTime dat = faker.date();
-            Date creationDate = dat.birthday(0, 2);
+            dat = faker.date();
+            Date creationDate = dat.between(minDate, maxDate);
             String title = hp.character();
             double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(0, 30);
@@ -159,7 +167,29 @@ public class DBPopulation {
             offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
             Long created = service.makeOffer(offer);
             if(created != null){
-                offerList.add(offer);
+                createdOfferList.add(offer);
+            }
+        }
+    }
+    
+    public void publishOffers(int nbOffersToPublish){
+        assert(nbOffersToPublish < createdOfferList.size());
+        Number number = faker.number();
+        for(int i = 0; i<nbOffersToPublish; i++){
+            DateAndTime dat = faker.date();
+            int chosenOffer = number.numberBetween(0, createdOfferList.size());
+            Offer offerToPublish = createdOfferList.remove(chosenOffer);
+            Date expirationDate = dat.future(10, TimeUnit.DAYS, offerToPublish.getCreationDate());
+            Date publishDate = dat.between(offerToPublish.getCreationDate(), expirationDate);
+            try{
+                offerToPublish = service.publishOffer(offerToPublish.getId(), publishDate, expirationDate);
+            }catch(Exception e){
+                System.out.println("Dates are incoherent");
+                offerToPublish = null;
+            }finally{
+                if(offerToPublish != null){
+                    ongoingOfferList.add(offerToPublish);
+                }
             }
         }
     }
@@ -170,8 +200,8 @@ public class DBPopulation {
         Number number = faker.number();
         DateAndTime dateAndTime = faker.date();
         while(reservationsMade < nbReservations){
-            int offerNumber = number.numberBetween(0, offerList.size()-1);
-            Offer offer = offerList.get(offerNumber);
+            int offerNumber = number.numberBetween(0, ongoingOfferList.size()-1);
+            Offer offer = ongoingOfferList.get(offerNumber);
             int reservationsToBeMade = number.numberBetween(0, (nbReservations - reservationsMade));
             for(int reservationNumber = 0; reservationNumber <= reservationsToBeMade; reservationNumber++){
                 //Find a random user
@@ -179,11 +209,9 @@ public class DBPopulation {
                 User customer = service.findUserById(userIdList.get(offerNumber));
                 assert(customer != null);
                 //Find a random date
-                Date publicationDate = offer.getCreationDate();
-                //Date expirationDate = offer.getExpirationDate();
-                Calendar cal = Calendar.getInstance();
-                Date today = cal.getTime();
-                Date reservationDate = dateAndTime.between(publicationDate, today);
+                Date publicationDate = offer.getPublicationDate();
+                Date expirationDate = offer.getExpirationDate();
+                Date reservationDate = dateAndTime.between(publicationDate, expirationDate);
                 //Assign a random state to the reservation
                 ReservationState state = ReservationState.values()[number.numberBetween(0, ReservationState.values().length)];
                 //Assign a random number of portions
@@ -193,7 +221,6 @@ public class DBPopulation {
                 if(created != null){
                     reservationList.add(reservation);
                     reservationsMade++;
-                    System.out.println(reservationsMade);
                 }
             }
         }
@@ -203,7 +230,8 @@ public class DBPopulation {
         
     }
     
-    public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, int nbOffers, int nbReservations){
+    public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, 
+                                 int nbOffers, int nbOffersToPublish, int nbReservations){
         JpaTool.init();
         createUsers(nbUsers);
         createCooks(nbCooks);
@@ -211,7 +239,10 @@ public class DBPopulation {
         createDiets();
         createCuisines(nbCuisines);
         createOffers(nbOffers);
+        publishOffers(nbOffersToPublish);
         createReservations(nbReservations);
+        int expired = service.checkOffersExpirationDate();
+        System.out.println(expired + " offers expired today");
         JpaTool.destroy();
     }
     private List<Ingredient> getIngredientsForOffer(){
@@ -251,6 +282,6 @@ public class DBPopulation {
     
     public static void main(String [] args){
         DBPopulation dbp = new DBPopulation();
-        dbp.populateDatabase(100, 30, 200, 20, 30, 100);
+        dbp.populateDatabase(100, 30, 200, 20, 30, 10, 50);
     }
 }

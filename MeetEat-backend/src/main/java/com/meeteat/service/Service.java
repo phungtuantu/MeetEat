@@ -251,11 +251,35 @@ public class Service {
         return res;
     }
     
+    public Offer publishOffer(Long offerId, Date publicationDate, Date expirationDate){
+        Offer offer = getOfferFromId(offerId);
+        Offer res = null;
+        try{
+            offer.publishOffer(publicationDate, expirationDate);
+            res = updateOffer(offer);
+        }catch(Exception e){
+            System.out.println("Expiration date is before the publication date");
+        }
+        return res;
+    }
+
+    
     public int checkOffersExpirationDate(){
         int cleanedOffers = 0;
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
-        List<Offer> offers = offerDao.getOngoingByStatus(Offer.offerState.ONGOING);
+        List<Offer> offers = new LinkedList<>();
+        JpaTool.createPersistenceContext();
+        try{
+            JpaTool.openTransaction();
+            offers = offerDao.getOngoingByStatus(Offer.offerState.ONGOING);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling checkOffersExpirationDate", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
         for(Offer offer : offers){
             if(offer.expired(today)){
                 updateOffer(offer);
