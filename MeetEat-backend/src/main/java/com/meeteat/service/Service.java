@@ -660,7 +660,11 @@ public class Service {
             //check the preferences in ongoingOffers + distance to User
             double distance;
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
-                distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
+                if (offer.getLocation()!=null && location!=null){
+                    distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
+                } else{
+                    distance = Double.MAX_VALUE;
+                }
                 offer.setDistanceToUser(distance);
                 sortedByDistanceOffers.add(offer); // insertion on O(log(n))   
             }
@@ -715,7 +719,11 @@ public class Service {
                     offerClassifications.add(classification.getId());
                 });
                 if (offerClassifications.containsAll(preferences) && Collections.disjoint(offerClassifications, ingredients)) {
-                    distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
+                    if (offer.getLocation()!=null && user.getLocation()!=null){
+                        distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
+                    } else{
+                        distance = Double.MAX_VALUE;
+                    }
                     offer.setDistanceToUser(distance);
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
                 }
