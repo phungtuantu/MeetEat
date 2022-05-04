@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container" @load="load()">
     <div class="row">
         <div class="col-6">
             <img src="../../assets/ithan.jpg" width="500px">
@@ -10,21 +10,27 @@
         <div class="col-3">
             <div class="column">
                 <label>First name</label>
-                <input type="text" name="" placeholder="Ithan">
+                <input type="text" name="" placeholder="Ithan" class="enableInput">
                 <label>Address</label><br>
-                <input type="text" name="" placeholder="20 avenue des arts, 69100 Villeurbanne">
-                <label>Phone number</label><br>
-                <input type="text" name="" placeholder="06.46.46.46.46">
+                <input type="text" name="" placeholder="20 avenue des arts" class="enableInput"><br>
+                <label>City</label><br>
+                <input type="text" name="" placeholder="Villeurbanne" class="enableInput">
+                <label>Zip code</label><br>
+                <input type="text" name="" placeholder="69100" class="enableInput">
+                <label>Password</label><br>
+                <input type="password" id="pass" name="password" class="enableInput">
             </div>
         </div>
         <div class="col-3">
             <div class="column">
                 <label>Family name</label>
-                <input type="text" name="" placeholder="Velarde">
+                <input type="text" name="" placeholder="Velarde" class="enableInput">
                 <label>Email address</label><br>
-                <input type="text" name="" placeholder="ithan.velarde@insa-lyon.fr">
+                <input type="text" name="" placeholder="ithan.velarde@insa-lyon." class="disableInput" disabled><br>
                 <label>Certification</label><br>
-                <input type="text" name="" placeholder="Professional">
+                <input type="text" name="" placeholder="Professional" class="disableInput" disabled><br>
+                <label>Phone number</label><br>
+                <input type="text" name="" placeholder="06.46.46.46.46" class="enableInput">
                 <button class="btn btn-success send btn-sm">
                     SUBMIT
                 </button> 
@@ -36,7 +42,13 @@
 
 <script>
 export default {
-  name: "ModificationAccount"
+    name: "ModificationAccount",
+    methods: {
+        load : function () {
+            console.log('load');
+            document.getElementById("pass").defaultValue = "hello123456";
+        },
+    },
 }
 </script>
 
@@ -51,15 +63,23 @@ export default {
 }
 
 .col-3 .btn{
-    margin-top: 105px;
+    margin-top: 100px;
     margin-bottom: 20px;
     width: 200px;
+    margin-left: -50px;
 }
 
-.column input{
+input[type="text"], input[type="password"]{
     margin-bottom: 20px;
-    background-color: #e0dfdf;
     border-radius: 5px;
+}
+
+.enableInput{
+    background-color: #f8f8f8;
+}
+
+.disableInput{
+    background-color: #e8e8e8;
 }
 
 .column{

@@ -21,11 +21,13 @@ import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionEvaluateMeal;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionModifyAccount;
+import com.meeteat.controller.action.ActionPublishOffer;
 import com.meeteat.controller.action.ActionRejectRequest;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSeeCookRequests;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewOffersHistory;
+import com.meeteat.controller.action.ActionViewOngoingOffersList;
 import com.meeteat.controller.action.ActionViewReservationsList;
 import com.meeteat.controller.action.ActionViewPurchasedMeals;
 import com.meeteat.controller.action.ActionViewReservationDetails;
@@ -37,6 +39,7 @@ import com.meeteat.controller.serialisation.SerialisationCookRequests;
 import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationReservations;
 import com.meeteat.controller.serialisation.SerialisationOffers;
+import com.meeteat.controller.serialisation.SerialisationPublishOffer;
 import com.meeteat.controller.serialisation.SerialisationRejectRequest;
 import com.meeteat.controller.serialisation.SerialisationReservation;
 import com.meeteat.controller.serialisation.SerialisationReview;
@@ -97,7 +100,11 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationOffer();
                 break;
             }
-            
+            case "publishOffer" -> {
+                action = new ActionPublishOffer();
+                serialisation = new SerialisationPublishOffer();
+                break;
+            }
             case "searchOffers" -> {
                 action = new ActionSearchOffers();
                 serialisation = new SerialisationOffers();
@@ -178,6 +185,12 @@ public class ActionServlet extends HttpServlet {
             case "becomeCook"-> {
                 action = new ActionBecomeCook();
                 serialisation = new SerialisationCookRequest();
+                break;
+            }
+            
+            case "viewOngoingOffersList"-> {
+                action = new ActionViewOngoingOffersList();
+                serialisation = new SerialisationOffers();
                 break;
             }
             
