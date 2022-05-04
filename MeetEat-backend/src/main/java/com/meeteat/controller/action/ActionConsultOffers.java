@@ -23,6 +23,7 @@ public class ActionConsultOffers extends Action {
         Service service = new Service();
         HttpSession session = request.getSession();
         String address = request.getParameter("address");
+        int x = service.checkOffersExpirationDate();
         List <Offer> offers= new ArrayList (service.consultOffers(address));
         request.setAttribute("offers",offers);
     }
