@@ -25,8 +25,8 @@ public class ActionSearchOffers extends Action {
         //seperate the preferences ids with comas
         Service service = new Service();
         HttpSession session = request.getSession();
-//        Long userId = (Long)session.getAttribute("userId");
-        Long userId = Long.parseLong(request.getParameter("userId"));
+        Long userId = (Long)session.getAttribute("userId");
+//        Long userId = Long.parseLong(request.getParameter("userId"));
         User user = service.findUserById(userId);
         int priceRange = Integer.parseInt(request.getParameter("priceRange"));
         List<Long> requestPreferences = new LinkedList<>();

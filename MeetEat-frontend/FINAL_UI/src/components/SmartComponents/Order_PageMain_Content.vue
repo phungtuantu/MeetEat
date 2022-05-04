@@ -23,7 +23,7 @@
 
       <div class="input-group">
         <input id="form1" class="form-control" placeholder="Keyword" type="search"/>
-        <button class="btn btn-primary" type="button">
+        <button class="btn btn-primary" type="button" @click="searchOffers">
           Search
         </button>
       </div>
@@ -194,63 +194,7 @@ export default {
   data () {
     return {
       city : "",
-      orders : [
-        // {
-        //   id : 227,
-        //   title : 'Delicious lasagna   !',
-        //   nbPortions : 1,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '02/04/2022',
-        //   options : [ 'noPork'],
-        //   price : 5,
-        //   evaluated : 0,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-        // {
-        //   id : 231,
-        //   title : 'Couscous',
-        //   nbPortions : 5,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '01/04/2022',
-        //   options : [],
-        //   price : 7,
-        //   evaluated : 0,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-        // {
-        //   id : 232,
-        //   title : 'Mexican tacos',
-        //   nbPortions : 3,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '28/03/2022',
-        //   options : [ 'noPork'],
-        //   price : 4,
-        //   evaluated : 1,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-        // {
-        //   title : 'Peruvian ceviche',
-        //   nbPortions : 1,
-        //   description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //   dateOrdered : '01/01/2022',
-        //   dateDelivery : '21/03/2022',
-        //   options : [ 'pescoVegetarian'],
-        //   price : 6,
-        //   evaluated : 1,
-        //   report : 0,
-        //   username : 'Ithan',
-
-        // },
-      ],
+      orders : [],
     }
   },
   methods : {
@@ -261,6 +205,9 @@ export default {
     viewDetails : function (id){
       localStorage.setItem("itemId", id);
       router.replace('orderPage/'+id);
+    },
+    searchOffers : function (){
+      
     },
 
   },

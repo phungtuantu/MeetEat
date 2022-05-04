@@ -718,8 +718,13 @@ public class Service {
             }
             //check the preferences in ongoingOffers + distance to User
             double distance;
+            List<Long> offerClassifications = new ArrayList<>();
             for (Offer offer : ongoingOffers) {// total complexity O(n * log(n))
-                if (offer.getClassifications().containsAll(preferences) && Collections.disjoint(offer.getClassifications(), ingredients)) {
+                offerClassifications.clear();
+                offer.getClassifications().forEach(classification ->{
+                    offerClassifications.add(classification.getId());
+                });
+                if (offerClassifications.containsAll(preferences) && Collections.disjoint(offerClassifications, ingredients)) {
                     distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
                     offer.setDistanceToUser(distance);
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
