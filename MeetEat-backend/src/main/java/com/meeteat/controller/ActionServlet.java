@@ -11,6 +11,7 @@ import com.meeteat.controller.action.ActionAcceptRequest;
 import com.meeteat.controller.action.ActionApproveCook;
 import com.meeteat.controller.action.ActionAuthentication;
 import com.meeteat.controller.action.ActionBecomeCook;
+import com.meeteat.controller.action.ActionCancelOffer;
 import com.meeteat.controller.action.ActionConsultCooksReviews;
 import com.meeteat.controller.action.ActionConsultGuestsList;
 import com.meeteat.controller.action.ActionConsultOffer;
@@ -40,6 +41,7 @@ import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationAcceptRequest;
 import com.meeteat.controller.serialisation.SerialisationApproveCook;
 import com.meeteat.controller.serialisation.SerialisationAuthenticate;
+import com.meeteat.controller.serialisation.SerialisationCancelOffer;
 import com.meeteat.controller.serialisation.SerialisationCookRequest;
 import com.meeteat.controller.serialisation.SerialisationCookRequests;
 import com.meeteat.controller.serialisation.SerialisationOffer;
@@ -226,6 +228,11 @@ public class ActionServlet extends HttpServlet {
             case "setPrice" ->{
                 action = new ActionSetPrice();
                 serialisation = new SerialisationOffer();
+                break;
+            }
+            case "cancelOffer" ->{
+                action = new ActionCancelOffer();
+                serialisation = new SerialisationCancelOffer();
                 break;
             }
         }

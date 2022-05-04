@@ -333,6 +333,24 @@ public class Service {
         }
         return offer;
     }
+    
+    public boolean cancelOffer(Long offerId) {
+        JpaTool.createPersistenceContext();
+        boolean canceled = false;
+        try {
+            JpaTool.openTransaction();
+            Offer offer = offerDao.searchById(offerId);
+            offerDao.delete(offer);
+            JpaTool.validateTransaction();
+            canceled = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return canceled;
+    }
 
     public Reservation acceptRequest(Long reservationId){
         JpaTool.createPersistenceContext();
