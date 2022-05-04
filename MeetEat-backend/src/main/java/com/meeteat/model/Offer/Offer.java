@@ -253,6 +253,14 @@ public class Offer implements Serializable {
     public String getAddress() {
         return address;
     }
+    
+    public boolean expired(Date date){
+        if(this.expirationDate.after(date)){
+            this.state = offerState.UNAVAILABLE;
+            return true;
+        }
+        return false;
+    }
 
     public void setAddress(String address) {
         this.address = address;

@@ -253,8 +253,8 @@ public class DBPopulation {
         createOffers(nbOffers);
         publishOffers(nbOffersToPublish);
         createReservations(nbReservations);
-        //int expired = service.checkOffersExpirationDate();
-        //System.out.println(expired + " offers expired today");
+        int expired = service.checkOffersExpirationDate();
+        System.out.println(expired + " offers expired today");
         JpaTool.destroy();
     }
     private List<Ingredient> getIngredientsForOffer(){

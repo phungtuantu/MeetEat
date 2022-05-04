@@ -274,10 +274,9 @@ public class Service {
         return updateOffer(offer);
     }
     
-    /*public int checkOffersExpirationDate(){
+    public int checkOffersExpirationDate(){
         int cleanedOffers = 0;
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
+        Date today = new Date();
         List<Offer> offers = new LinkedList<>();
         JpaTool.createPersistenceContext();
         try{
@@ -297,7 +296,7 @@ public class Service {
             }
         }
         return cleanedOffers;
-    }*/
+    }
     
     public Long approveCook(Cook cook){
         Long result = null;
