@@ -1,39 +1,70 @@
 <template>
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-            <img src="../../assets/lasagne.jpg" width="300px">
-        </div>
-        <div class="col-6">
-            <div class="column">
-                <label style="font-weight: bold; font-size: 20px">My mother's delicious lasagna !</label>
-                <label class="rating" style="font-weight: bold">Rating : 4.2/5</label> <br>
-                <label style="font-weight: bold">Expiration date : 04/04/2022</label><br>
-                <label>Description : Lorem ipsum dolor sit amet, consectetur adpiscing elit.</label><br>
-                <label>Number of sold servings : 5</label><br>
-                <label style="font-weight: bold; font-size: 18px">Price : 5€</label> <br>
+<div class="container" >
+    <div class = "card" v-for="offer in offers" :key="offer.id">
+        <template v-if= "offer.state === 'SOLDOUT' || offer.state ==='UNAVAILABLE' || offer.state ==='PENDING'">
+            <div class="row" >
+                <div class="col-6">
+                    <img v-bind:src= "offer.image" width="300px">
+                </div>
+                <div class="col-6">
+                    <div class="column">
+                        <label style="font-weight: bold; font-size: 20px">{{offer.title}}</label><br>
+                        <label class="rating" style="font-weight: bold">Rating : {{offer.cook.rating}}/5</label> <br>
+                        <label style="font-weight: bold">Expiration date : {{offer.expirationDate}}</label><br>
+                        <label>Description : {{offer.details}}</label><br>
+                        <label>Number of sold servings : {{offer.soldPortions}}</label><br>
+                        <label style="font-weight: bold; font-size: 18px">Price : {{offer.price}}€</label> <br>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <!-- espace sous image-->
-        </div>
-        <div class="col-6">
-            <div class="column">
-                <button class="btn btn-edit">
-                    Details
-                </button>
+            <div class="row">
+                <div class="col-6">
+                    <!-- espace sous image-->
+                </div>
+                <div class="col-6">
+                    <div class="column">
+                        <button class="btn btn-edit" @click="detailsButton(offer.id)">
+                            Details
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </template>
     </div>
-
 </div>
 </template>
 
 <script>
+import axios from "axios";
+import {urlAPI} from "@/variables";
+import router from "@/router";
+
+
 export default {
-  name: "OnGoingOffers"
+    name: "OnGoingOffers",
+
+    data(){
+        return{
+            offers:[],
+        }
+    },
+
+    methods : {
+        detailsButton: function(offerId){
+            localStorage.setItem("offerId",offerId);
+            router.replace('/ModificationOffer/'+offerId)
+            // il faut redirigier vers une page de consultation offre cook
+        },
+   },
+
+  async mounted() {
+
+    await axios.get(urlAPI + 'todo=viewOffersHistory')
+        .then(response => (this.offers = response.data.offers));
+
+    console.log(this.offers);
+
+  }
 }
 </script>
 

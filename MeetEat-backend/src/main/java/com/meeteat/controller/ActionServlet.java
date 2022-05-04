@@ -11,6 +11,7 @@ import com.meeteat.controller.action.ActionAcceptRequest;
 import com.meeteat.controller.action.ActionApproveCook;
 import com.meeteat.controller.action.ActionAuthentication;
 import com.meeteat.controller.action.ActionBecomeCook;
+import com.meeteat.controller.action.ActionCancelOffer;
 import com.meeteat.controller.action.ActionConsultCooksReviews;
 import com.meeteat.controller.action.ActionConsultGuestsList;
 import com.meeteat.controller.action.ActionConsultOffer;
@@ -26,6 +27,7 @@ import com.meeteat.controller.action.ActionPublishOffer;
 import com.meeteat.controller.action.ActionRejectRequest;
 import com.meeteat.controller.action.ActionSearchOffers;
 import com.meeteat.controller.action.ActionSeeCookRequests;
+import com.meeteat.controller.action.ActionSetPrice;
 import com.meeteat.controller.action.ActionSpecifyPreferences;
 import com.meeteat.controller.action.ActionViewCuisines;
 import com.meeteat.controller.action.ActionViewDiets;
@@ -39,6 +41,7 @@ import com.meeteat.controller.serialisation.Serialisation;
 import com.meeteat.controller.serialisation.SerialisationAcceptRequest;
 import com.meeteat.controller.serialisation.SerialisationApproveCook;
 import com.meeteat.controller.serialisation.SerialisationAuthenticate;
+import com.meeteat.controller.serialisation.SerialisationCancelOffer;
 import com.meeteat.controller.serialisation.SerialisationCookRequest;
 import com.meeteat.controller.serialisation.SerialisationCookRequests;
 import com.meeteat.controller.serialisation.SerialisationOffer;
@@ -220,6 +223,16 @@ public class ActionServlet extends HttpServlet {
             case "estimatePrice" ->{
                 action = new ActionEstimatePrice();
                 serialisation = new SerialisationPriceEstimate();
+                break;
+            }
+            case "setPrice" ->{
+                action = new ActionSetPrice();
+                serialisation = new SerialisationOffer();
+                break;
+            }
+            case "cancelOffer" ->{
+                action = new ActionCancelOffer();
+                serialisation = new SerialisationCancelOffer();
                 break;
             }
         }

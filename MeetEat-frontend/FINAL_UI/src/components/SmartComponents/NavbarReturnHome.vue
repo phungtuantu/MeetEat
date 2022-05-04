@@ -59,7 +59,6 @@
         </div>
       </nav>
     </template>
-
   </div>
 
 </template>
@@ -77,9 +76,6 @@ export default {
     goHome : function(){
       router.replace('/');
     },
-    /*deroulerMenu : function(){
-      document.getElementsByClassName("dropdown-child").style.display = "block";
-    },*/
     becomeCook : function(){
       router.replace('/becomeCook');
     },

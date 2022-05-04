@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,10 +53,6 @@ public class Offer implements Serializable {
     private int totalPortions;
     private int remainingPortions;
     private String offerPhotoPath;
-
-    private Exception Exception(String expiration_date_cant_be_before_today) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     public enum offerState {
         PENDING,
         ONGOING,
@@ -122,7 +119,7 @@ public class Offer implements Serializable {
         this.location = location;
     }
 
-    public Date getCreationDate() {
+    public Date getAvailableFrom() {
         return availableFrom;
     }
 
@@ -226,6 +223,9 @@ public class Offer implements Serializable {
         this.reservations.add(reservation);
         this.remainingPortions -= reservation.getNbOfPortion();
         assert(this.remainingPortions>=0);
+        if(this.remainingPortions == 0){
+            this.state = offerState.SOLDOUT;
+        }
     }
     
     public void publishOffer() {
@@ -243,6 +243,7 @@ public class Offer implements Serializable {
 
     public void setRemainingPortions(int remainingPortions) {
         this.remainingPortions = remainingPortions;
+        assert(remainingPortions >= 0);
     }
 
     public void setMessages(List<Message> messages) {
@@ -251,6 +252,14 @@ public class Offer implements Serializable {
 
     public String getAddress() {
         return address;
+    }
+    
+    public boolean expired(Date date){
+        if(this.expirationDate.after(date)){
+            this.state = offerState.UNAVAILABLE;
+            return true;
+        }
+        return false;
     }
 
     public void setAddress(String address) {
@@ -264,6 +273,7 @@ public class Offer implements Serializable {
     public Offer(Cook cook, Date availableFrom, String title, int totalPortions,
             String details, List<PreferenceTag> classifications, List<Ingredient> ingredients, String specifications,
             String address, String city, String zipCode, Date expirationDate, String offerPhotoPath) {
+        assert(expirationDate.after(availableFrom));
         this.cook = cook;
         this.availableFrom = availableFrom;
         this.title = title;
@@ -282,6 +292,32 @@ public class Offer implements Serializable {
         this.expirationDate = expirationDate;
         this.offerPhotoPath = offerPhotoPath;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Offer other = (Offer) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+    
     
     
     public Long getId() {

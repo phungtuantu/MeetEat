@@ -43,6 +43,7 @@ public class ActionSearchOffers extends Action {
 //        for (String preferenceId : request.getParameterValues("requestPreferences")){
 //            requestPreferences.add(Long.parseLong(preferenceId));
 //        }
+        int x = service.checkOffersExpirationDate();
         List <Offer> offers=service.searchOffers(requestPreferences, priceLimit, user);
         request.setAttribute("offers",offers);
     }
