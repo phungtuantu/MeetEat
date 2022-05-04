@@ -93,6 +93,9 @@ public class SerialisationOffers extends Serialisation{
             jsonOffer.addProperty("city", offer.getCity());
             jsonOffer.addProperty("zipCode", offer.getZipCode());
             jsonOffer.addProperty("distanceToUser", offer.getDistanceToUser());
+            jsonOffer.addProperty("image",offer.getOfferPhotoPath());
+            jsonOffer.addProperty("state",offer.getState().name());
+            jsonOffer.addProperty("soldPortions",offer.getTotalPortions()-offer.getRemainingPortions());
             
             return jsonOffer;
         }).forEachOrdered(jsonOffer -> {

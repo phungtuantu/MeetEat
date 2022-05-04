@@ -1,43 +1,69 @@
 <template>
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-            <img src="../../assets/couscous.jpg" width="300px">
-        </div>
-        <div class="col-6">
-            <div class="column">
-                <label style="font-weight: bold; font-size: 20px">Couscous !</label>
-                <img src="../../assets/icons8-no-pork-50.png" width="30px"> <br>
-                <label style="font-weight: bold">Expiration date : 16/04/2022</label><br>
-                <label>Description : Lorem ipsum dolor sit amet, consectetur adpiscing elit.</label><br>
-                <label>Number of offered serving : 3</label><br>
-                <label>Number of sold serving : 2</label><br>
-                <label style="font-weight: bold; font-size: 18px">Price : 5€</label> <br>
+<div class="container" >
+    <div class = "card" v-for="offer in offers" :key="offer.id">
+        <template v-if= "offer.state === 'ONGOING'">
+            <div class="row" >
+                <div class="col-6">
+                    <img v-bind:src= "offer.image" width="300px">
+                </div>
+                <div class="col-6">
+                    <div class="column">
+                        <label style="font-weight: bold; font-size: 20px">{{offer.title}}</label><br>
+                        <label style="font-weight: bold">Expiration date : {{offer.expirationDate}}</label><br>
+                        <label>Description : {{offer.details}}</label><br>
+                        <label>Number of total servings : {{offer.totalPortion}}</label><br>
+                        <label>Number of remaining servings : {{offer.remainingPortions}}</label><br>
+                        <label style="font-weight: bold; font-size: 18px">Price : {{offer.price}}€</label> <br>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <!-- espace sous image-->
-        </div>
-        <div class="col-6">
-            <div class="column">
-                <button class="btn btn-edit">
-                        Edit
-                </button>
-                <button class="btn btn-danger">
-                    Cancel
-                </button> 
+            <div class="row">
+                <div class="col-6">
+                    <!-- espace sous image-->
+                </div>
+                <div class="col-6">
+                    <div class="column">
+                        <button class="btn btn-edit">
+                                Edit
+                        </button>
+                        <button class="btn btn-danger">
+                            Cancel
+                        </button> 
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-10">
+                    <hr class="line-color">
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
-
 </div>
 </template>
 
 <script>
+import axios from "axios";
+import {urlAPI} from "@/variables";
 export default {
-  name: "OnGoingOffers"
+  name: "OnGoingOffers",
+
+  data(){
+      return{
+          offers:[],
+      }
+  },
+
+  async mounted() {
+
+    await axios.get(urlAPI + 'todo=viewOffersHistory')
+        .then(response => (this.offers = response.data.offers));
+
+    console.log(this.offers);
+
+  }
 }
 </script>
 

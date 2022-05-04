@@ -136,6 +136,9 @@ export default {
     margin-left : 30px;
     text-decoration: underline;
 }
+.p{
+  color:white;
+}
 
 
 

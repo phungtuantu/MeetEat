@@ -12,21 +12,6 @@
     </div>
     <OnGoingOffers></OnGoingOffers>
     <div class="container">
-      <div class="row">
-        <div class="col-10">
-          <hr class="line-color">
-        </div>
-      </div>
-    </div>
-    <OnGoingOffers></OnGoingOffers>
-    <div class="container">
-      <div class="row">
-        <div class="col-10">
-          <hr class="line-color2">
-        </div>
-      </div>
-    </div>
-    <div class="container">
       <h2>My previous offers :</h2>
     </div>
     <PreviousOffers></PreviousOffers>

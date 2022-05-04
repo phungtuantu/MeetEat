@@ -51,11 +51,11 @@ public class main {
     }
     
     public static void testGetPrice(){
-        Service service = new Service();
-        Offer offer = service.getOfferFromId(101l);
-        PriceEstimate e = service.getMinMaxPrice(offer.getIngredients());
-        System.out.println("We think that you are cooking: " + e.getRecipeGuess() 
-                + " and suggest a price between " + e.getMinPrice() + " and " + e.getMaxPrice());
+//        Service service = new Service();
+//        Offer offer = service.getOfferFromId(101l);
+//        PriceEstimate e = service.getMinMaxPrice(offer.getIngredients());
+//        System.out.println("We think that you are cooking: " + e.getRecipeGuess() 
+//                + " and suggest a price between " + e.getMinPrice() + " and " + e.getMaxPrice());
         
     }
     
@@ -150,9 +150,9 @@ public class main {
 //    }
     
     public static void testMakeReservation(){
-        Service service = new Service();
-        Reservation reservation = new Reservation(new Date(System.currentTimeMillis()),ReservationState.REQUEST,2, service.getOfferFromId(1l), service.getUserFromId(1l));
-        service.createReservation(reservation);
+//        Service service = new Service();
+//        Reservation reservation = new Reservation(new Date(System.currentTimeMillis()),ReservationState.REQUEST,2, service.getOfferFromId(1l), service.getUserFromId(1l));
+//        service.createReservation(reservation);
     }
     
     public static void testSpecifyPreferences(){

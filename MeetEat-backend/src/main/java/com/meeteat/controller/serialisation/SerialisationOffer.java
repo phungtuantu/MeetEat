@@ -26,36 +26,36 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author gvnge
  */
-public class SerialisationOffer extends Serialisation{
+public class SerialisationOffer extends Serialisation {
 
     @Override
     public void serialise(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JsonObject container = new JsonObject();
-        Offer offer = (Offer)request.getAttribute("offer");
-        container.addProperty("id",offer.getId());
-        
+        Offer offer = (Offer) request.getAttribute("offer");
+        container.addProperty("id", offer.getId());
+
         JsonObject jsonCook = new JsonObject();
-        
-        jsonCook.addProperty("id",offer.getCook().getId());
-        jsonCook.addProperty("firstName",offer.getCook().getFirstName());
-        jsonCook.addProperty("lastName",offer.getCook().getLastName());
-        jsonCook.addProperty("rating",offer.getCook().getRating());
+
+        jsonCook.addProperty("id", offer.getCook().getId());
+        jsonCook.addProperty("firstName", offer.getCook().getFirstName());
+        jsonCook.addProperty("lastName", offer.getCook().getLastName());
+        jsonCook.addProperty("rating", offer.getCook().getRating());
         jsonCook.addProperty("numberOfReviews", offer.getCook().getNumberOfReviews());
         jsonCook.addProperty("image", offer.getCook().getUser().getProfilePhotoPath());
-        
-        container.add("cook",jsonCook);
+
+        container.add("cook", jsonCook);
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        if (offer.getPublicationDate()!=null){
-            container.addProperty("publicationDate",df.format(offer.getPublicationDate()));
+        if (offer.getPublicationDate() != null) {
+            container.addProperty("publicationDate", df.format(offer.getPublicationDate()));
         }
-        if (offer.getExpirationDate()!=null){
-            container.addProperty("expirationDate",df.format(offer.getExpirationDate()));
+        if (offer.getExpirationDate() != null) {
+            container.addProperty("expirationDate", df.format(offer.getExpirationDate()));
         }
-        container.addProperty("title",offer.getTitle());
-        container.addProperty("price",offer.getPrice());
-        container.addProperty("totalPortion",offer.getTotalPortions());
-        container.addProperty("details",offer.getDetails());
-        
+        container.addProperty("title", offer.getTitle());
+        container.addProperty("price", offer.getPrice());
+        container.addProperty("totalPortion", offer.getTotalPortions());
+        container.addProperty("details", offer.getDetails());
+
         JsonArray jsonCuisineList = new JsonArray();
         JsonArray jsonDietList = new JsonArray();
         List<PreferenceTag> classifications = offer.getClassifications();
@@ -63,15 +63,15 @@ public class SerialisationOffer extends Serialisation{
             JsonObject jsonPref = new JsonObject();
             jsonPref.addProperty("id", classification.getId());
             jsonPref.addProperty("name", classification.getName());
-            if (classification instanceof Cuisine){
+            if (classification instanceof Cuisine) {
                 jsonCuisineList.add(jsonPref);
-            } else if (classification instanceof Diet){
+            } else if (classification instanceof Diet) {
                 jsonDietList.add(jsonPref);
             }
         });
-        container.add("cuisines",jsonCuisineList);
-        container.add("diets",jsonDietList);
-        
+        container.add("cuisines", jsonCuisineList);
+        container.add("diets", jsonDietList);
+
         JsonArray jsonIngredientList = new JsonArray();
         List<Ingredient> ingredients = offer.getIngredients();
         ingredients.stream().map(ingredient -> {
@@ -82,19 +82,21 @@ public class SerialisationOffer extends Serialisation{
         }).forEachOrdered(jsonPref -> {
             jsonIngredientList.add(jsonPref);
         });
-        container.add("ingredients",jsonIngredientList);
-        
+        container.add("ingredients", jsonIngredientList);
+
         container.addProperty("specifications", offer.getSpecifications());
         container.addProperty("address", offer.getAddress());
-        container.addProperty("remainingPortions",offer.getRemainingPortions());
+        container.addProperty("remainingPortions", offer.getRemainingPortions());
         container.addProperty("city", offer.getCity());
         container.addProperty("zipcode", offer.getZipCode());
         container.addProperty("distanceToUser", offer.getDistanceToUser());
-        
-        try (PrintWriter out = this.getWriter(response)) {
+        container.addProperty("image", offer.getOfferPhotoPath());
+        container.addProperty("state", offer.getState().name());
+        container.addProperty("soldPortions", offer.getTotalPortions() - offer.getRemainingPortions());
+        try ( PrintWriter out = this.getWriter(response)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-            gson.toJson(container,out);
+            gson.toJson(container, out);
         }
     }
-    
+
 }
