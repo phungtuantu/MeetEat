@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-6">
                     <div class="column">
-                        <button class="btn btn-edit">
+                        <button class="btn btn-edit" @click="detailsButton(offer.id)">
                             Details
                         </button>
                     </div>
@@ -37,14 +37,25 @@
 <script>
 import axios from "axios";
 import {urlAPI} from "@/variables";
-export default {
-  name: "OnGoingOffers",
+import router from "@/router";
 
-  data(){
-      return{
-          offers:[],
-      }
-  },
+
+export default {
+    name: "OnGoingOffers",
+
+    data(){
+        return{
+            offers:[],
+        }
+    },
+
+    methods : {
+        detailsButton: function(offerId){
+            localStorage.setItem("offerId",offerId);
+            router.replace('/ModificationOffer/'+offerId)
+            // il faut redirigier vers une page de consultation offre cook
+        },
+   },
 
   async mounted() {
 

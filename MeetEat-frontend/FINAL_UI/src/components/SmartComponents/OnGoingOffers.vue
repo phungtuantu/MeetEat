@@ -23,11 +23,11 @@
                 </div>
                 <div class="col-6">
                     <div class="column">
-                        <button class="btn btn-edit">
+                        <button class="btn btn-edit" @click="editButton(offer.id)">
                                 Edit
                         </button>
-                        <button class="btn btn-danger">
-                            Cancel
+                        <button class="btn btn-danger" @click="deleteButton(offer.id)">
+                            Delete
                         </button> 
                     </div>
                 </div>
@@ -47,14 +47,30 @@
 <script>
 import axios from "axios";
 import {urlAPI} from "@/variables";
+import router from "@/router";
+
 export default {
   name: "OnGoingOffers",
 
   data(){
       return{
           offers:[],
+          deleteOfferResult: false,
       }
   },
+
+   methods : {
+       editButton: function(offerId){
+           localStorage.setItem("offerId",offerId);
+           router.replace('/ModificationOfferPage/'+offerId)
+       },
+
+       deleteButton: async function(offerId){
+           await axios.get(urlAPI + 'todo=cancelOffer&offerId='+offerId)
+            .then(response => (this.deleteOfferResult = response.offerCanceled));
+            console.log(this.deleteOfferResult);
+       }
+   },
 
   async mounted() {
 
@@ -64,6 +80,7 @@ export default {
     console.log(this.offers);
 
   }
+  
 }
 </script>
 
