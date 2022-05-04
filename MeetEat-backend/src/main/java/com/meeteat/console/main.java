@@ -7,6 +7,7 @@ package com.meeteat.console;
 
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.PriceEstimate;
 import com.meeteat.model.Offer.Reservation;
 import com.meeteat.model.Offer.ReservationState;
 import com.meeteat.model.Offer.Review;
@@ -46,8 +47,18 @@ public class main {
 //        testAuthenticate();
 //        testCreateReview();
 //          testViewOffersHistory();
-           testSearchOffers();
+//           testSearchOffers();
+//        testGetPrice();
         JpaTool.destroy();
+    }
+    
+    public static void testGetPrice(){
+        Service service = new Service();
+        Offer offer = service.getOfferFromId(101l);
+        PriceEstimate e = service.getMinMaxPrice(offer.getIngredients());
+        System.out.println("We think that you are cooking: " + e.getRecipeGuess() 
+                + " and suggest a price between " + e.getMinPrice() + " and " + e.getMaxPrice());
+        
     }
     
     public static void testCreatePref(){
@@ -133,7 +144,10 @@ public class main {
         Cook cook = service.findCookById(cookId);
         List<PreferenceTag> classifications = new LinkedList<>();
         List<Ingredient> ingredients = new LinkedList<>();
-        Offer offer = new Offer(cook, new Date(), "test",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
+        ingredients.add(new Ingredient("pork chops"));
+        ingredients.add(new Ingredient("potatoes"));
+        ingredients.add(new Ingredient("cream"));
+        Offer offer = new Offer(cook, new Date(), "My pork chops",5.5, 10, "bery good food", classifications, ingredients, "none", "there", "that city", "1011");
         service.makeOffer(offer);
     }
     
