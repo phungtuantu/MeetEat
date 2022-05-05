@@ -30,7 +30,7 @@
             <img src="../../assets/arrow-left.png" alt="left-arrow" width="40px">
             <!-- <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a> -->
           </button>
-          <button type="button" class="btn btn-nav">
+          <button type="button" class="btn btn-nav" @click="goHome()">
             <img src="../../assets/home.png" alt="home" width="35px">
           </button>
           <h1 class="display-5">MeetEat</h1>
@@ -66,6 +66,8 @@
 
 <script>
 import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
 export default {
   name: "NavbarReturnHome",
   data() {
@@ -92,9 +94,10 @@ export default {
     orders : function(){
       router.replace('/historic');
     },
-    logOut : function(){
+    logOut : async function () {
       sessionStorage.setItem("user", null);
-      if(this.$route.name !== '/'){
+      await axios.get(urlAPI + "todo=disconnect");
+      if (this.$route.name !== '/') {
         router.replace('/');
       }
       location.reload();
