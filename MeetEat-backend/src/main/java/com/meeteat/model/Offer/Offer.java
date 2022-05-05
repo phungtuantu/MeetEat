@@ -11,7 +11,6 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;

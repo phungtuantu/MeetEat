@@ -33,11 +33,11 @@ public class SerialisationReservations extends Serialisation{
         JsonArray jsonReservationList = new JsonArray();
         reservations.stream().map(res->{
             JsonObject jsonReservation = new JsonObject();
-            jsonReservation.addProperty("id",res.getId());
+            jsonReservation.addProperty("reservationId",res.getId());
             jsonReservation.addProperty("nbOfPortion", res.getNbOfPortion());
             jsonReservation.addProperty("reservationDate",df.format(res.getReservationDate()));
             jsonReservation.addProperty("customerName",res.getCustomer().getFirstName());
-            jsonReservation.addProperty("price",res.getOffer().getPrice() * res.getNbOfPortion());
+            jsonReservation.addProperty("totalPrice",res.getOffer().getPrice() * res.getNbOfPortion());
             jsonReservation.addProperty("offerTitle",res.getOffer().getTitle());
             jsonReservation.addProperty("offerDetails",res.getOffer().getDetails());
             jsonReservation.addProperty("offerImage",res.getOffer().getOfferPhotoPath());
