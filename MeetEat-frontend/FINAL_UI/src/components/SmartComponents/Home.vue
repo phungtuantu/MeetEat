@@ -62,7 +62,7 @@
               <div class="col-lg-4 d-none d-lg-block">
                 <div class="card">
                   <img
-                      src="../../assets/moneysave.png"
+                      src="../../assets/moneysave.jpg"
                       class="card-img-top"
                       alt="moneysave"
                   />

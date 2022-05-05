@@ -60,10 +60,7 @@
       <div style="text-align: right; margin-bottom: 30px;">
         <button type="button" class="btn btn-dark" @click="seeBasket()">My basket</button>
       </div>
-
-      <p class="noOffer" id="noOffer" style="display:none;">
-            No offer
-      </p>
+      <h1 class="noOffer" id="noOffer" style="display:none;">No offer</h1>
 
       <div class="card" v-for="offer in orders" :key="offer.id">
         <img class="card-img-top"
