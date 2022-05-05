@@ -233,7 +233,10 @@ public class DBPopulation {
                 //Assign a random state to the reservation
                 ReservationState state = ReservationState.values()[number.numberBetween(0, ReservationState.values().length)];
                 //Assign a random number of portions
-                int nbPortions = number.numberBetween(1, offer.getRemainingPortions()/5);
+                int nbPortions = number.numberBetween(1, offer.getRemainingPortions()/2);
+                if(nbPortions < 0){
+                    nbPortions = 1;
+                }
                 Reservation reservation = new Reservation(reservationDate, state, nbPortions, offer, customer);
                 Long created = service.createReservation(reservation);
                 if(created != null){
