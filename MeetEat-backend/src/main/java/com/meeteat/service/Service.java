@@ -382,7 +382,7 @@ public class Service {
             Offer offer = reservation.getOffer();
             if (reservation.getNbOfPortion()<=offer.getRemainingPortions()){
                 reservation.setState(ReservationState.RESERVATION);
-                offer.addReservation(reservation);
+                offer.validateReservation(reservation);
             }else{
                 reservation.setState(ReservationState.REJECTED);
             }
@@ -980,8 +980,6 @@ public class Service {
         try {
             JpaTool.openTransaction();
             List <Offer> madeOffers = offerDao.getOffers(cookId);
-            System.out.println("cook: "+cookId);
-            System.out.println(madeOffers.get(0).getId());
 
             for (Offer offer : madeOffers){
                 if (result==null){
@@ -989,6 +987,7 @@ public class Service {
                 } else{
                     result.addAll(reviewDao.getOffersReviews(offer.getId()));
                 }
+                
             }
             JpaTool.validateTransaction();
         } catch (Exception ex) {

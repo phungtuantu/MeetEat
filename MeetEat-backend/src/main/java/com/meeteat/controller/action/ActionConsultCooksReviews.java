@@ -20,7 +20,7 @@ public class ActionConsultCooksReviews extends Action {
     @Override
     public void executer(HttpServletRequest request) {
         Service service = new Service();
-        //      HttpSession session = request.getSession();
+//        HttpSession session = request.getSession();
 //        Long userId = (Long)session.getAttribute("userId");
         
         Long userId = Long.parseLong(request.getParameter("userId"));

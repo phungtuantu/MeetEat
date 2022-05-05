@@ -26,11 +26,11 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <button type="button" class="btn btn-nav" @click="goHome()">
+           <!-- <button type="button" class="btn btn-nav" @click="goHome()">
             <img src="../../assets/arrow-left.png" alt="left-arrow" width="40px">
-            <!-- <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a> -->
-          </button>
-          <button type="button" class="btn btn-nav">
+           <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a> 
+          </button>-->
+          <button type="button" class="btn btn-nav" @click="goHome()">
             <img src="../../assets/home.png" alt="home" width="35px">
           </button>
           <h1 class="display-5">MeetEat</h1>
@@ -38,11 +38,11 @@
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
           </ul>
           <div class="form-inline my-2 my-lg-0">
+            <!--<button type="button" class="btn2 btn-nav">
+              <img src="../../assets/mailbox.png" alt="mail" width="40px"  >
+            </button>-->
             <button type="button" class="btn2 btn-nav">
-              <img src="../../assets/mailbox.png" alt="basket" width="40px">
-            </button>
-            <button type="button" class="btn2 btn-nav">
-              <img src="../../assets/basket.png" alt="basket" width="40px">
+              <img src="../../assets/basket.png" alt="basket" width="40px" @click="basket()">
             </button>
             <div class="dropdown">
               <button type="button" class="btn2 btn-nav"> <!-- menuDeroulant -->
@@ -76,6 +76,9 @@ export default {
   methods: {
     goHome : function(){
       router.replace('/');
+    },
+    basket : function(){
+      router.replace('/myBasket');
     },
     becomeCook : function(){
       router.replace('/becomeCook');

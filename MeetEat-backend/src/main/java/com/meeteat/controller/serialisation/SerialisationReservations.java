@@ -38,10 +38,14 @@ public class SerialisationReservations extends Serialisation{
             jsonReservation.addProperty("reservationDate",df.format(res.getReservationDate()));
             jsonReservation.addProperty("customerName",res.getCustomer().getFirstName());
             jsonReservation.addProperty("price",res.getOffer().getPrice() * res.getNbOfPortion());
-            jsonReservation.addProperty("offerTitle",res.getOffer().getTitle());
-            jsonReservation.addProperty("offerDetails",res.getOffer().getDetails());
-            jsonReservation.addProperty("offerImage",res.getOffer().getOfferPhotoPath());
-            jsonReservation.addProperty("noTelCustomer",res.getCustomer().getNoTelephone());
+            
+            JsonObject offer = new JsonObject();
+            offer.addProperty("offerId",res.getOffer().getId());
+            offer.addProperty("offerTitle",res.getOffer().getTitle());
+            offer.addProperty("offerDetails",res.getOffer().getDetails());
+            offer.addProperty("offerImage",res.getOffer().getOfferPhotoPath());
+            offer.addProperty("noTelCustomer",res.getCustomer().getNoTelephone());
+            jsonReservation.add("offer", offer);
             if (null != res.getState())switch (res.getState()) {
                 case REQUEST -> jsonReservation.addProperty("state", "request");
                 case RESERVATION -> jsonReservation.addProperty("state", "reservation");
@@ -63,6 +67,14 @@ public class SerialisationReservations extends Serialisation{
                 jsonClassificationList.add(jsonPref);
             });
             jsonReservation.add("classifications",jsonClassificationList);
+            
+            JsonObject cook = new JsonObject();
+            cook.addProperty("cookId",res.getOffer().getCook().getId());
+            cook.addProperty("cookFirstName", res.getOffer().getCook().getFirstName());
+            cook.addProperty("cookLastName", res.getOffer().getCook().getLastName());
+            cook.addProperty("cookPhoto", res.getOffer().getCook().getUser().getProfilePhotoPath());
+
+            jsonReservation.add("cook",cook);
             
             return jsonReservation;
         }).forEachOrdered(jsonReservation -> {

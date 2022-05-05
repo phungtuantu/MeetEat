@@ -7,7 +7,7 @@
          <br/>
          <div class = "row">
             <div class = "col-sm-3">
-                <img src="../../assets/peruvian-ceviche.jpg" width="100%">
+                <img v-bind:src="reservation.offer.offerPhoto" width="100%">
             </div>
             <div class = "col-sm-8">
                 <div class="row">
@@ -16,7 +16,7 @@
                 </div>
                 <p class="">{{reservation.offer.details}}</p>
                 <div class="row">
-                    <div class="col-4"> {{reservation.nbOfPortion}}portion</div>
+                    <div class="col-4"> {{reservation.nbOfPortion}} portions</div>
                     <div class="col-1"> <img src="../../assets/point.png" width="10px"> </div>
                     <div class="col-3">{{reservation.offer.price * reservation.nbOfPortion}}$</div>
                 </div>
@@ -24,9 +24,9 @@
             <div class = "col-sm-1">
                 <figure>
                     <a href="">
-                        <img src="https://i.imgur.com/xELPaag.jpg" width="50px" class=""> <!--class="rounded-circle mt-2"-->
+                        <img v-bind:src="reservation.cook.cookPhoto" width="50px" class=""> <!--class="rounded-circle mt-2"-->
                     </a>
-                    <figcaption>Sarah</figcaption>
+                    <figcaption>{{reservation.cook.cookFirstName}} {{reservation.cook.cookLastName}}</figcaption>
                 </figure>
             </div>
          </div>
@@ -68,6 +68,7 @@
 <script>
 import axios from "axios";
 import {urlAPI} from "@/variables";
+import router from "@/router";
 
 export default {
   name: "EvaluateMeal",
@@ -101,8 +102,8 @@ export default {
 
       console.log(arr);
 
-      console.log(urlAPI + "todo=evaluateMeal&userId="+this.reservation.customerId+"&nbOfStars="+this.nbStars+"&comment="+this.comment+"&reservation_Id="+this.reservation.id);
-      await axios.get(urlAPI + "todo=evaluateMeal&userId="+this.reservation.customerId+"&nbOfStars="+this.nbStars+"&comment="+this.comment+"&reservation_Id="+this.reservation.id);
+      console.log(urlAPI + "todo=evaluateMeal&userId="+this.reservation.customerId+"&nbOfStars="+this.nbStars+"&comment="+this.comment+"&reservationId="+this.reservation.id);
+      await axios.get(urlAPI + "todo=evaluateMeal&userId="+this.reservation.customerId+"&nbOfStars="+this.nbStars+"&comment="+this.comment+"&reservationId="+this.reservation.id);
       /**
        * evaluateMeal
        * Long userId = (Long)session.getAttribute("userId");
@@ -110,10 +111,12 @@ export default {
        *         String comment = request.getParameter("comment");
        *         Long sourceReservation_id = Long.parseLong(request.getParameter("reservation_Id"));
        */
+      router.replace('/historic')
     }
   },
   async mounted() {
     //viewReservationsList
+    this.idReservation =   sessionStorage.getItem("idEvaluate")
     await axios.get(urlAPI+'todo=viewReservationDetails&reservationId='+this.idReservation)
     .then(response => (this.reservation = response.data))
 

@@ -33,6 +33,16 @@ public class SerialisationReservation extends Serialisation{
         JsonObject container = new JsonObject();
         Reservation reservation = (Reservation)request.getAttribute("reservation");
         if (reservation==null){
+            switch ((int)request.getAttribute("errorCode")){
+                    case 1 -> {
+                        container.addProperty("errorCode",1);
+                        break;
+                    }
+                    case 2 -> {
+                        container.addProperty("errorCode",2);
+                        break;
+                    }
+            }
             container.addProperty("foundReservation",false);
         } else{
             container.addProperty("foundReservation",true);
@@ -97,13 +107,21 @@ public class SerialisationReservation extends Serialisation{
             });
             containerOffer.add("ingredients",jsonIngredientList);
 
-            containerOffer.addProperty("specifications", offer.getSpecifications());
-            containerOffer.addProperty("address", offer.getAddress());
+            containerOffer.addProperty("offerSpecifications", offer.getSpecifications());
+            containerOffer.addProperty("offerPhoto", offer.getOfferPhotoPath());
+            containerOffer.addProperty("offerAddress", offer.getAddress());
             containerOffer.addProperty("remainingPortions",offer.getRemainingPortions());
             containerOffer.addProperty("city", offer.getCity());
             containerOffer.addProperty("zipCode", offer.getZipCode());
 
             container.add("offer",containerOffer);
+            JsonObject cook = new JsonObject();
+            cook.addProperty("cookId",offer.getCook().getId());
+            cook.addProperty("cookFirstName", offer.getCook().getFirstName());
+            cook.addProperty("cookLastName", offer.getCook().getLastName());
+            cook.addProperty("cookPhoto", offer.getCook().getUser().getProfilePhotoPath());
+
+            container.add("cook",cook);
         }
         
         try (PrintWriter out = this.getWriter(response)) {
