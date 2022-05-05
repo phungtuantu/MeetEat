@@ -45,6 +45,7 @@ public class SerialisationReservations extends Serialisation{
             offer.addProperty("offerDetails",res.getOffer().getDetails());
             offer.addProperty("offerImage",res.getOffer().getOfferPhotoPath());
             offer.addProperty("noTelCustomer",res.getCustomer().getNoTelephone());
+            offer.addProperty("offerAddress", res.getOffer().getAddress());
             jsonReservation.add("offer", offer);
             if (null != res.getState())switch (res.getState()) {
                 case REQUEST -> jsonReservation.addProperty("state", "request");

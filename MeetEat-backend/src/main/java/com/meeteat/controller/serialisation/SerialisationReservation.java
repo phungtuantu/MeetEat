@@ -84,7 +84,10 @@ public class SerialisationReservation extends Serialisation{
             containerOffer.addProperty("price",offer.getPrice());
             containerOffer.addProperty("totalPortion",offer.getTotalPortions());
             containerOffer.addProperty("details",offer.getDetails());
-
+            containerOffer.addProperty("offerAddress", offer.getAddress());
+            
+            container.add("offer", containerOffer);
+            
             JsonArray jsonClassificationList = new JsonArray();
             List<PreferenceTag> classifications = offer.getClassifications();
             classifications.stream().map(classification -> {
