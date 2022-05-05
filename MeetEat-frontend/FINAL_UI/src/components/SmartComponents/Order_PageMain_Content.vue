@@ -2,29 +2,9 @@
   <div class="row">
 
     <div class="col-3 border-right " style="text-align: left; margin-left: 25px;">
-      <h2>Sort</h2>
-
-      <form>
-      <div class="form-check">
-        <input id="flexRadioDefault1" checked class="form-check-input" name="flexRadioDefault" type="radio">
-        <label class="form-check-label" for="flexRadioDefault1">
-          Most popular
-        </label>
-      </div>
-      <div class="form-check">
-        <input id="flexRadioDefault2" class="form-check-input" name="flexRadioDefault" type="radio">
-        <label class="form-check-label" for="flexRadioDefault2">
-          Rating
-        </label>
-      </div>
-      </form>
-      <br/>
-
 
       <div class="input-group">
-        <input id="form1" class="form-control" placeholder="Keyword" type="search"/>
-        <!-- <button class="btn btn-primary" type="button"> -->
-        <button class="btn btn-primary" type="button" @click="searchOffers()">
+        <button class="btn btn-success" type="button" @click="searchOffers()">
           Search
         </button>
       </div>
@@ -82,7 +62,7 @@
 
       <div class="card" v-for="offer in orders" :key="offer.id">
         <img class="card-img-top"
-             src="../../assets/lasagne.jpg"/>
+             v-bind:src="offer.image"/>
         <div class="card-body" style="text-align: left;">
           <h5 class="card-title">{{offer.title}}</h5>
           <p class="card-text">
@@ -148,7 +128,7 @@ export default {
           }
       }
 
-      console.log(preferences);
+      // console.log(preferences);
 
       for (i=0; i<preferences.length-1; i++){
           searchOffersUrl+=preferences[i]+'&requestPreferences=';
@@ -157,7 +137,7 @@ export default {
           searchOffersUrl+=preferences[preferences.length-1];
       }
 
-      console.log(searchOffersUrl)
+      // console.log(searchOffersUrl)
 
       await axios.get(searchOffersUrl)
         .then(response => (this.orders = response.data));
@@ -175,8 +155,8 @@ export default {
     await axios.get(urlAPI + 'todo=viewCuisines')
         .then(response => (this.cuisines = response.data.preferenceTags));
 
-    console.log(this.orders);
-    console.log(this.city);
+    // console.log(this.orders);
+    // console.log(this.city);
   }
 }
 </script>
@@ -305,5 +285,16 @@ input[type="checkbox"]{
 
 .btn{
   margin-left: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
+
+.btn-success{
+  width: 90%;
+}
+
+.form-check-label .lbl { /* input[type="checkbox"] */
+  margin-right: 10px;
+}
+
 </style>

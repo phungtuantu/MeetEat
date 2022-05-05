@@ -10,6 +10,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.meeteat.model.Offer.Offer;
+import com.meeteat.model.Offer.Reservation;
+import com.meeteat.model.Offer.Review;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Diet;
 import com.meeteat.model.Preference.Ingredient;
@@ -51,6 +53,9 @@ public class SerialisationOffer extends Serialisation {
         if (offer.getExpirationDate() != null) {
             container.addProperty("expirationDate", df.format(offer.getExpirationDate()));
         }
+        if (offer.getAvailableFrom() != null) {
+            container.addProperty("availableFrom", df.format(offer.getAvailableFrom()));
+        }
         container.addProperty("title", offer.getTitle());
         container.addProperty("price", offer.getPrice());
         container.addProperty("totalPortion", offer.getTotalPortions());
@@ -90,6 +95,30 @@ public class SerialisationOffer extends Serialisation {
         container.addProperty("city", offer.getCity());
         container.addProperty("zipcode", offer.getZipCode());
         container.addProperty("distanceToUser", offer.getDistanceToUser());
+        
+        JsonArray jsonReviewsList = new JsonArray();
+        List<Reservation> reservations = offer.getReservations();
+        reservations.stream().map(res -> {
+            List<Review> reviews = res.getReviews();
+            return reviews;
+        }).forEachOrdered(reviews -> {
+            for(Review review : reviews){
+                JsonObject jsonReview = new JsonObject();
+                jsonReview.addProperty("id",review.getId());
+                jsonReview.addProperty("comment",review.getComment());
+                jsonReview.addProperty("nbOfStars",review.getNbOfStars());
+                jsonReview.addProperty("reviewedUser_firstName", review.getReviewedUser().getFirstName());
+                jsonReview.addProperty("reviewedUser_lastName", review.getReviewedUser().getLastName());
+                jsonReview.addProperty("reviewingUser_firstName", review.getReviewingUser().getFirstName());
+                jsonReview.addProperty("reviewingUser_lastName", review.getReviewingUser().getLastName());
+                jsonReview.addProperty("reviewingUser_photo", review.getReviewingUser().getProfilePhotoPath());
+                jsonReview.addProperty("orderName", review.getSource().getOffer().getTitle());
+                jsonReview.addProperty("reversationDate", df.format(review.getSource().getReservationDate()));
+                jsonReviewsList.add(jsonReview);
+            }
+        });
+        container.add("reviews",jsonReviewsList);
+        
         container.addProperty("image", offer.getOfferPhotoPath());
         container.addProperty("state", offer.getState().name());
         container.addProperty("soldPortions", offer.getTotalPortions() - offer.getRemainingPortions());

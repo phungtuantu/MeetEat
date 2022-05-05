@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.lang.Math;
 
 /**
  *
@@ -66,6 +67,7 @@ public class Service {
     protected MessageDao messageDao = new MessageDao();
     protected CookRequestDao cookRequestDao = new CookRequestDao();
     protected RequestImageDao requestImageDao = new RequestImageDao();
+    public static String spoonacularKey = "f6c1e678f19446c7bd67d810232c484d";
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
@@ -344,7 +346,25 @@ public class Service {
             JpaTool.validateTransaction();
             canceled = true;
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling cancelOffer", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return canceled;
+    }
+    
+    public boolean cancelReservation(Long reservationId) {
+        JpaTool.createPersistenceContext();
+        boolean canceled = false;
+        try {
+            JpaTool.openTransaction();
+            Reservation reservation = reservationDao.searchById(reservationId);
+            reservationDao.delete(reservation);
+            JpaTool.validateTransaction();
+            canceled = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling cancelReservation", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -362,7 +382,9 @@ public class Service {
             Offer offer = reservation.getOffer();
             if (reservation.getNbOfPortion()<=offer.getRemainingPortions()){
                 reservation.setState(ReservationState.RESERVATION);
-                offer.setRemainingPortions(offer.getRemainingPortions()-reservation.getNbOfPortion());
+                offer.addReservation(reservation);
+            }else{
+                reservation.setState(ReservationState.REJECTED);
             }
             reservationDao.merge(reservation);
             offerDao.merge(offer);
@@ -536,6 +558,24 @@ public class Service {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createReview", ex);
             JpaTool.cancelTransaction();
             result = null;
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public boolean updateRating(Cook cook, int reviewNote) {
+        boolean result = false;
+        JpaTool.createPersistenceContext(); 
+        try {
+            JpaTool.openTransaction();
+            cook.updateRating(reviewNote);
+            cookDao.merge(cook);
+            JpaTool.validateTransaction();
+            result = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling updateRating", ex);
+            JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
         }
@@ -899,6 +939,22 @@ public class Service {
         }
         return reservationsList;
     }
+    
+    public List<Reservation> viewReservationsRequests(Cook cook) {
+        //view the reservations requests made by users for offers of a cook
+        List<Reservation> reservationsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            reservationsList = reservationDao.getReservationsRequests(cook.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewReservationsList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return reservationsList;
+    }
 
     public Long becomeCook(CookRequest cookRequest) {
         Long result = null;
@@ -924,6 +980,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             List <Offer> madeOffers = offerDao.getOffers(cookId);
+            System.out.println("cook: "+cookId);
+            System.out.println(madeOffers.get(0).getId());
+
             for (Offer offer : madeOffers){
                 if (result==null){
                     result = reviewDao.getOffersReviews(offer.getId());
@@ -934,6 +993,22 @@ public class Service {
             JpaTool.validateTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCooksReviews", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public List<Review> viewGuestReviews(User user){
+        List<Review> result = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            result = reviewDao.getGuestReviews(user);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewGuestsReviews", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -956,6 +1031,7 @@ public class Service {
         }
         return offersList;
     }
+    
     public List<Diet> viewDiets() {
         List<Diet> dietsList = null;
         JpaTool.createPersistenceContext();
@@ -970,6 +1046,7 @@ public class Service {
         }
         return dietsList;
     }
+    
     public List<Cuisine> viewCuisines() {
         List<Cuisine> cuisinesList = null;
         JpaTool.createPersistenceContext();
@@ -1002,6 +1079,18 @@ public class Service {
     }
     
     public PriceEstimate getMinMaxPrice(List<Ingredient> ingredients){
+        JsonObject json = getSpoonacularResponseByIngredients(ingredients);
+        Long id = Long.parseLong(json.get("id").getAsString());
+        String title = json.get("title").getAsString();
+        JsonObject json2 = getRequestAsJsonObject("https://api.spoonacular.com/recipes/"
+                +id+"/priceBreakdownWidget.json?apiKey="+spoonacularKey);
+        System.out.println(json2);
+        Double price = Double.parseDouble(json2.get("totalCostPerServing").getAsString())/100.0;
+        PriceEstimate estimate = new PriceEstimate(price, price*2, title);
+        return estimate;
+    }
+    
+    public JsonObject getSpoonacularResponseByIngredients(List<Ingredient> ingredients){
         String urlString = "";
         for(int i=0; i<ingredients.size(); i++){
             urlString+=ingredients.get(i).getName();
@@ -1010,14 +1099,27 @@ public class Service {
             }
         }
         JsonObject json = getRequestAsJsonObject("https://api.spoonacular.com/recipes/findByIngredients?ingredients="
-                    +urlString+"&number=1&apiKey=86fb15aafb0d4d7486e024e094d9705d");
+                    +urlString+"&number=1&apiKey="+spoonacularKey);
+        return json;
+    }
+    
+    public PriceEstimate getMinMaxPriceFromStrings(List<String> ingredients){
+        String urlString = "";
+        for(int i=0; i<ingredients.size(); i++){
+            urlString+=ingredients.get(i);
+            if(i<ingredients.size()-1){
+                urlString+=",+";
+            }
+        }
+        JsonObject json = getRequestAsJsonObject("https://api.spoonacular.com/recipes/findByIngredients?ingredients="
+                    +urlString+"&number=1&apiKey=0edfed31f0a340a9927395d2d566d6fb");
         Long id = Long.parseLong(json.get("id").getAsString());
         String title = json.get("title").getAsString();
         JsonObject json2 = getRequestAsJsonObject("https://api.spoonacular.com/recipes/"
-                +id+"/priceBreakdownWidget.json?apiKey=86fb15aafb0d4d7486e024e094d9705d");
+                +id+"/priceBreakdownWidget.json?apiKey=0edfed31f0a340a9927395d2d566d6fb");
         System.out.println(json2);
         Double price = Double.parseDouble(json2.get("totalCostPerServing").getAsString())/100.0;
-        PriceEstimate estimate = new PriceEstimate(price, price*2, title);
+        PriceEstimate estimate = new PriceEstimate(((int)(price.doubleValue()*100))/100.0, ((int)(price.doubleValue()*2*100))/100.0, title);
         return estimate;
     }
     
@@ -1030,7 +1132,7 @@ public class Service {
             con.setRequestMethod("GET");
             
             int status = con.getResponseCode();
-            
+            System.out.println(status);
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuffer content = new StringBuffer();
@@ -1047,6 +1149,8 @@ public class Service {
             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e){
+            
         }
         return json;
     }

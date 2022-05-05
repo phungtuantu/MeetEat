@@ -22,12 +22,11 @@
       <div class="col-sm">
         <div class="card border border-secondary" v-for="order in orders" :key="order.order.id" style="background-color: lightgray">
           <img class="card-img-top"
-               src="../../assets/lasagne.jpg" style="padding-left: 5px;"/>
+               v-bind:src="order.order.image" style="padding-left: 5px;"/>
           <div class="card-body" style="text-align: left;">
             <h5 class="card-title">{{order.order.title}}</h5>
             <p class="card-text">
-              <b>Delivery : (A changer)01/01/2022{{order.order.expirationDate}} </b><br/>
-              {{order.order.details}}<br/>
+              <b>Delivery : {{order.order.availableFrom}}-{{order.order.expirationDate}} </b>
             </p>
             <!--
             <p class="card-text" v-for="option in order.order.classifications" :key="option">
@@ -45,7 +44,7 @@
               </div>
               <div class="col-sm">
                 <p class="card-text">
-                  <b>Number of portions : {{order.qty}}</b>
+                  <b>Number of portions : {{order.qty}}/{{order.order.remainingPortions}}</b>
                 </p>
               </div>
             </div>
@@ -53,6 +52,7 @@
             <br/>
             <div class="input-group w-auto">
               <button class="btn btn-dark" type="button" @click="viewDetails(order.order.id)">View details</button>
+              <button class="btn btn-dark" type="button" @click="deleteItem(order)">Delete item</button>
             </div>
           </div>
         </div>
@@ -146,21 +146,27 @@ export default {
       router.replace('/orderPage/'+id)
     },
 
+    deleteItem : function (order)
+    {
+      this.totalQty -= parseInt(order.qty)
+      this.totalPrice -= parseFloat(order.qty*order.order.price)
+      console.log(order.qty)
+      console.log(order.price)
+      this.orders.splice(this.orders.indexOf(order),1);
+      sessionStorage.setItem("basket", JSON.stringify(this.orders));
+    },
+
     pay : async function () {
       //createReservation
       console.log('pay');
       for(let i=0; i<this.orders.length; i++){
         let order = this.orders[i].order;
         let qty = this.orders[i].qty;
-        await axios.get(urlAPI + 'todo=createReservation&userId='+this.user.id+'&offerId='+order.id+'&nbOfPortions='+qty)
+        await axios.get(urlAPI + 'todo=createReservation&offerId='+order.id+'&nbOfPortions='+qty)
             .then(response => (response.data));
       }
-
+      sessionStorage.setItem("basket", JSON.stringify([]));
       router.replace('/orderPage');
-
-
-
-
 
     },
 
@@ -174,9 +180,9 @@ export default {
     var arr = JSON.parse(sessionStorage.getItem("basket"));
     if (arr !== null) {
       for (let i = 0; i < arr.length; i++) {
-        console.log(arr[i]);
+        // console.log(arr[i]);
         var element = null;
-        await axios.get(urlAPI + 'todo=consultOffer&offerId=' + arr[i].id)
+        await axios.get(urlAPI + 'todo=consultOffer&offerId=' + arr[i].order.id)
             .then(response => (element = response.data));
 
         this.orders.push({
@@ -185,12 +191,12 @@ export default {
         });
 
         this.totalPrice += (arr[i].qty * element.price);
-        this.totalQty += arr[i].qty;
+        this.totalQty += parseInt(arr[i].qty);
       }
 
-      console.log(this.orders);
+      // console.log(this.orders);
       this.user = JSON.parse(sessionStorage.getItem("user"));
-      console.log(JSON.parse(sessionStorage.getItem("user")));
+      // console.log(JSON.parse(sessionStorage.getItem("user")));
     }
   }
 }

@@ -26,15 +26,18 @@
         <div class="col-sm">
             <div class="row">
               <div class="col-sm"  id="listIngredients">
-                <input type="text" class="form-control ingredient" id="ingredients" v-model="ingredient">
+                <select name="m" id="w" class="form-control inputs">
+                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
+                      {{ing.name}}
+                    </option>
+                  </select>
               </div>
               <div class="col-sm"  id="listDeleteButton">
-                <button type="button" class="btn btn-success" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete</button>
               </div>
             </div>
             <br/>
-              <button type="button" class="btn btn-success" @click='addIngredients'>Add an ingredient</button>
-
+              <button type="button" class="btn btn-success" @click='addIngredients()'>Add an ingredient</button>
+              <button type="button" class="btn btn-danger" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete last ingredient</button>
         </div>
         <div class="col-sm">
         </div>
@@ -147,10 +150,12 @@
     <template v-if="show === 1">
       <form>
         <div class="form-group row">
-          <label for="suggestedPrice" class="col-sm-2 col-form-label">Price suggestion</label>
-          <div class="col-sm-10">
-            <input type="number" disabled readonly class="form-control-plaintext" id="suggestedPrice" v-model="suggestedPrice">
+          <label for="suggestedPriceMin" class="col-sm-2 col-form-label">Suggested price range</label>
+          <input type="number" disabled readonly class="form-control-plaintext col-sm-1 price" id="suggestedPriceMin" v-model="suggestedPriceMin"> 
+          <div class="form-control-plaintext col-1 price">
+          -
           </div>
+          <input type="number" disabled readonly class="form-control-plaintext col-sm-1 price" id="suggestedPriceMax" v-model="suggestedPriceMax">
         </div>
 
         <div class="form-group row">
@@ -214,8 +219,10 @@ export default {
       specification : '',
       typeOfCuisine : '',
       portions : 0,
-      suggestedPrice : null,
-      sellingPrice : null,
+      suggestedPriceMin : null,
+      suggestedPriceMax : null,
+      sellingPrice : 5.99,
+      guessedTitle : '',
       ingredient : null,
       show : 0,
       date : null,
@@ -225,37 +232,53 @@ export default {
       address : '',
       saleDate : null,
       strRequestEstimatePrice : '',
+      //ingredients : [],
+      lastIngredient : [],
 
     }
   },
   methods: {
-    addIngredients : function () {
-      console.log('add');
-      
-      this.numberOfIngredients ++;
-      var newInput = document.createElement("input");
-      newInput.setAttribute("class", "form-control ingredient");
-      newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
-      newInput.setAttribute("type", "text");
-      
-      document.getElementById("listIngredients").appendChild(newInput);
-      var br = document.createElement("br");
 
-      var newButton = document.createElement("button");
-      newButton.setAttribute("type", "button");
-      newButton.setAttribute("class", "btn btn-success");
-      newButton.innerText = "Delete";
-      newButton.onclick = this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients);
-      document.getElementById("listDeleteButton").appendChild(br);
-      document.getElementById("listDeleteButton").appendChild(newButton);
-      
-    },
+    addIngredients : function () {
+
+        console.log('add');
+        this.numberOfIngredients ++;
+        var newInput = document.createElement("select");
+        newInput.setAttribute("class", "form-control inputs");
+        newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
+        this.lastIngredient[this.numberOfIngredients-1] = newInput.getAttribute("id");
+
+        for(let i=0; i<this.ingredients.length; i++){
+          var option = document.createElement("option");
+          option.setAttribute("value", this.ingredients[i].id);
+          option.innerText = this.ingredients[i].name;
+          newInput.appendChild(option);
+        }
+
+        document.getElementById("listIngredients").appendChild(newInput);
+        /*
+        var br = document.createElement("br");
+        var newButton = document.createElement("button");
+        newButton.setAttribute("type", "button");
+        newButton.setAttribute("class", "btn btn-success");
+        newButton.setAttribute("id", "button"+this.numberOfIngredients);
+        //newButton.setAttribute("@click", this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients));
+        newButton.innerText = "Delete";
+        document.getElementById("listDeleteButton").appendChild(br);
+        document.getElementById("listDeleteButton").appendChild(newButton);*/
+
+      },
 
     deleteIngredients : function (ingredient, index)
-    {
-      console.log(ingredient + ' ' + index);
-      return 0;
-    },
+      {
+        console.log(ingredient + ' ' + index);
+        if (this.numberOfIngredients>1) {
+          this.numberOfIngredients--;
+          document.getElementById(this.lastIngredient[this.numberOfIngredients]).remove();
+          this.lastIngredient.pop();
+        }
+        return 0;
+      },
 
     validateInformation : async function ()
     {
@@ -273,7 +296,20 @@ export default {
       await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
         .then(response => (this.suggestedPrice = response.data.priceestimate));
       document.getElementById("validate").style.display = "none";
+      var url = "";
+      var list = document.getElementsByClassName("ingredient");
+      for (let item of list) {
+          console.log(item.value);
+          url+="&ingredients="+item.value;
+      }
+      await axios.get(urlAPI+'todo=estimatePrice&'+url).then(response => {
+        this.suggestedPriceMin = response.data.min;
+        this.suggestedPriceMax = response.data.max;
+        this.guessedTitle = response.data.title;
+        this.sellingPrice = (this.suggestedPriceMax+this.suggestedPriceMin)/2;
+      });
       this.show = 1;
+
     },
 
     backHome : function () {
@@ -304,7 +340,8 @@ export default {
 
   },
   async mounted() {
-
+    this.user = JSON.parse(sessionStorage.getItem("user"))
+      this.user = this.user.user;
     await axios.get(urlAPI + 'todo=viewCuisines')
         .then(response => (this.cuisines = response.data.preferenceTags));
     await axios.get(urlAPI + 'todo=viewIngredients')
@@ -374,6 +411,14 @@ input[type=checkbox]:checked ~ div {
     margin-left: 20px;
 }
 
+.price{
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
 .successPublish{
     color: gray;
     float: center;
@@ -385,6 +430,12 @@ input[type=checkbox]:checked ~ div {
 input[type="checkbox"]{
     width: 100%;
     height: 100%;
+}
+
+.btn-danger{
+  margin-left: 15px;
+  background-color: brown;
+  font-size: 15px;
 }
 
 

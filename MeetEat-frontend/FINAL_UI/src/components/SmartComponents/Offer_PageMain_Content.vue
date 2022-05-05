@@ -8,13 +8,13 @@
       </div>
 
         <img class="card-img-top" id="mainPicture"
-           src="../../assets/lasagne.jpg"
-           alt="Card image cap">
+           v-bind:src="offer.image"
+           alt="Meal image">
       <div class="card-body" style="text-align: left;">
         <h5 class="card-title">{{offer.title}}</h5>
         <div class="row">
           <div class="col-4">
-            <img src="../../assets/ithan.jpg" alt="Ithan" width="120px"> <!--  height="100px" -->
+            <img v-bind:src="offer.cook.image" alt="cookImage" width="120px"> <!--  height="100px" -->
           </div>
           <div class="col-8">
             <div class="row">
@@ -102,22 +102,21 @@ export default {
 
     addToBasket : function ()
     {
+      // console.log(this.offer)
       var arr = JSON.parse(sessionStorage.getItem("basket"));
       if(arr === null){
         arr = [];
       }
       var newItem = {
-        id : 0,
-        qty : 1,
+        order : this.offer,
+        qty : this.qtyOrdered,
       };
 
-      newItem.id = this.idOffer;
-      newItem.qty = this.qtyOrdered;
       arr.push(newItem);
 
       sessionStorage.setItem("basket", JSON.stringify(arr));
-
-
+      
+      // console.log(arr)
 
       router.replace('/orderPage');
 
@@ -138,8 +137,9 @@ export default {
 
     this.offer.specifications = this.offer.specifications.split(',');
 
-    console.log(this.offer);
-    console.log(JSON.parse(sessionStorage.getItem("basket")));
+    localStorage.setItem("offer",this.offer)
+    // console.log(this.offer);
+    // console.log(JSON.parse(sessionStorage.getItem("basket")));
 
 
 
