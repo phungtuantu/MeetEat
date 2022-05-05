@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -25,12 +24,16 @@ public class ActionConsultOffers extends Action {
         String address = request.getParameter("address");
         int x = service.checkOffersExpirationDate();
         PriorityQueue<Offer> offersQueue = service.consultOffers(address);
-        List <Offer> offers= new ArrayList ();
-        Offer offer=offersQueue.poll();
-        while (offer!=null){
-            offers.add(offer);
-            offer=offersQueue.poll();
+        List <Offer> offers = null;
+        if (offersQueue!=null){
+            offers = new ArrayList<>();
+            Offer offer=offersQueue.poll();
+            while (offer!=null){
+                offers.add(offer);
+                offer=offersQueue.poll();
+            }
         }
+        
         
         request.setAttribute("offers",offers);
     }

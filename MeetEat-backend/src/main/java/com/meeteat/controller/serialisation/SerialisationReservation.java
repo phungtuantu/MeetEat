@@ -67,6 +67,8 @@ public class SerialisationReservation extends Serialisation{
             });
             container.add("reviews",jsonReviewList);
             container.addProperty("state",reservation.getState().name());
+            container.addProperty("evaluatedByCustomer",reservation.isEvaluatedByCustomer());
+            container.addProperty("evaluatedByCook",reservation.isEvaluatedByCook());
 
             JsonObject containerOffer = new JsonObject();
             Offer offer = reservation.getOffer();
