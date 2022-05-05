@@ -40,6 +40,8 @@ public class SerialisationReview extends Serialisation{
         container.addProperty("reviewingUser_photo", review.getReviewingUser().getProfilePhotoPath());
         container.addProperty("orderName", review.getSource().getOffer().getTitle());
         container.addProperty("reversationDate", df.format(review.getSource().getReservationDate()));
+        container.addProperty("evaluatedByCustomer", review.getSource().isEvaluatedByCustomer());
+        container.addProperty("evaluatedByCook", review.getSource().isEvaluatedByCook());
         
         try (PrintWriter out = this.getWriter(response)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
