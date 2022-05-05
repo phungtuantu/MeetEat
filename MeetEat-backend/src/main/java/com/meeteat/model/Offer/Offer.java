@@ -77,6 +77,7 @@ public class Offer implements Serializable {
     private LatLng location;
     @Transient
     private double distanceToUser;
+    
 
     public double getDistanceToUser() {
         return distanceToUser;

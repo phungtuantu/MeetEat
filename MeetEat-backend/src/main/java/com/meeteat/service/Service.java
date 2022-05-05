@@ -67,7 +67,7 @@ public class Service {
     protected MessageDao messageDao = new MessageDao();
     protected CookRequestDao cookRequestDao = new CookRequestDao();
     protected RequestImageDao requestImageDao = new RequestImageDao();
-    public static String spoonacularKey = "596362655be4435eb1f4131658ad2ce5";
+    public static String spoonacularKey = "b2b767638353406794ba5a1d1354bbc0";
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
@@ -1147,11 +1147,11 @@ public class Service {
             }
         }
         JsonObject json = getRequestAsJsonObject("https://api.spoonacular.com/recipes/findByIngredients?ingredients="
-                    +urlString+"&number=1&apiKey=0edfed31f0a340a9927395d2d566d6fb");
+                    +urlString+"&number=1&apiKey="+spoonacularKey);
         Long id = Long.parseLong(json.get("id").getAsString());
         String title = json.get("title").getAsString();
         JsonObject json2 = getRequestAsJsonObject("https://api.spoonacular.com/recipes/"
-                +id+"/priceBreakdownWidget.json?apiKey=0edfed31f0a340a9927395d2d566d6fb");
+                +id+"/priceBreakdownWidget.json?apiKey="+spoonacularKey);
         System.out.println(json2);
         Double price = Double.parseDouble(json2.get("totalCostPerServing").getAsString())/100.0;
         PriceEstimate estimate = new PriceEstimate(((int)(price.doubleValue()*100))/100.0, ((int)(price.doubleValue()*2*100))/100.0, title);

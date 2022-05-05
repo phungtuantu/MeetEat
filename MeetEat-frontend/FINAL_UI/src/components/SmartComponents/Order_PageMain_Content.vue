@@ -62,7 +62,7 @@
 
       <div class="card" v-for="offer in orders" :key="offer.id">
         <img class="card-img-top"
-             v-bind:src="offer.image"/>
+             src=offer.image/>
         <div class="card-body" style="text-align: left;">
           <h5 class="card-title">{{offer.title}}</h5>
           <p class="card-text">

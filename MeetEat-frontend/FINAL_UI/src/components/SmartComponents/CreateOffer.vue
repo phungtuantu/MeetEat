@@ -11,9 +11,21 @@
 
       <div class="form-group">
         <input type="file" id="csv" name="profile_pic"
-               accept=".jpg">
+               accept=".jpg" @click="test()">
       </div>
-
+      <div>
+          <input
+            class="form-control form-control-lg"
+            ref="fileInput"
+            type="file"
+            id="formFileLg"
+            @input="selectImgFile"
+            accept=".jpg"
+            >
+      </div>
+      <button class="btn" @click="test()">
+                  Become a cook
+                </button>
       <div class="form-group row">
         <label for="title" class="col-sm-2 col-form-label">Title</label>
         <div class="col-sm-10">
@@ -134,7 +146,7 @@
     </div>
 
 
-    <template v-if="show === 1">
+    <template v-if="1 === 1">
       <form>
         <div class="form-group row">
           <label for="suggestedPriceMin" class="col-sm-2 col-form-label">Suggested price range</label>
@@ -223,6 +235,7 @@ export default {
       offer: null,
       lastIngredient : [],
       details : null,
+      filePreview : "",
     }
   },
   methods: {
@@ -284,7 +297,7 @@ export default {
       if(this.recipeIngredients.length==0){
         this.strRequestEstimatePrice='&ingredients=';
       }else{
-        for (let i = 0; i < this.recipeIngredients.length; i++) {
+        for (let i = 1; i < this.recipeIngredients.length; i++) {
           this.strRequestEstimatePrice += '&ingredients='+ this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].text;
         }
       }
@@ -294,13 +307,18 @@ export default {
       //   // console.log(this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].value)
       // }
       
-      var resultEstimate
+      //
 
       await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
-        .then(response => (resultEstimate = response.data));
+        .then(response => {
+         this.suggestedPriceMin = response.data.min;
+         this.suggestedPriceMax = response.data.max;
+         this.guessedTitle = response.data.title;
+         this.sellingPrice = (this.suggestedPriceMax+this.suggestedPriceMin)/2;
+       });
       
-      this.suggestedPriceMin=resultEstimate.min;
-      this.suggestedPriceMax=resultEstimate.max;
+      //this.suggestedPriceMin=resultEstimate.min;
+      //this.suggestedPriceMax=resultEstimate.max;
       document.getElementById("validate").style.display = "none";
       // var url = "";
       // var list = document.getElementsByClassName("ingredient");
@@ -315,12 +333,31 @@ export default {
       //   this.sellingPrice = (this.suggestedPriceMax+this.suggestedPriceMin)/2;
       // });
       this.show = 1;
-
     },
 
     backHome : function () {
       router.replace('/');
 
+    },
+
+    test : function(){
+      console.log('heyyy');
+      console.log(document.getElementById("csv"));
+      var input = document.getElementById("formFileLg");
+      console.log("Input is " + input.files[0]);
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        console.log("im here");
+        reader.onload = e => {
+                this.filePreview = e.target.result;
+                console.log("THIS? " + this.filePreview);
+                //console.log("Loading");
+                document.getElementById("mainPicture").src=this.filePreview;
+        }
+        reader.readAsDataURL(input.files[0])
+        //this.filePreview = input.files[0]
+        console.log("AND NOW? " + this.filePreview);
+      }
     },
 
     deleteOffer : function () {
@@ -354,13 +391,13 @@ export default {
       
       var expirationDateParsed = this.expirationDate.split('-');
       var fromDateDateParsed = this.saleDate.split('-');
-      console.log(this.specifications);
+      console.log(this.filePreview);
       await axios.get(urlAPI + 'todo=makeOffer&fromDate='+fromDateDateParsed[2]+'-'+fromDateDateParsed[1]+'-'+fromDateDateParsed[0]+
                       '&title='+this.title+'&totalPortions='+this.portions+
                       '&details='+this.details+'&address='+this.address+
                       '&city='+this.city+'&zipcode='+this.zipCode+
                       '&expDate='+expirationDateParsed[2]+'-'+expirationDateParsed[1]+
-                      '-'+expirationDateParsed[0]+'&photoPath='+makeOfferUrlIngredients+
+                      '-'+expirationDateParsed[0]+'&photoPath='+this.filePreview+
                       '&preferences='+this.typeOfCuisine+makeOfferUrlDiets+
                       '&specifications='+this.specifications)
         .then(response => (this.offer = response.data));
@@ -477,6 +514,16 @@ input[type="checkbox"]{
   background-color: brown;
   font-size: 15px;
 }
+
+.previewBlock {
+        display: block;
+        cursor: pointer;
+        width: 300px;
+        height: 280px;        
+        margin: 0 auto 20px;
+        background-position: center center;
+        background-size: cover;
+    }
 
 
 </style>
