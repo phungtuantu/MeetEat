@@ -5,6 +5,7 @@
  */
 package com.meeteat.controller.action;
 
+import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,13 @@ public class ActionAuthentication extends Action{
             session.setAttribute("userId", user.getId());
             request.setAttribute("user", user);
             request.setAttribute("connection", true);
+            Cook cook = service.findCookByUserId(user.getId());
+            if (cook!=null){
+                request.setAttribute("isCook",true);
+                request.setAttribute("cookId",cook.getId());
+            } else {
+                request.setAttribute("isCook",false);
+            }
         }
         else{
             request.setAttribute("connection", false);

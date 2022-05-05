@@ -21,7 +21,9 @@ import com.meeteat.controller.action.ActionConsultOffers;
 import com.meeteat.controller.action.ActionCookRequestDetails;
 import com.meeteat.controller.action.ActionCreateAccount;
 import com.meeteat.controller.action.ActionCreateReservation;
+import com.meeteat.controller.action.ActionDisconnectSession;
 import com.meeteat.controller.action.ActionEstimatePrice;
+import com.meeteat.controller.action.ActionEvaluateGuest;
 import com.meeteat.controller.action.ActionEvaluateMeal;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionModifyAccount;
@@ -47,6 +49,7 @@ import com.meeteat.controller.serialisation.SerialisationAuthenticate;
 import com.meeteat.controller.serialisation.SerialisationCancel;
 import com.meeteat.controller.serialisation.SerialisationCookRequest;
 import com.meeteat.controller.serialisation.SerialisationCookRequests;
+import com.meeteat.controller.serialisation.SerialisationDisconnectSession;
 import com.meeteat.controller.serialisation.SerialisationOffer;
 import com.meeteat.controller.serialisation.SerialisationReservations;
 import com.meeteat.controller.serialisation.SerialisationOffers;
@@ -165,6 +168,10 @@ public class ActionServlet extends HttpServlet {
                 serialisation = new SerialisationAuthenticate();
                 break;
             }
+            case "disconnect" ->{
+                action = new ActionDisconnectSession();
+                serialisation = new SerialisationDisconnectSession();
+            }
             case "viewOffersHistory"-> {
                 action = new ActionViewOffersHistory();
                 serialisation = new SerialisationOffers();
@@ -207,6 +214,10 @@ public class ActionServlet extends HttpServlet {
             }
             case "evaluateMeal" -> {
                 action = new ActionEvaluateMeal();
+                serialisation = new SerialisationReview();
+            }
+            case "evaluateGuest" -> {
+                action = new ActionEvaluateGuest();
                 serialisation = new SerialisationReview();
             }
             case "becomeCook"-> {
