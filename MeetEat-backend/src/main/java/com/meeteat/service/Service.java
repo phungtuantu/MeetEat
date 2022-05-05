@@ -1123,7 +1123,7 @@ public class Service {
         return estimate;
     }
     
-    private JsonObject getRequestAsJsonObject(String urlString){
+    public JsonObject getRequestAsJsonObject(String urlString){
         URL url;
         JsonObject json = null;
         try {
