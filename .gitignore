@@ -364,3 +364,6 @@ MeetEat-backend/src/main/resources/META-INF/persistence.xml
 /MeetEat-backend/nbproject/
 
 MeetEat-backend/src/main/resources/META-INF/persistence.xml
+
+# variable front
+/variables.js
