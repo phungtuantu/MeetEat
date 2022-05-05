@@ -374,7 +374,7 @@ public class DBPopulation {
     
     public static void main(String [] args){
         DBPopulation dbp = new DBPopulation();
-        dbp.populateDatabase(100, 30, 200, 20, 50, 30, 20, 40);
+        dbp.populateDatabase(100, 30, 200, 20, 100, 50, 20, 40);
         //public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, 
         //                         int nbOffers, int nbOffersToPublish, int nbReservations){
     }
