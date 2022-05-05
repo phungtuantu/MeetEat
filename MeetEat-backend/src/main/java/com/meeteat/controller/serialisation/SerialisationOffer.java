@@ -51,6 +51,9 @@ public class SerialisationOffer extends Serialisation {
         if (offer.getExpirationDate() != null) {
             container.addProperty("expirationDate", df.format(offer.getExpirationDate()));
         }
+        if (offer.getAvailableFrom() != null) {
+            container.addProperty("availableFrom", df.format(offer.getAvailableFrom()));
+        }
         container.addProperty("title", offer.getTitle());
         container.addProperty("price", offer.getPrice());
         container.addProperty("totalPortion", offer.getTotalPortions());
