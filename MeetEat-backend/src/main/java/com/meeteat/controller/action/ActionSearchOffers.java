@@ -27,6 +27,7 @@ public class ActionSearchOffers extends Action {
         Long userId = (Long)session.getAttribute("userId");
 //        Long userId = Long.parseLong(request.getParameter("userId"));
         User user = service.findUserById(userId);
+        String address = request.getParameter("address");
         int priceLimit = Integer.parseInt(request.getParameter("priceLimit"));
         List<Long> requestPreferences = new LinkedList<>();
         for (String preferenceId : request.getParameterValues("requestPreferences")){
@@ -43,8 +44,8 @@ public class ActionSearchOffers extends Action {
 //        for (String preferenceId : request.getParameterValues("requestPreferences")){
 //            requestPreferences.add(Long.parseLong(preferenceId));
 //        }
-        int x = service.checkOffersExpirationDate();
-        List <Offer> offers=service.searchOffers(requestPreferences, priceLimit, user);
+//        int x = service.checkOffersExpirationDate();
+        List <Offer> offers=service.searchOffers(requestPreferences, priceLimit, user, address);
         request.setAttribute("offers",offers);
     }
     

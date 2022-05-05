@@ -225,7 +225,7 @@ public class main {
         Service service = new Service();
         User user = service.findUserById(Long.parseLong("2"));
         List<Long> requestPreferences = null;
-        List <Offer> offers = service.searchOffers(requestPreferences, 2 , user);
+        List <Offer> offers = service.searchOffers(requestPreferences, 2 , user, "Villeurbanne");
         System.out.println(offers);
     }
 

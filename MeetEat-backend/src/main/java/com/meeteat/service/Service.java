@@ -714,7 +714,7 @@ public class Service {
         return sortedByDistanceOffers;
     }
 
-    public List<Offer> searchOffers(List<Long> requestPreferences, int priceLimit, User user) {
+    public List<Offer> searchOffers(List<Long> requestPreferences, int priceLimit, User user, String address) {
         //SearchOffers according to :diet, cuisine, user's preferences, price and location
 
         List<Offer> ongoingOffers;
@@ -726,6 +726,8 @@ public class Service {
                 return distance1.compareTo(distance2); //May be - instead
             }
         });
+        
+        LatLng location = getLatLng(address);
 
         JpaTool.createPersistenceContext();
         try {
@@ -738,12 +740,15 @@ public class Service {
             if(requestPreferences!=null){
                 preferences.addAll(requestPreferences); //cuisine and diets
             }
-            for (PreferenceTag preference : user.getPreferences()) {
-                if (!(preference instanceof Ingredient)) {
-                    preferences.add(preference.getId());
-                } else {
-                    ingredients.add(preference.getId());
-                }
+            //check if user is logged in yet
+            if (user!=null){
+                user.getPreferences().forEach(preference -> {
+                    if (!(preference instanceof Ingredient)) {
+                        preferences.add(preference.getId());
+                    } else {
+                        ingredients.add(preference.getId());
+                    }
+                });
             }
             //check the preferences in ongoingOffers + distance to User
             double distance;
@@ -754,8 +759,8 @@ public class Service {
                     offerClassifications.add(classification.getId());
                 });
                 if (offerClassifications.containsAll(preferences) && Collections.disjoint(offerClassifications, ingredients)) {
-                    if (offer.getLocation()!=null && user.getLocation()!=null){
-                        distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
+                    if (offer.getLocation()!=null && location!=null){
+                        distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
                     } else{
                         distance = Double.MAX_VALUE;
                     }
@@ -763,6 +768,7 @@ public class Service {
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
                 }
             }
+            System.out.println(ongoingOffers.size());
             res = new ArrayList(sortedByDistanceOffers);
 
             JpaTool.validateTransaction();

@@ -130,7 +130,9 @@ export default {
       router.replace('orderPage/'+id);
     },
     searchOffers : async function (){
-      var searchOffersUrl = urlAPI + 'todo=searchOffers&priceLimit=' + this.priceLimit + '&requestPreferences=';
+      this.city = sessionStorage.getItem("city");
+      var searchOffersUrl = urlAPI + 'todo=searchOffers&priceLimit=' + this.priceLimit +'&address='+
+                            this.city + '&requestPreferences=';
       let preferences = [];
       let cuisinecheckboxes = document.getElementsByClassName("form-check-input cuisinecheckbox");
       let dietcheckboxes = document.getElementsByClassName("col-sm dietcol")
