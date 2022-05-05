@@ -11,10 +11,13 @@ import com.github.javafaker.Food;
 import com.github.javafaker.Name;
 import com.github.javafaker.DateAndTime;
 import com.github.javafaker.Number;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Offer.Reservation;
 import com.meeteat.model.Offer.ReservationState;
+import com.meeteat.model.Offer.Review;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Diet;
 import com.meeteat.model.Preference.Ingredient;
@@ -22,6 +25,11 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.http.HttpRequest;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +56,8 @@ public class DBPopulation {
     Locale locale = new Locale("fr");
     int nbProfilePictures = 20;
     int nbOfferPictures = 20;
+    String apiPersonImagesEndpoint = "https://fakeface.rest/face/json";
+    String defaultImageURL = "https://thumbs.dreamstime.com/z/spoon-fork-icon-flat-vector-template-design-trendy-simple-isolated-illustration-signage-179491630.jpg";
     
     public DBPopulation(){
         
@@ -66,7 +76,8 @@ public class DBPopulation {
             String phone = faker.phoneNumber().cellPhone();
             String password = "password";
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
-            user.setProfilePhotoPath("./Images/profile_images/profile" + (i%nbProfilePictures + 1));
+            String photoURL = generateImage();
+            user.setProfilePhotoPath(photoURL);
             Long created = service.createAccount(user, password);
             if(created != null){
                 userIdList.add(created);
@@ -161,11 +172,11 @@ public class DBPopulation {
             //double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(1, 30);
             String details = food.spice();
-            String specifications = faker.backToTheFuture().quote();
+            String specifications = food.vegetable();
             Offer offer = new Offer(cook, availableFrom, title, totalPortions,
                                   details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
                                     address.zipCode(), expDate, imagePath);
-            offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
+            offer.setOfferPhotoPath(generateFoodImage(ingredients));
             Long created = service.makeOffer(offer);
             if(created != null){
                 createdOfferList.add(created);
@@ -223,7 +234,10 @@ public class DBPopulation {
                 //Assign a random state to the reservation
                 ReservationState state = ReservationState.values()[number.numberBetween(0, ReservationState.values().length)];
                 //Assign a random number of portions
-                int nbPortions = number.numberBetween(1, offer.getRemainingPortions()/5);
+                int nbPortions = number.numberBetween(1, offer.getRemainingPortions()/2);
+                if(nbPortions < 0){
+                    nbPortions = 1;
+                }
                 Reservation reservation = new Reservation(reservationDate, state, nbPortions, offer, customer);
                 Long created = service.createReservation(reservation);
                 if(created != null){
@@ -235,11 +249,27 @@ public class DBPopulation {
     }
     
     public void createReviews(int nbReviews){
-        
+        for(int i =0; i<nbReviews; i++){
+            Number number = faker.number();
+            int reservationId = number.numberBetween(0, reservationList.size()-1);
+            Reservation reservation = service.findReservationById(reservationList.get(reservationId));
+            assert(reservation != null);
+            User user1 = reservation.getOffer().getCook().getUser();
+            User user2 = reservation.getCustomer();
+            int nbStars = number.numberBetween(0, 5);
+            String comment = faker.harryPotter().spell();
+            if(i%2==0){
+                Review review = new Review(reservation, user1, user2, nbStars, comment);
+                service.createReview(review);
+            }else{
+                Review review = new Review(reservation, user2, user1, nbStars, comment);
+                service.createReview(review);
+            }    
+        }
     }
     
     public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, 
-                                 int nbOffers, int nbOffersToPublish, int nbReservations){
+                                 int nbOffers, int nbOffersToPublish, int nbReservations, int nbReviews){
         JpaTool.init();
         createUsers(nbUsers);
         createCooks(nbCooks);
@@ -249,13 +279,16 @@ public class DBPopulation {
         createOffers(nbOffers);
         publishOffers(nbOffersToPublish);
         createReservations(nbReservations);
+        createReviews(nbReviews);
         int expired = service.checkOffersExpirationDate();
         System.out.println(expired + " offers expired today");
         JpaTool.destroy();
     }
+    
     private List<Ingredient> getIngredientsForOffer(){
         int min = 0;
-        int max = ingredientsList.size();
+        int max = 10;
+        assert(ingredientsList.size() >= max );
         Number number = faker.number();
         int lower = number.numberBetween(min, max);
         int upper = number.numberBetween(lower, max);
@@ -288,8 +321,50 @@ public class DBPopulation {
         return ll;
     }
     
+    private String generateImage(){
+        JsonObject response = retrieveJson(apiPersonImagesEndpoint);
+        if(response == null){
+            return defaultImageURL;
+        }
+        String imageURL = response.get("image_url").getAsString();
+        return imageURL;
+    }
+    
+    private String generateFoodImage(List<Ingredient> ingredients){
+        JsonObject json = service.getSpoonacularResponseByIngredients(ingredients);
+        if(json == null){
+            return defaultImageURL;
+        }
+        String imageURL = json.get("image").getAsString();
+        return imageURL;
+    }
+    
+    private JsonObject retrieveJson(String ressource){
+        try {
+            URL url = new URL(ressource);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
+            String jsonString = content.toString();
+            JsonObject json = new JsonParser().parse(jsonString).getAsJsonObject();
+            return json;
+        }catch (Exception e){
+            System.out.println("Exception");
+            return null;
+        }
+    }
+    
     public static void main(String [] args){
         DBPopulation dbp = new DBPopulation();
-        dbp.populateDatabase(100, 30, 200, 20, 50, 30, 40);
+        dbp.populateDatabase(100, 30, 200, 20, 50, 30, 20, 40);
+        //public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, 
+        //                         int nbOffers, int nbOffersToPublish, int nbReservations){
     }
 }
