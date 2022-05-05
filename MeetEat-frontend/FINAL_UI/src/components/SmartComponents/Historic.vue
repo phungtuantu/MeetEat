@@ -1,59 +1,53 @@
 <template>
 <div>
-  <h1>Previous orders</h1>
-  <br/>
-  <br/>
-  <div v-for="order in orders" :key="order.title" style="margin-bottom: 30px; padding-left: 30px; padding-right: 30px;" >
-    <div class="row">
-      <div class="col-sm">
-        <img src="../../assets/lasagne.jpg" height="200px">
-      </div>
-      <div class="col-sm" style="text-align: left">
-        <div class="row">
-          <div class="col-sm-6">
-            <b>{{order.title}}</b> <br/>
 
+    <h1>Previous orders</h1>
+    <br/>
+    <br/>
+    <div v-for="order in orders.reservations" :key="order.id" style="margin-bottom: 30px; padding-left: 30px; padding-right: 30px;" >
+      <div class="row">
+        <div class="col-sm">
+          <img v-bind:src="order.offer.offerImage" height="200px">
+        </div>
+        <div class="col-sm" style="text-align: left">
+          <div class="row">
+            <div class="col-sm-6">
+              <b>{{order.offer.offerTitle}}</b> <br/>
+
+            </div>
+            <div class="col-sm-4">
+              <b>{{order.reservationDate}}</b> <br/>
+            </div>
           </div>
-          <div class="col-sm-4">
-            <b>{{order.dateDelivery}}</b> <br/>
+          <p>
+            {{order.offerDetails}} <br/>
+          </p>
+          <div class="row">
+            <div class="col-sm">
+              {{order.nbOfPortion}} portions
+            </div>
+            <div class="col-sm">
+              {{order.price}}$
+            </div>
           </div>
         </div>
-        <p>
-          {{order.description}} <br/>
-        </p>
-        <p v-for="option in order.options" :key="option">
-          {{option}}
-        </p>
-        <div class="row">
-          <div class="col-sm">
-            {{order.nbPortions}} portions
-          </div>
-          <div class="col-sm">
-            {{order.nbPortions * order.price}}$
-          </div>
+
+        <div class="col-sm-1">
+          <img v-bind:src="order.cook.cookPhoto" width="100px" height="80px"/>
+          <p>{{ order.cook.cookFirstName }} {{ order.cook.cookLastName }}</p>
         </div>
-      </div>
-
-      <div class="col-sm-1">
-        <img src="../../assets/ithan.jpg" width="100px" height="80px"/>
-        <p>{{ order.username }}</p>
-      </div>
 
 
-      <div class="col-sm">
-        <span  v-if="order.evaluated === 0">
-           <button class="btn btn-success" @click="evaluate()" style="margin-bottom: 10px;"> Evaluate </button>
+        <div class="col-sm">
+           <button class="btn btn-success" @click="evaluate(order.id)" style="margin-bottom: 10px;"> Evaluate </button>
           <br/>
-        </span>
-
-        <button class="btn btn-danger" @click="report()"> Report </button>
+          <button class="btn btn-danger" @click="report()"> Report </button>
+        </div>
       </div>
+      <hr class="my-4"/>
+
+
     </div>
-    <hr class="my-4"/>
-
-
-  </div>
-
 </div>
 </template>
 
@@ -66,70 +60,17 @@ export default {
   name: "Historic",
   data() {
     return {
-      orders : [
-        {
-          title : 'Delicious lasagna   !',
-          nbPortions : 1,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '02/04/2022',
-          options : [ 'noPork'],
-          price : 5,
-          evaluated : 0,
-          report : 0,
-          username : 'Ithan',
-
-        },
-        {
-          title : 'Couscous',
-          nbPortions : 5,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '01/04/2022',
-          options : [],
-          price : 7,
-          evaluated : 0,
-          report : 0,
-          username : 'Ithan',
-
-        },
-        {
-          title : 'Mexican tacos',
-          nbPortions : 3,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '28/03/2022',
-          options : [ 'noPork'],
-          price : 4,
-          evaluated : 1,
-          report : 0,
-          username : 'Ithan',
-
-        },
-        {
-          title : 'Peruvian ceviche',
-          nbPortions : 1,
-          description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          dateOrdered : '01/01/2022',
-          dateDelivery : '21/03/2022',
-          options : [ 'pescoVegetarian'],
-          price : 6,
-          evaluated : 1,
-          report : 0,
-          username : 'Ithan',
-
-        },
-      ],
-
+      orders : [],
       user: null,
 
     }
   },
 
   methods : {
-    evaluate : function ()
+    evaluate : function (id)
     {
       console.log('evaluate');
+      sessionStorage.setItem("idEvaluate", id);
       router.replace('/evaluatemeal');
     },
 
@@ -145,7 +86,7 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem("user"));
     this.user = this.user.user;
     //viewOffersHistory
-    await axios.get(urlAPI + "todo=viewOffersHistory&userId=" + 3)//this.user.id)
+    await axios.get(urlAPI + "todo=viewPurchasedMeals")
         .then(response => (this.orders = response.data));
 
     console.log(this.orders);

@@ -97,13 +97,21 @@ public class SerialisationReservation extends Serialisation{
             });
             containerOffer.add("ingredients",jsonIngredientList);
 
-            containerOffer.addProperty("specifications", offer.getSpecifications());
-            containerOffer.addProperty("address", offer.getAddress());
+            containerOffer.addProperty("offerSpecifications", offer.getSpecifications());
+            containerOffer.addProperty("offerPhoto", offer.getOfferPhotoPath());
+            containerOffer.addProperty("offerAddress", offer.getAddress());
             containerOffer.addProperty("remainingPortions",offer.getRemainingPortions());
             containerOffer.addProperty("city", offer.getCity());
             containerOffer.addProperty("zipCode", offer.getZipCode());
 
             container.add("offer",containerOffer);
+            JsonObject cook = new JsonObject();
+            cook.addProperty("cookId",offer.getCook().getId());
+            cook.addProperty("cookFirstName", offer.getCook().getFirstName());
+            cook.addProperty("cookLastName", offer.getCook().getLastName());
+            cook.addProperty("cookPhoto", offer.getCook().getUser().getProfilePhotoPath());
+
+            container.add("cook",cook);
         }
         
         try (PrintWriter out = this.getWriter(response)) {

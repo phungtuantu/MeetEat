@@ -980,8 +980,6 @@ public class Service {
         try {
             JpaTool.openTransaction();
             List <Offer> madeOffers = offerDao.getOffers(cookId);
-            System.out.println("cook: "+cookId);
-            System.out.println(madeOffers.get(0).getId());
 
             for (Offer offer : madeOffers){
                 if (result==null){
@@ -989,6 +987,7 @@ public class Service {
                 } else{
                     result.addAll(reviewDao.getOffersReviews(offer.getId()));
                 }
+                
             }
             JpaTool.validateTransaction();
         } catch (Exception ex) {
@@ -1123,7 +1122,7 @@ public class Service {
         return estimate;
     }
     
-    private JsonObject getRequestAsJsonObject(String urlString){
+    public JsonObject getRequestAsJsonObject(String urlString){
         URL url;
         JsonObject json = null;
         try {
