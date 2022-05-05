@@ -128,7 +128,7 @@ const routes = [
     component: BecomeCookPage
   },
   {
-    path: '/historic',
+    path: '/history',
     name: 'HistoricPage',
     component: HistoricPage
   },

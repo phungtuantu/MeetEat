@@ -26,10 +26,10 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-           <!-- <button type="button" class="btn btn-nav" @click="goHome()">
+          <button type="button" class="btn btn-nav" @click="goHome()">
             <img src="../../assets/arrow-left.png" alt="left-arrow" width="40px">
-           <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a> 
-          </button>-->
+            <!-- <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a> -->
+          </button>
           <button type="button" class="btn btn-nav" @click="goHome()">
             <img src="../../assets/home.png" alt="home" width="35px">
           </button>
@@ -45,11 +45,17 @@
               <img src="../../assets/basket.png" alt="basket" width="40px" @click="basket()">
             </button>
             <div class="dropdown">
-              <button type="button" class="btn2 btn-nav"> <!-- menuDeroulant -->
-                <img src="../../assets/user.png" alt="user" width="40px">
+              <button type="button"  class="btn2 btn-nav"> <!-- menuDeroulant -->
+                <img src="../../assets/user.png" alt="user" width="40px" @click="showMenu()">
               </button>
-              <div class="dropdown-child">
-                <a @click="becomeCook()">BECOME A COOK</a>
+              <div id="userButton" class="dropdown-child">
+                <template v-if="user.isCook !== true ">
+                  <a @click="becomeCook()">BECOME A COOK</a>
+                </template>
+                <template v-if="user.isCook === true ">
+                  <a @click="createOffer()">CREATE OFFER</a>
+                  <a @click="consultCookOffers()">MY OFFERS</a>
+                </template>
                 <a @click="modifyAccount()">MODIFY ACCOUNT</a>
                 <a @click="editPreferences()">EDIT MY PREFERENCES</a>
                 <a @click="orders()">MY ORDERS</a>
@@ -66,11 +72,14 @@
 
 <script>
 import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
 export default {
   name: "NavbarReturnHome",
   data() {
     return {
       user : null,
+      menuIsShowing : false,
     }
   },
   methods: {
@@ -83,6 +92,12 @@ export default {
     becomeCook : function(){
       router.replace('/becomeCook');
     },
+    createOffer : function(){
+      router.replace('/createOffer');
+    },
+    consultCookOffers : function(){
+      router.replace('/cookOfferHistory');
+    },
     modifyAccount : function(){
       router.replace('/modificationAccount');
     },
@@ -90,11 +105,12 @@ export default {
       router.replace('/selectpreferences');
     },
     orders : function(){
-      router.replace('/historic');
+      router.replace('/history');
     },
-    logOut : function(){
+    logOut : async function () {
       sessionStorage.setItem("user", null);
-      if(this.$route.name !== '/'){
+      await axios.get(urlAPI + "todo=disconnect");
+      if (this.$route.name !== '/') {
         router.replace('/');
       }
       location.reload();
@@ -105,11 +121,20 @@ export default {
     signup : function(){
       router.replace('/signup');
     },
+    showMenu : function(){
+      if(this.menuIsShowing === false){
+        document.getElementById("userButton").style.display = "block";
+        this.menuIsShowing = true;
+      }else{
+        document.getElementById("userButton").style.display = "none";
+        this.menuIsShowing = false;
+      }
+    }
   },
   async mounted() {
     this.user = JSON.parse(sessionStorage.getItem("user"));
     console.log(sessionStorage.getItem("show"));
-    console.log(sessionStorage.getItem("user"));
+    console.log("user is "+sessionStorage.getItem("user"));
   }
 }
 </script>
@@ -159,6 +184,10 @@ position: relative;
 display: inline-block;
 }
 .dropdown-child {
+position:  absolute; 
+z-index: 2;
+right:0px;
+top  :42px;
 display: none;
 background-color: gray;
 color: white;
@@ -176,7 +205,7 @@ background-color: black;
 margin: 5px;
 }
 .dropdown:hover .dropdown-child {
-display: block;
+/*display: block;*/
 }
 
 </style>

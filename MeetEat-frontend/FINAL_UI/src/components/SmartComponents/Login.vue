@@ -42,13 +42,14 @@ export default {
 
        await axios.get(urlAPI + 'todo=authenticate&mail=' + this.email+'&password='+this.password)
            .then(response => (this.user = response.data));
-        if(this.user !== null){
+       if(this.user.connection){
           console.log(this.user);
           sessionStorage.setItem("user", JSON.stringify(this.user));
           router.replace('/');
         }else{
           document.getElementById("errorMessage").innerText= "Login or password incorrect";
         }
+
 
 
 

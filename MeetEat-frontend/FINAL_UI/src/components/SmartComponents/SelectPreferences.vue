@@ -7,58 +7,25 @@
       <div class="row dietButton">
         <div class="col-sm-10">
           <div class="row dietButton2">
-            <article class=" col-sm">
-              <input id="dairyFree" type="checkbox" v-bind:value="diaryFreeID"/>
-              <div>
-                  <span>
-                    Dairy free
-                  </span>
-              </div>
-            </article>
 
-            <article class=" col-sm">
-              <input id="glutenFree" type="checkbox" v-bind:value="glutenFreeID"/>
-              <div>
+            <article class=" col-sm" v-for="diet in diets" :key="diet.id">
+              <template v-if="myDiets.includes(diet.id)">
+                <input class="check" v-bind:id="diet.id" type="checkbox" v-bind:value="diet.id" checked/>
+                <div>
                   <span>
-                    Gluten free
+                    {{diet.name}}
                   </span>
-              </div>
-            </article>
+                </div>
+              </template>
+              <template v-if="!myDiets.includes(diet.id)">
+                <input class="check" v-bind:id="diet.id" type="checkbox" v-bind:value="diet.id"/>
+                <div>
+                  <span>
+                    {{diet.name}}
+                  </span>
+                </div>
+              </template>
 
-            <article class=" col-sm">
-              <input id="noPork" type="checkbox" v-bind:value="noPorkID"/>
-              <div>
-                  <span>
-                    No pork
-                  </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="vegan" type="checkbox" v-bind:value="veganID"/>
-              <div>
-                  <span>
-                    Vegan
-                  </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="Vegetarian" type="checkbox" v-bind:value="vegetarianID"/>
-              <div>
-                  <span>
-                    Vegetarian
-                  </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="Pesco-vegetarian" type="checkbox" v-bind:value="pescoID"/>
-              <div>
-                  <span>
-                    Pesco-vegetarian
-                  </span>
-              </div>
             </article>
 
           </div>
@@ -69,25 +36,28 @@
 
       <h1>Preferences</h1>
       <h4>Besides special diets, are there any ingredients you don't like ?</h4>
-      <div class="form-group row" style="padding-left: 30%;">
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm"  id="listIngredients">
+      <template v-if="myIngr.length > 1">
+        <div class="form-group row" style="padding-left: 30%;">
+          <div class="col-sm-6">
+            <div class="row"  v-for="ingr in myIngr" :key="ingr.id">
+              <div class="col-sm"  id="listIngredients" >
                 <select name="m" id="w" class="form-control inputs">
+                  <option selected v-bind:value="ingr.id">{{ingr.name}}</option>
                   <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
                     {{ing.name}}
                   </option>
                 </select>
+              </div>
+              <div class="col-sm-3"  id="listDeleteButton">
+              </div>
             </div>
-            <div class="col-sm-3"  id="listDeleteButton">
-            </div>
-          </div>
-          <br/>
-          <button type="button" class="btn btn-success"  @click='addIngredients'>Add an ingredient</button>
-          <button type="button" class="btn btn-danger"  @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete last ingredient</button>
+            <br/>
+            <button type="button" class="btn btn-success"  @click='addIngredients'>Add an ingredient</button>
+            <button type="button" class="btn btn-danger"  @click='deleteIngredients()'>Delete last ingredient</button>
 
+          </div>
         </div>
-      </div>
+      </template>
 
     <button type="button" class="btn btn-success btn-block btn-lg" @click="save()">Save</button>
 
@@ -116,6 +86,9 @@ export default {
       user : null,
       ingredients : [],
       lastIngredient : [],
+      diets :[],
+      myDiets : [],
+      myIngr : [],
     }
   },
     methods: {
@@ -131,43 +104,26 @@ export default {
         console.log('ARR');
 
         console.log(arr);
-        var diet = ["dairyFree",
-          "glutenFree",
-          "noPork",
-          "vegan",
-          "Vegetarian",
-          "Pesco-vegetarian"];
 
-        var dietChecked = [];
-        for(var j=0; j<diet.length; j++){
-          if(document.getElementById(diet[j]).checked){
-            dietChecked.push(document.getElementById(diet[j]).value);
-            console.log(document.getElementById(diet[j]))
+        var arr2 = [];
+        var diets = document.getElementsByClassName("check");
+        for(var j=0; j<diets.length; j++) {
+          if(diets[j].checked) {
+            arr2.push((diets[j].value));
           }
         }
 
 
-        var atLeastOne = 0;
-        console.log(dietChecked);
-        var request = urlAPI+'todo=specifiyPreferences&userId='+this.user.id+'&requestPreferences=';
-        for(let k = 0; k<dietChecked.length; k++){
-          if(atLeastOne === 1){
-            request += ','+dietChecked[k];
-          }else{
-            request += dietChecked[k];
-            atLeastOne = 1;
-          }
+        console.log(arr2);
+        var request = urlAPI+'todo=specifiyPreferences&userId='+this.user.id;
+        for(let k =0; k<arr.length; k++) {
+          request += '&requestPreferences=' + arr[k];
         }
+          for(let k =0; k<arr2.length; k++){
+            request+= '&requestPreferences='+arr2[k];
+          }
 
-        var atLeastOne2 = 0;
-        for(let k = 0; k<arr.length; k++){
-          if(atLeastOne2 === 1 || (atLeastOne2===0 && atLeastOne===1)){
-            request += ','+arr[k];
-          }else{
-            request += arr[k];
-            atLeastOne2 = 1;
-          }
-        }
+
 
         console.log(this.user);
         console.log(request);
@@ -210,13 +166,16 @@ export default {
 
       },
 
-      deleteIngredients : function (ingredient, index)
+      deleteIngredients : function ()
       {
-        console.log(ingredient + ' ' + index);
+
         if (this.numberOfIngredients>1) {
           this.numberOfIngredients--;
-          document.getElementById(this.lastIngredient[this.numberOfIngredients]).remove();
-          this.lastIngredient.pop();
+          //document.getElementById(this.lastIngredient[this.numberOfIngredients]).remove();
+          console.log(this.numberOfIngredients);
+          console.log(document.getElementsByClassName("inputs")[this.numberOfIngredients]);
+          document.getElementsByClassName("inputs")[this.numberOfIngredients].remove();
+          //this.lastIngredient.pop();
         }
         return 0;
       },
@@ -245,7 +204,7 @@ export default {
     },
 
     async mounted() {
-      this.user = JSON.parse(sessionStorage.getItem("user"))
+      this.user = JSON.parse(sessionStorage.getItem("user"));
       this.user = this.user.user;
 
       await axios.get(urlAPI + 'todo=viewIngredients')
@@ -253,7 +212,40 @@ export default {
 
       this.ingredients = this.ingredients.preferenceTags;
 
-      console.log(this.ingredients.preferenceTags);
+      await axios.get(urlAPI + 'todo=viewDiets')
+          .then(response => (this.diets = response.data));
+      this.diets = this.diets.preferenceTags;
+
+      var allDiet = [];
+      for(let i=0; i<this.diets.length; i++){
+        allDiet.push(this.diets[i].id);
+      }
+
+      var allIng = [];
+
+      for(let i=0; i<this.ingredients.length; i++){
+        allIng.push(this.ingredients[i].id);
+      }
+
+
+
+      for(let i=0; i<this.user.preferences.length; i++){
+        if(allDiet.includes(this.user.preferences[i].id)){
+          this.myDiets.push(this.user.preferences[i].id);
+        }
+        if(allIng.includes(this.user.preferences[i].id)){
+          this.myIngr.push(this.user.preferences[i]);
+        }
+      }
+
+      this.numberOfIngredients = this.myIngr.length;
+
+
+      console.log(this.ingredients);
+      console.log(this.user);
+      console.log(this.diets);
+      console.log(this.myIngr);
+
     }
 }
 

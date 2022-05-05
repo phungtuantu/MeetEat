@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.meeteat.model.VerificationRequest.CookRequest;
-import com.meeteat.model.VerificationRequest.RequestImage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
