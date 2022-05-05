@@ -30,17 +30,23 @@
               {{order.price}}$
             </div>
           </div>
+          <h4 v-if="order.state === 'purchasedMeal'" style="color: green">Passed</h4>
+          <h4 v-if="order.state === 'reservation'"  style="color: green">Accepted</h4>
+
         </div>
 
         <div class="col-sm-1">
           <img v-bind:src="order.cook.cookPhoto" width="100px" height="80px"/>
-          <p>{{ order.cook.cookFirstName }} {{ order.cook.cookLastName }}</p>
+          <h5 style="text-align: left">{{ order.cook.cookFirstName }} {{ order.cook.cookLastName }}</h5>
+          <p style="text-align: left"> {{order.offer.offerAddress}}</p>
         </div>
 
 
         <div class="col-sm">
-           <button class="btn btn-success" @click="evaluate(order.id)" style="margin-bottom: 10px;"> Evaluate </button>
-          <br/>
+            <template v-if="!order.evaluatedByCustomer">
+              <button class="btn btn-success" @click="evaluate(order.id)" style="margin-bottom: 10px;"> Evaluate </button>
+              <br/>
+            </template>
           <button class="btn btn-danger" @click="report()"> Report </button>
         </div>
       </div>

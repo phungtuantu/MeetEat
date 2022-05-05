@@ -161,23 +161,30 @@ export default {
       //createReservation
       // console.log('pay');
       var resultMessage = true;
-      for(let i=0; i<this.orders.length; i++){
-        let order = this.orders[i].order;
-        let qty = this.orders[i].qty;
-        await axios.get(urlAPI + 'todo=createReservation&offerId='+order.id+'&nbOfPortions='+qty)
-            .then(response => (resultMessage = response.data));
-        if (!resultMessage.foundReservation){
-          if(resultMessage.errorCode === 1){
-            alert("your purchase of "+order.title+" failed, please log in before purchasing!");
-          } else if(resultMessage.errorCode === 2){
-            alert("your purchase of "+order.title+" failed, the number of remaining portions has changed!");
-          } else {
-            alert("your purchase of "+order.title+" failed, please try again later!");
+      let user = JSON.parse(sessionStorage.getItem("user"));
+      if (user === null){
+            alert("Please sign in before purchasing!");
+            router.replace('/login')
+      } else{
+          for(let i=0; i<this.orders.length; i++){
+            let order = this.orders[i].order;
+            let qty = this.orders[i].qty;
+            await axios.get(urlAPI + 'todo=createReservation&offerId='+order.id+'&nbOfPortions='+qty)
+                .then(response => (resultMessage = response.data));
+            if (!resultMessage.foundReservation){
+              if(resultMessage.errorCode === 1){
+                alert("your purchase of "+order.title+" failed, please log in before purchasing!");
+              } else if(resultMessage.errorCode === 2){
+                alert("your purchase of "+order.title+" failed, the number of remaining portions has changed!");
+              } else {
+                alert("your purchase of "+order.title+" failed, please try again later!");
+              }
+            }
           }
-        }
+          sessionStorage.setItem("basket", JSON.stringify([]));
+          router.replace('/orderPage');
       }
-      sessionStorage.setItem("basket", JSON.stringify([]));
-      router.replace('/orderPage');
+      
 
     },
 

@@ -222,7 +222,7 @@ export default {
       strRequestEstimatePrice : '',
       offer: null,
       lastIngredient : [],
-
+      details : null,
     }
   },
   methods: {

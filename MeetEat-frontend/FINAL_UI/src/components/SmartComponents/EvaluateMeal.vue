@@ -111,7 +111,7 @@ export default {
        *         String comment = request.getParameter("comment");
        *         Long sourceReservation_id = Long.parseLong(request.getParameter("reservation_Id"));
        */
-      router.replace('/historic')
+      router.replace('/history')
     }
   },
   async mounted() {

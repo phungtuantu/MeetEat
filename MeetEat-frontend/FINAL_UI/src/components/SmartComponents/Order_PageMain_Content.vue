@@ -179,11 +179,13 @@ export default {
     await axios.get(urlAPI + 'todo=viewCuisines')
         .then(response => (this.cuisines = response.data.preferenceTags));
     
-    if (resultConsultOffer.hasResults){
+    if (this.orders.length!==0){
       document.getElementById("noOffer").style.display="none";
+    } else{
+      document.getElementById("noOffer").style.display="block";
     }
 
-    // console.log(this.orders);
+    console.log(this.orders);
     // console.log(this.city);
   }
 }

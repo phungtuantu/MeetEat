@@ -26,10 +26,10 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <button type="button" class="btn btn-nav" @click="goHome()">
+          <!--<button type="button" class="btn btn-nav" @click="goHome()">
             <img src="../../assets/arrow-left.png" alt="left-arrow" width="40px">
-            <!-- <a href="https://www.flaticon.com/free-icons/back" title="back icons">Back icons created by Roundicons - Flaticon</a> -->
-          </button>
+             
+          </button>-->
           <button type="button" class="btn btn-nav" @click="goHome()">
             <img src="../../assets/home.png" alt="home" width="35px">
           </button>
@@ -46,7 +46,7 @@
             </button>
             <div class="dropdown">
               <button type="button"  class="btn2 btn-nav"> <!-- menuDeroulant -->
-                <img src="../../assets/user.png" alt="user" width="40px" @click="showMenu()">
+                <img src="../../assets/menu.png" alt="user" width="40px" @click="showMenu()">
               </button>
               <div id="userButton" class="dropdown-child">
                 <template v-if="user.isCook !== true ">
@@ -55,6 +55,7 @@
                 <template v-if="user.isCook === true ">
                   <a @click="createOffer()">CREATE OFFER</a>
                   <a @click="consultCookOffers()">MY OFFERS</a>
+                  <a @click="pendingRequests()">PENDING REQUESTS</a>
                 </template>
                 <a @click="modifyAccount()">MODIFY ACCOUNT</a>
                 <a @click="editPreferences()">EDIT MY PREFERENCES</a>
@@ -94,6 +95,9 @@ export default {
     },
     createOffer : function(){
       router.replace('/createOffer');
+    },
+    pendingRequests : function(){
+      router.replace('/pendingRequests');
     },
     consultCookOffers : function(){
       router.replace('/cookOfferHistory');
@@ -163,8 +167,8 @@ a{
     background: #2ecc71;
 }
 
-.btn2 .btn-primary{
-    margin-left: 10px;
+.btn2{
+    margin-left: 15px;
 }
 
 .btn .btn-dark{
@@ -204,8 +208,8 @@ background-color: black;
 /*border: thick double green ;*/
 margin: 5px;
 }
-.dropdown:hover .dropdown-child {
-/*display: block;*/
-}
+/*.dropdown:hover .dropdown-child {
+display: block;
+}*/
 
 </style>
