@@ -1,13 +1,14 @@
 <template>
 
   <div>
-    <template v-if="user === null">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo0">
-          <h1 class="display-5">MeetEat</h1>
+    
+    <template v-if="this.show === 1">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <h1 class="display-5">MeetEat</h1>
           <a><img src="../../assets/MeetEat_logo.jpg" width="35px" @click="goHome()"></a>
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
           </ul>
@@ -19,7 +20,7 @@
       </nav>
     </template>
 
-    <template v-if="user !== null">
+    <template v-if="this.show === 2">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -69,7 +70,8 @@ export default {
   name: "NavbarReturnHome",
   data() {
     return {
-        user : null,
+      show:1,
+      user : JSON.parse(sessionStorage.getItem("user")),
     }
   },
   methods: {
@@ -90,6 +92,7 @@ export default {
     },
     logOut : function(){
       sessionStorage.setItem("user", null);
+      sessionStorage.setItem("show",1);
       if(this.$route.name !== '/'){
         router.replace('/');
       }
@@ -100,11 +103,15 @@ export default {
     },
     signup : function(){
       router.replace('/signup');
-    }
+    },
   },
-
-  mounted() {
-    this.user = JSON.parse(sessionStorage.getItem("user"));
+  async mounted() {
+    this.user = sessionStorage.getItem("user");
+    if (this.user !== null) {
+      this.show = 2;
+    }
+    console.log(sessionStorage.getItem("show"));
+    console.log(sessionStorage.getItem("user"));
   }
 }
 </script>
