@@ -119,28 +119,37 @@ export default {
 
 <style scoped>
 
-.btn, .btn2{
+.btn.btn-outline-secondary{
+  margin: 15px;
+}
+
+a{
+  margin-left: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.btn .btn-primary, .btn2 .btn-primary{
     background-color: whitesmoke;
     border: 0;
     padding: 0;
     transition: 0s;
 }
 
-.btn :hover, .btn2 :hover {
+.btn .btn-primary :hover, .btn2 .btn-primary :hover {
     background: #2ecc71;
 }
 
-.btn2{
+.btn2 .btn-primary{
     margin-left: 10px;
+}
+
+.btn .btn-dark{
+  margin-left: 30px;
 }
 
 .display-5{
     margin-left: 10px;
-}
-
-a{
-  margin-left: 15px;
-  margin-bottom: 10px;
 }
 
 img{
