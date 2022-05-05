@@ -381,7 +381,9 @@ public class Service {
             Offer offer = reservation.getOffer();
             if (reservation.getNbOfPortion()<=offer.getRemainingPortions()){
                 reservation.setState(ReservationState.RESERVATION);
-                offer.setRemainingPortions(offer.getRemainingPortions()-reservation.getNbOfPortion());
+                offer.addReservation(reservation);
+            }else{
+                reservation.setState(ReservationState.REJECTED);
             }
             reservationDao.merge(reservation);
             offerDao.merge(offer);

@@ -60,12 +60,14 @@ export default {
             await axios.get(urlAPI + 'todo=acceptRequest&requestId='+requestId)
                 .then(response => (this.requestAccepted = response.requestAccepted));
                 console.log(this.requestAccepted );
+                location.reload();
         },
 
         rejectButton: async function(requestId){
             await axios.get(urlAPI + 'todo=rejectRequest&requestId='+requestId)
                 .then(response => (this.requestRejected = response.requestRejected));
                 console.log(this.requestRejected);
+                location.reload();
         },
    },
 
