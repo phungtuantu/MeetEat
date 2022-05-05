@@ -31,7 +31,7 @@
                 </template>
 
               </template>
-              {{offer.cook.rating}}/5 ({{offer.cook.numberOfReviews}}reviews)
+              {{offer.cook.rating}}/5 ({{offer.cook.numberOfReviews}} reviews)
             </div>
           </div>
         </div>
@@ -62,6 +62,7 @@
         <p class="card-text">If you have any food allergies or special dietary requirements, please notify {{offer.cook.firstName}}
           directly before placing your order.</p>
         <p class="card-text"><small class="text-muted">{{offer.remainingPortions}} portions left</small></p>
+        <h5>Price : {{offer.price}}$</h5>
         <div class="form-outline" id="counter">
           <label for="qty" class="form-label">Quantity : </label>
           <input class="form-control" type="number" min="1" step="1" onfocus="this.previousValue = this.value"
@@ -140,7 +141,7 @@ export default {
     this.offer.specifications = this.offer.specifications.split(',');
 
     localStorage.setItem("offer",this.offer)
-    // console.log(this.offer);
+    console.log(this.offer);
     // console.log(JSON.parse(sessionStorage.getItem("basket")));
 
 

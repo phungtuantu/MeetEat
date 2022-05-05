@@ -161,6 +161,7 @@ export default {
       //createReservation
       // console.log('pay');
       var resultMessage = true;
+      var numberOfSuccess = 0;
       let user = JSON.parse(sessionStorage.getItem("user"));
       if (user === null){
             alert("Please sign in before purchasing!");
@@ -179,9 +180,12 @@ export default {
               } else {
                 alert("your purchase of "+order.title+" failed, please try again later!");
               }
+            } else{
+              numberOfSuccess++;
             }
           }
           sessionStorage.setItem("basket", JSON.stringify([]));
+          alert("Reservations made for "+numberOfSuccess+" orders!");
           router.replace('/orderPage');
       }
       
