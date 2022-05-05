@@ -11,6 +11,8 @@ import com.github.javafaker.Food;
 import com.github.javafaker.Name;
 import com.github.javafaker.DateAndTime;
 import com.github.javafaker.Number;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Offer.Reservation;
@@ -22,6 +24,11 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.http.HttpRequest;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +55,7 @@ public class DBPopulation {
     Locale locale = new Locale("fr");
     int nbProfilePictures = 20;
     int nbOfferPictures = 20;
+    String apiPersonImagesEndpoint = "https://fakeface.rest/face/json";
     
     public DBPopulation(){
         
@@ -66,7 +74,8 @@ public class DBPopulation {
             String phone = faker.phoneNumber().cellPhone();
             String password = "password";
             User user = new User(name.firstName(), name.lastName(), address.streetAddress(), address.city(), address.zipCode(), phone, email);
-            user.setProfilePhotoPath("./Images/profile_images/profile" + (i%nbProfilePictures + 1));
+            String photoURL = generateImage();
+            user.setProfilePhotoPath(photoURL);
             Long created = service.createAccount(user, password);
             if(created != null){
                 userIdList.add(created);
@@ -286,6 +295,34 @@ public class DBPopulation {
             ll.add(service.findPreferenceById(dietList.get(i)));
         }
         return ll;
+    }
+    
+    private String generateImage(){
+        JsonObject response = retrieveJson(apiPersonImagesEndpoint);
+        String imageURL = response.get("image_url").getAsString();
+        return imageURL;
+    }
+    
+    private JsonObject retrieveJson(String ressource){
+        try {
+            URL url = new URL(ressource);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
+            String jsonString = content.toString();
+            JsonObject json = new JsonParser().parse(jsonString).getAsJsonObject();
+            return json;
+        }catch (Exception e){
+            System.out.println("Exception");
+            return null;
+        }
     }
     
     public static void main(String [] args){
