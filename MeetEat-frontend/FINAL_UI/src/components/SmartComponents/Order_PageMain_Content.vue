@@ -62,7 +62,7 @@
 
       <div class="card" v-for="offer in orders" :key="offer.id">
         <img class="card-img-top"
-             src="../../assets/lasagne.jpg"/>
+             v-bind:src="offer.image"/>
         <div class="card-body" style="text-align: left;">
           <h5 class="card-title">{{offer.title}}</h5>
           <p class="card-text">
@@ -128,7 +128,7 @@ export default {
           }
       }
 
-      console.log(preferences);
+      // console.log(preferences);
 
       for (i=0; i<preferences.length-1; i++){
           searchOffersUrl+=preferences[i]+'&requestPreferences=';
@@ -137,7 +137,7 @@ export default {
           searchOffersUrl+=preferences[preferences.length-1];
       }
 
-      console.log(searchOffersUrl)
+      // console.log(searchOffersUrl)
 
       await axios.get(searchOffersUrl)
         .then(response => (this.orders = response.data));
@@ -155,8 +155,8 @@ export default {
     await axios.get(urlAPI + 'todo=viewCuisines')
         .then(response => (this.cuisines = response.data.preferenceTags));
 
-    console.log(this.orders);
-    console.log(this.city);
+    // console.log(this.orders);
+    // console.log(this.city);
   }
 }
 </script>
