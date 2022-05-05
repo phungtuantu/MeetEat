@@ -109,6 +109,10 @@ export default {
     }
   },
   mounted() {
+
+     this.user = JSON.parse(sessionStorage.getItem("user"))
+    this.user = this.user.user;
+
     this.firstName = this.user.firstName;
     this.lastName = this.user.lastName;
     this.city = this.user.city;

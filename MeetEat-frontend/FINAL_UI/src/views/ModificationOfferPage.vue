@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Navbar from "@/components/SmartComponents/Navbar";
+import Navbar from "@/components/SmartComponents/NavbarReturnHome";
 import ModificationOffer from "@/components/SmartComponents/ModificationOffer";
 import Footer from "@/components/SmartComponents/Footer";
 
