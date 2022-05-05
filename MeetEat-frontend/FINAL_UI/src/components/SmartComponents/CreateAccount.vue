@@ -12,7 +12,7 @@
                     <input type="text" name="" placeholder="Phone number" class="form-control"   v-model="tel" required>
                     <input type="email" name="" placeholder="Email address" class="form-control"  v-model="email" required>
                     <input type="password" name="" placeholder="Password" class="form-control"  v-model="password" required>
-                    <button type="button" class="btn btn-success" v-on:click="createUser()">Sign in</button>
+                    <button type="button" class="btn btn-success" v-on:click="createUser()">Sign up</button>
 
                   </form>
   </div>
@@ -56,7 +56,7 @@ export default {
             .then(response => (this.effective = response))
 
         console.log('Effectif : ' + this.effective);
-        await router.replace('/orderPage');
+        await router.replace('/login');
 
 
       }

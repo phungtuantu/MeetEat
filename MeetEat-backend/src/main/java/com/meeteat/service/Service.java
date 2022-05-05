@@ -564,6 +564,42 @@ public class Service {
         return result;
     }
     
+    public boolean evaluatedByCustomer(Reservation reservation) {
+        boolean result = false;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            reservation.setEvaluatedByCustomer(true);
+            reservationDao.merge(reservation);
+            JpaTool.validateTransaction();
+            result = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling evaluatedByCustomer", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public boolean evaluatedByCook(Reservation reservation) {
+        boolean result = false;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            reservation.setEvaluatedByCook(true);
+            reservationDao.merge(reservation);
+            JpaTool.validateTransaction();
+            result = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling evaluatedByCook", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
     public boolean updateRating(Cook cook, int reviewNote) {
         boolean result = false;
         JpaTool.createPersistenceContext(); 

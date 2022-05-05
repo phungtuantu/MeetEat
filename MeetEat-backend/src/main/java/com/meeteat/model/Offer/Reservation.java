@@ -44,6 +44,8 @@ public class Reservation implements Serializable {
     private User customer;
     @OneToMany(mappedBy="source",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Review> reviews;
+    private boolean evaluatedByCustomer;
+    private boolean evaluatedByCook;
 
     public Reservation() {
     }
@@ -55,6 +57,8 @@ public class Reservation implements Serializable {
         this.offer = offer;
         this.customer = customer;
         this.reviews = new LinkedList();
+        this.evaluatedByCustomer = false;
+        this.evaluatedByCook = false;
     }
 
     public Long getId() {
@@ -81,6 +85,22 @@ public class Reservation implements Serializable {
 
     public void setState(ReservationState state) {
         this.state = state;
+    }
+
+    public boolean isEvaluatedByCustomer() {
+        return evaluatedByCustomer;
+    }
+
+    public void setEvaluatedByCustomer(boolean evaluatedByCustomer) {
+        this.evaluatedByCustomer = evaluatedByCustomer;
+    }
+
+    public boolean isEvaluatedByCook() {
+        return evaluatedByCook;
+    }
+
+    public void setEvaluatedByCook(boolean evaluatedByCook) {
+        this.evaluatedByCook = evaluatedByCook;
     }
 
     public int getNbOfPortion() {

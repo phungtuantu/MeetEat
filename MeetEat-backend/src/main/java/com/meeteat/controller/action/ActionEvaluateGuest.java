@@ -35,6 +35,7 @@ public class ActionEvaluateGuest extends Action{
         
         Review review = new Review(reservation, reviewedUser, reviewingUser, nbOfStars, comment);
         Long review_Id = service.createReview(review);
+        service.evaluatedByCook(reservation);
         request.setAttribute("review",review);
     }
     
