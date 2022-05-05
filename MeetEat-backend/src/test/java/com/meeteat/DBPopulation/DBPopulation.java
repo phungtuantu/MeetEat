@@ -11,8 +11,6 @@ import com.github.javafaker.Food;
 import com.github.javafaker.Name;
 import com.github.javafaker.DateAndTime;
 import com.github.javafaker.Number;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.meeteat.dao.JpaTool;
@@ -32,7 +30,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.http.HttpRequest;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -166,6 +163,7 @@ public class DBPopulation {
             List<Ingredient> ingredients = getIngredientsForOffer();
             List<PreferenceTag> classifications = getPreferenceTagForOffer();
             Cook cook = service.findCookById(cookIdList.get(number.numberBetween(min, cookIdList.size())));
+            assert(cook != null);
             Food food = faker.food();
             dat = faker.date();
             String title = food.dish();
@@ -195,6 +193,7 @@ public class DBPopulation {
         for(int i = 0; i<nbOffersToPublish; i++){
             int chosenOffer = number.numberBetween(0, createdOfferList.size());
             Offer offerToPublish = service.getOfferById(createdOfferList.get(chosenOffer));
+            assert(offerToPublish.getCook() != null);
             try{
                 offerToPublish = service.publishOffer(offerToPublish.getId());
             }catch(Exception e){

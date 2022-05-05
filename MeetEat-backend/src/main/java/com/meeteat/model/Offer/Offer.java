@@ -11,7 +11,6 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import static com.meeteat.service.GeoNetApi.getLatLng;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -221,10 +220,14 @@ public class Offer implements Serializable {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
-        this.remainingPortions -= reservation.getNbOfPortion();
-        assert(this.remainingPortions>=0);
-        if(this.remainingPortions == 0){
-            this.state = offerState.SOLDOUT;
+    }
+    
+    public void validateReservation(Reservation reservation){
+        if (reservations.contains(reservation)){
+            this.remainingPortions -= reservation.getNbOfPortion();
+            if(this.remainingPortions == 0){
+                this.state = offerState.SOLDOUT;
+            }
         }
     }
     

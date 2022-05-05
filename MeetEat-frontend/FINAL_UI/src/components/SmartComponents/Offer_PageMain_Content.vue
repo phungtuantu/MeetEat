@@ -64,8 +64,9 @@
         <p class="card-text"><small class="text-muted">{{offer.remainingPortions}} portions left</small></p>
         <div class="form-outline" id="counter">
           <label for="qty" class="form-label">Quantity : </label>
-          <input class="form-control" min="1" name="quantity" step="1" type="number" id="qty"
-                 v-model="qtyOrdered">
+          <input class="form-control" type="number" min="1" step="1" onfocus="this.previousValue = this.value"
+                  onkeydown="this.previousValue = this.value" oninput="validity.valid || (value = this.previousValue)"
+                  name="quantity" id="qty" v-model="qtyOrdered">
         </div>
         <br/>
         <button type="button" class="btn btn-dark" @click="addToBasket()">Add to basket </button>
@@ -112,13 +113,14 @@ export default {
         qty : this.qtyOrdered,
       };
 
-      arr.push(newItem);
-
-      sessionStorage.setItem("basket", JSON.stringify(arr));
-      
-      // console.log(arr)
-
-      router.replace('/orderPage');
+      if (this.qtyOrdered>this.offer.remainingPortions){
+        alert("Not enough remaining orders!")
+      } else{
+        arr.push(newItem);
+        sessionStorage.setItem("basket", JSON.stringify(arr));
+        // console.log(arr)
+        router.replace('/orderPage');
+      }
 
     }
   },

@@ -382,7 +382,7 @@ public class Service {
             Offer offer = reservation.getOffer();
             if (reservation.getNbOfPortion()<=offer.getRemainingPortions()){
                 reservation.setState(ReservationState.RESERVATION);
-                offer.addReservation(reservation);
+                offer.validateReservation(reservation);
             }else{
                 reservation.setState(ReservationState.REJECTED);
             }

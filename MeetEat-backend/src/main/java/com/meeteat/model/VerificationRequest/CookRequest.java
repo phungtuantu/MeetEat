@@ -38,9 +38,9 @@ public class CookRequest implements Serializable{
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name="equipment_images")
     private List<RequestImage> equipmentImages;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private RequestImage idImage;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private RequestImage certificationImage;
 
     public CookRequest(Date requestDate, User user, List<RequestImage> equipmentImages, RequestImage idImage, RequestImage certificationImage) {
