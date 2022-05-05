@@ -55,6 +55,8 @@ public class SerialisationReservations extends Serialisation{
                 default -> {
                 }
             }
+            jsonReservation.addProperty("evaluatedByCustomer",res.isEvaluatedByCustomer());
+            jsonReservation.addProperty("evaluatedByCook",res.isEvaluatedByCook());
             
             JsonArray jsonClassificationList = new JsonArray();
             List<PreferenceTag> classifications = res.getOffer().getClassifications();
