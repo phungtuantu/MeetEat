@@ -31,7 +31,7 @@
                 </template>
 
               </template>
-              {{offer.cook.rating}}/5 ({{offer.cook.numberOfReviews}}reviews)
+              {{offer.cook.rating}}/5 ({{offer.cook.numberOfReviews}} reviews)
             </div>
           </div>
         </div>
