@@ -2,6 +2,7 @@
   <div>
     <NavbarReturnHome></NavbarReturnHome>
     <br/>
+    <div><h3>Pending requests</h3></div>
     <PendingRequests/>
     <br/>
     <Footer></Footer>
@@ -24,5 +25,7 @@ export default {
 </script>
 
 <style scoped>
-
+.h3{
+  text-align: left;
+}
 </style>
