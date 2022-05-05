@@ -113,13 +113,17 @@ export default {
         order : this.offer,
         qty : this.qtyOrdered,
       };
+      console.log('COMP');
+
+      console.log(this.qtyOrdered);
+      console.log(this.offer.remainingPortions);
 
       if (this.qtyOrdered>this.offer.remainingPortions){
         alert("Not enough remaining orders!")
       } else{
         arr.push(newItem);
         sessionStorage.setItem("basket", JSON.stringify(arr));
-        // console.log(arr)
+        console.log(JSON.parse(sessionStorage.getItem("basket")));
         router.replace('/orderPage');
       }
 

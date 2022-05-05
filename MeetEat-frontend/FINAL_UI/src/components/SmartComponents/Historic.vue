@@ -27,7 +27,7 @@
               {{order.nbOfPortion}} portions
             </div>
             <div class="col-sm">
-              {{order.price}}$
+              {{order.price.toFixed(2)}}$
             </div>
           </div>
           <h4 v-if="order.state === 'purchasedMeal'" style="color: green">Passed</h4>

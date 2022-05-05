@@ -22,7 +22,7 @@
                      <!-- <div class="column"> -->
                         <label style="font-weight: bold; font-size: 20px">{{request.customer.customerFirstName}}&nbsp;{{request.customer.customerLastName}} </label><br>
                         <label style=""> Number of portions :{{request.nbOfPortion}} </label><br>
-                        <label style="font-weight: bold"> Total Price :{{request.totalPrice}}€</label><br>
+                        <label style="font-weight: bold"> Total Price :{{request.totalPrice.toFixed(2)}}$</label><br>
                     <!-- </div> -->
                 </div>
                 <div class="col-2">

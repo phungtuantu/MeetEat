@@ -36,7 +36,7 @@
 
       <h1>Preferences</h1>
       <h4>Besides special diets, are there any ingredients you don't like ?</h4>
-      <template v-if="myIngr.length > 1">
+      <template v-if="myIngr.length >= 0">
         <div class="form-group row" style="padding-left: 30%;">
           <div class="col-sm-6">
             <div class="row"  v-for="ingr in myIngr" :key="ingr.id">
@@ -51,6 +51,15 @@
               <div class="col-sm-3"  id="listDeleteButton">
               </div>
             </div>
+            <template v-if="myIngr.length === 0">
+              <div class="row" >
+                <select class="form-control inputs">
+                  <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
+                    {{ing.name}}
+                  </option>
+                </select>
+              </div>
+            </template>
             <br/>
             <button type="button" class="btn btn-success"  @click='addIngredients'>Add an ingredient</button>
             <button type="button" class="btn btn-danger"  @click='deleteIngredients()'>Delete last ingredient</button>
@@ -115,13 +124,42 @@ export default {
 
 
         console.log(arr2);
+        var pref = this.user.preferences;
+        console.log(pref)
         var request = urlAPI+'todo=specifiyPreferences&userId='+this.user.id;
         for(let k =0; k<arr.length; k++) {
           request += '&requestPreferences=' + arr[k];
+          for(let m=0; m<this.ingredients; m++){
+            if(this.ingredients[m].id === arr[k]){
+              let obj = {
+                id : this.ingredients[m].id,
+                name : this.ingredients[m].name
+              }
+              pref.push(obj);
+            }
+          }
+          //this.user.preferences.push(arr[k]);
+
         }
           for(let k =0; k<arr2.length; k++){
             request+= '&requestPreferences='+arr2[k];
+            //this.user.preferences.push(arr2[k]);
+            for(let m=0; m<this.diets; m++){
+              if(this.diets[m].id === arr2[k]){
+                let obj = {
+                  id : this.diets[m].id,
+                  name : this.diets[m].name
+                }
+                pref.push(obj);
+              }
+            }
+
           }
+
+          console.log(pref);
+
+
+
 
 
 
@@ -206,6 +244,7 @@ export default {
     async mounted() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
       this.user = this.user.user;
+      console.log(this.user);
 
       await axios.get(urlAPI + 'todo=viewIngredients')
           .then(response => (this.ingredients = response.data));
@@ -243,7 +282,7 @@ export default {
 
       console.log(this.ingredients);
       console.log(this.user);
-      console.log(this.diets);
+      console.log(this.myDiets);
       console.log(this.myIngr);
 
     }

@@ -76,7 +76,7 @@
             <h4>Total</h4>
           </div>
           <div class="col-sm">
-              {{totalPrice}}$
+              {{totalPrice.toFixed(2)}}$
           </div>
         </div>
       </div>
@@ -113,7 +113,7 @@
           </div>
           <div class="col-12">
             <button class="btn btn-primary mb-3" @click="pay()">
-              <span class="ps-3">Pay {{totalPrice}}$</span> <span class="fas fa-arrow-right"></span> </button>
+              <span class="ps-3">Pay {{totalPrice.toFixed(2)}}$</span> <span class="fas fa-arrow-right"></span> </button>
           </div>
         </div>
       </div>
@@ -196,6 +196,9 @@ export default {
   },
   async mounted() {
     var arr = JSON.parse(sessionStorage.getItem("basket"));
+    console.log('ARR');
+    console.log(arr);
+
     if (arr !== null) {
       for (let i = 0; i < arr.length; i++) {
         // console.log(arr[i]);
@@ -212,7 +215,9 @@ export default {
         this.totalQty += parseInt(arr[i].qty);
       }
 
-      // console.log(this.orders);
+      console.log(this.orders);
+      console.log(arr);
+
       this.user = JSON.parse(sessionStorage.getItem("user"));
       // console.log(JSON.parse(sessionStorage.getItem("user")));
     }
