@@ -66,7 +66,7 @@ public class Service {
     protected MessageDao messageDao = new MessageDao();
     protected CookRequestDao cookRequestDao = new CookRequestDao();
     protected RequestImageDao requestImageDao = new RequestImageDao();
-    public static String spoonacularKey = "a1e13fe317b54440bd2d6ed8bd8c34c0";
+    public static String spoonacularKey = "f6c1e678f19446c7bd67d810232c484d";
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
@@ -1100,7 +1100,7 @@ public class Service {
         return json;
     }
     
-    private JsonObject getRequestAsJsonObject(String urlString){
+    public JsonObject getRequestAsJsonObject(String urlString){
         URL url;
         JsonObject json = null;
         try {

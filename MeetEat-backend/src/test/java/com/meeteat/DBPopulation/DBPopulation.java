@@ -11,6 +11,8 @@ import com.github.javafaker.Food;
 import com.github.javafaker.Name;
 import com.github.javafaker.DateAndTime;
 import com.github.javafaker.Number;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.meeteat.dao.JpaTool;
@@ -25,6 +27,7 @@ import com.meeteat.model.Preference.PreferenceTag;
 import com.meeteat.model.User.Cook;
 import com.meeteat.model.User.User;
 import com.meeteat.service.Service;
+import static com.meeteat.service.Service.spoonacularKey;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -169,16 +172,17 @@ public class DBPopulation {
             Date availableFrom = dat.between(minDate, maxDate);
             Date expDate = dat.between(availableFrom, dat.future(10, TimeUnit.DAYS, availableFrom));
             String imagePath = faker.internet().avatar();
-            //double price = number.randomDouble(2, 0, 20);
+            double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(1, 30);
             String details = food.spice();
             String specifications = food.vegetable();
             Offer offer = new Offer(cook, availableFrom, title, totalPortions,
                                   details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
                                     address.zipCode(), expDate, imagePath);
-            offer.setOfferPhotoPath(generateFoodImage(ingredients));
+            offer.setOfferPhotoPath(generateFoodImage(title));
             Long created = service.makeOffer(offer);
             if(created != null){
+                service.setPrice(offer.getId(), price); 
                 createdOfferList.add(created);
             }
         }
@@ -330,13 +334,21 @@ public class DBPopulation {
         return imageURL;
     }
     
-    private String generateFoodImage(List<Ingredient> ingredients){
-        JsonObject json = service.getSpoonacularResponseByIngredients(ingredients);
-        if(json == null){
-            return defaultImageURL;
+    private String generateFoodImage(String name){
+        String imageURL = defaultImageURL;
+        try{
+            JsonObject json = getSpoonacularResponseByName(name);
+            imageURL = json.get("results").getAsJsonArray().get(0).getAsJsonObject().get("image").getAsString();
+        }catch(Exception e){
+            System.out.println("Image not found, sending default image");
         }
-        String imageURL = json.get("image").getAsString();
         return imageURL;
+    }
+    
+    private JsonObject getSpoonacularResponseByName(String name){
+        JsonObject json = service.getRequestAsJsonObject("https://api.spoonacular.com/recipes/complexSearch?query="
+                    +name+"&number=1&apiKey="+spoonacularKey);
+        return json;
     }
     
     private JsonObject retrieveJson(String ressource){
@@ -367,4 +379,5 @@ public class DBPopulation {
         //public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, 
         //                         int nbOffers, int nbOffersToPublish, int nbReservations){
     }
+
 }
