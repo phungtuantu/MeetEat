@@ -54,7 +54,7 @@ public class ActionMakeOffer extends Action {
         String address = request.getParameter("address");
         String city = request.getParameter("city");
         String zipCode = request.getParameter("zipcode");
-        //System.out.println(specifications);
+        
         Date expirationDate;
         try {
             expirationDate = getDate(request.getParameter("expDate"));
@@ -63,6 +63,9 @@ public class ActionMakeOffer extends Action {
             expirationDate = null;
         }
         String offerPhotoPath = request.getParameter("photoPath");
+        if(offerPhotoPath == null){
+            offerPhotoPath = "https://thumbs.dreamstime.com/z/spoon-fork-icon-flat-vector-template-design-trendy-simple-isolated-illustration-signage-179491630.jpg";
+        }
         Offer offer = new Offer(cook, availableFrom, title, totalPortions, details,
                 classifications, ingredients, specifications,address,city,zipCode, expirationDate, offerPhotoPath);
         service.makeOffer(offer);
