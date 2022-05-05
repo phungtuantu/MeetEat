@@ -29,8 +29,7 @@ public class ActionMakeOffer extends Action {
     public void executer(HttpServletRequest request){
         Service service = new Service();
         HttpSession session = request.getSession();
-        //Long userId = (Long)session.getAttribute("userId");
-          Long userId = Long.parseLong(request.getParameter("userId"));
+        Long userId = (Long)session.getAttribute("userId");
         Cook cook = service.findCookByUserId(userId);
         Date availableFrom;
         try {
@@ -50,7 +49,7 @@ public class ActionMakeOffer extends Action {
         for (String preferenceTagId : request.getParameterValues("preferences")){
             classifications.add(service.findPreferanceTagById(Long.parseLong(preferenceTagId)));
         }
-        String specifications = (String)session.getAttribute("specifications");
+        String specifications = request.getParameter("specifications");
         String address = request.getParameter("address");
         String city = request.getParameter("city");
         String zipCode = request.getParameter("zipcode");

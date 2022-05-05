@@ -53,6 +53,11 @@ public class SerialisationAuthenticate extends Serialisation{
             userJson.add("preferences",jsonPreferenceList);
             container.add("user",userJson);
             container.addProperty("connection", true);
+            boolean isCook = (boolean)request.getAttribute("isCook");
+            container.addProperty("isCook", isCook);
+            if (isCook){
+                container.addProperty("cookId",(Long)request.getAttribute("cookId"));
+            }
         } else{
             container.addProperty("connection", false);
         }
