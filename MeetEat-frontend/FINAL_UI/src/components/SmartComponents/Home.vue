@@ -174,4 +174,10 @@ export default {
  color: white;
 }
 
+.carousel-caption{
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: initial;
+}
+
 </style>
