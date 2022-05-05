@@ -66,7 +66,7 @@ public class Service {
     protected MessageDao messageDao = new MessageDao();
     protected CookRequestDao cookRequestDao = new CookRequestDao();
     protected RequestImageDao requestImageDao = new RequestImageDao();
-    public static String spoonacularKey = "443412ce4f244b78b911e6ad2edb85d9";
+    public static String spoonacularKey = "a1e13fe317b54440bd2d6ed8bd8c34c0";
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
