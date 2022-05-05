@@ -148,7 +148,11 @@ export default {
 
     deleteItem : function (order)
     {
-      this.orders.splice(order.id,1);
+      this.totalQty -= parseInt(order.qty)
+      this.totalPrice -= parseFloat(order.qty*order.order.price)
+      console.log(order.qty)
+      console.log(order.price)
+      this.orders.splice(this.orders.indexOf(order),1);
       sessionStorage.setItem("basket", JSON.stringify(this.orders));
     },
 
@@ -158,10 +162,10 @@ export default {
       for(let i=0; i<this.orders.length; i++){
         let order = this.orders[i].order;
         let qty = this.orders[i].qty;
-        await axios.get(urlAPI + 'todo=createReservation&userId='+this.user.id+'&offerId='+order.id+'&nbOfPortions='+qty)
+        await axios.get(urlAPI + 'todo=createReservation&offerId='+order.id+'&nbOfPortions='+qty)
             .then(response => (response.data));
       }
-
+      sessionStorage.setItem("basket", JSON.stringify([]));
       router.replace('/orderPage');
 
     },
@@ -176,7 +180,7 @@ export default {
     var arr = JSON.parse(sessionStorage.getItem("basket"));
     if (arr !== null) {
       for (let i = 0; i < arr.length; i++) {
-        console.log(arr[i]);
+        // console.log(arr[i]);
         var element = null;
         await axios.get(urlAPI + 'todo=consultOffer&offerId=' + arr[i].order.id)
             .then(response => (element = response.data));
@@ -187,12 +191,12 @@ export default {
         });
 
         this.totalPrice += (arr[i].qty * element.price);
-        this.totalQty += arr[i].qty;
+        this.totalQty += parseInt(arr[i].qty);
       }
 
-      console.log(this.orders);
+      // console.log(this.orders);
       this.user = JSON.parse(sessionStorage.getItem("user"));
-      console.log(JSON.parse(sessionStorage.getItem("user")));
+      // console.log(JSON.parse(sessionStorage.getItem("user")));
     }
   }
 }

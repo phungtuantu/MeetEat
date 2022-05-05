@@ -148,7 +148,7 @@ export default {
           }
       }
 
-      console.log(preferences);
+      // console.log(preferences);
 
       for (i=0; i<preferences.length-1; i++){
           searchOffersUrl+=preferences[i]+'&requestPreferences=';
@@ -157,7 +157,7 @@ export default {
           searchOffersUrl+=preferences[preferences.length-1];
       }
 
-      console.log(searchOffersUrl)
+      // console.log(searchOffersUrl)
 
       await axios.get(searchOffersUrl)
         .then(response => (this.orders = response.data));
@@ -175,8 +175,8 @@ export default {
     await axios.get(urlAPI + 'todo=viewCuisines')
         .then(response => (this.cuisines = response.data.preferenceTags));
 
-    console.log(this.orders);
-    console.log(this.city);
+    // console.log(this.orders);
+    // console.log(this.city);
   }
 }
 </script>
