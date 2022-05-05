@@ -26,15 +26,18 @@
         <div class="col-sm">
             <div class="row">
               <div class="col-sm"  id="listIngredients">
-                <input type="text" class="form-control" id="ingredients" v-model="ingredient">
+                <select name="m" id="w" class="form-control inputs">
+                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
+                      {{ing.name}}
+                    </option>
+                  </select>
               </div>
               <div class="col-sm"  id="listDeleteButton">
-                <button type="button" class="btn btn-success" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete</button>
               </div>
             </div>
             <br/>
-              <button type="button" class="btn btn-success" @click='addIngredients'>Add an ingredient</button>
-
+              <button type="button" class="btn btn-success" @click='addIngredients()'>Add an ingredient</button>
+              <button type="button" class="btn btn-danger" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete last ingredient</button>
         </div>
         <div class="col-sm">
         </div>
@@ -58,13 +61,9 @@
         <label for="typeOfCuisine" class="col-sm-2 col-form-label">Type of cuisine</label>
         <div class="col-sm">
           <select name="line" id="typeOfCuisine" class="form-select form-select-sm" aria-label=".form-select-sm" v-model="typeOfCuisine">
-            <option value="american">American</option>
-            <option value="cantoneese">Cantoneese</option>
-            <option value="chineese">Chineese</option>
-            <option value="french">French</option>
-            <option value="italian">Italian</option>
-            <option value="mexican">Mexican</option>
-            <option value="spanish">Spanish</option>
+            <option  v-for="cui in cuisines" :key="cui.id" v-bind:value="cui.name">
+                    {{cui.name}}
+            </option>
           </select>
         </div>
       </div>
@@ -74,56 +73,12 @@
         <label for="specification" class="col-sm-2 col-form-label">Diet </label>
         <div class="col-sm-10">
           <div class="row">
-            <article class=" col-sm">
-              <input id="dairyFree" type="checkbox"/>
+            
+            <article class=" col-sm" v-for="die in diets" :key="die.id" v-bind:value="die.name">
+              <input id="die.name" type="checkbox"/>
               <div>
                 <span>
-                  Dairy free
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="glutenFree" type="checkbox"/>
-              <div>
-                <span>
-                  Gluten free
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="noPork" type="checkbox"/>
-              <div>
-                <span>
-                  No pork
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="vegan" type="checkbox"/>
-              <div>
-                <span>
-                  Vegan
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="Vegetarian" type="checkbox"/>
-              <div>
-                <span>
-                  Vegetarian
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="Pesco-vegetarian" type="checkbox"/>
-              <div>
-                <span>
-                  Pesco-vegetarian
+                  {{die.name}}
                 </span>
               </div>
             </article>
@@ -195,10 +150,12 @@
     <template v-if="show === 1">
       <form>
         <div class="form-group row">
-          <label for="suggestedPrice" class="col-sm-2 col-form-label">Price suggestion</label>
-          <div class="col-sm-10">
-            <input type="number" disabled readonly class="form-control-plaintext" id="suggestedPrice" v-model="suggestedPrice">
+          <label for="suggestedPriceMin" class="col-sm-2 col-form-label">Suggested price range</label>
+          <input type="number" disabled readonly class="form-control-plaintext col-sm-1 price" id="suggestedPriceMin" v-model="suggestedPriceMin"> 
+          <div class="form-control-plaintext col-1 price">
+          -
           </div>
+          <input type="number" disabled readonly class="form-control-plaintext col-sm-1 price" id="suggestedPriceMax" v-model="suggestedPriceMax">
         </div>
 
         <div class="form-group row">
@@ -244,19 +201,28 @@
 </template>
 
 <script>
+
 import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
 
 export default {
   name: "ModificationOffer",
   data() {
     return {
+      cuisines : [],
+      ingredients : [],
+      recipeIngredients : [],
+      diets : [],
       title : '',
       description : '',
       specification : '',
       typeOfCuisine : '',
       portions : 0,
-      suggestedPrice : 5.50,
+      suggestedPriceMin : null,
+      suggestedPriceMax : null,
       sellingPrice : 5.99,
+      guessedTitle : '',
       ingredient : null,
       show : 0,
       date : null,
@@ -265,42 +231,85 @@ export default {
       zipCode : '',
       address : '',
       saleDate : null,
+      strRequestEstimatePrice : '',
+      //ingredients : [],
+      lastIngredient : [],
 
     }
   },
   methods: {
+
     addIngredients : function () {
-      console.log('add');
-      this.numberOfIngredients ++;
-      var newInput = document.createElement("input");
-      newInput.setAttribute("class", "form-control");
-      newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
-      newInput.setAttribute("type", "text");
 
-      document.getElementById("listIngredients").appendChild(newInput);
+        console.log('add');
+        this.numberOfIngredients ++;
+        var newInput = document.createElement("select");
+        newInput.setAttribute("class", "form-control inputs");
+        newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
+        this.lastIngredient[this.numberOfIngredients-1] = newInput.getAttribute("id");
 
-      var br = document.createElement("br");
+        for(let i=0; i<this.ingredients.length; i++){
+          var option = document.createElement("option");
+          option.setAttribute("value", this.ingredients[i].id);
+          option.innerText = this.ingredients[i].name;
+          newInput.appendChild(option);
+        }
 
-      var newButton = document.createElement("button");
-      newButton.setAttribute("type", "button");
-      newButton.setAttribute("class", "btn btn-success");
-      newButton.innerText = "Delete";
-      newButton.onclick = this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients);
-      document.getElementById("listDeleteButton").appendChild(br);
-      document.getElementById("listDeleteButton").appendChild(newButton);
+        document.getElementById("listIngredients").appendChild(newInput);
+        /*
+        var br = document.createElement("br");
+        var newButton = document.createElement("button");
+        newButton.setAttribute("type", "button");
+        newButton.setAttribute("class", "btn btn-success");
+        newButton.setAttribute("id", "button"+this.numberOfIngredients);
+        //newButton.setAttribute("@click", this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients));
+        newButton.innerText = "Delete";
+        document.getElementById("listDeleteButton").appendChild(br);
+        document.getElementById("listDeleteButton").appendChild(newButton);*/
 
-    },
+      },
 
     deleteIngredients : function (ingredient, index)
-    {
-      console.log(ingredient + ' ' + index);
-      return 0;
-    },
+      {
+        console.log(ingredient + ' ' + index);
+        if (this.numberOfIngredients>1) {
+          this.numberOfIngredients--;
+          document.getElementById(this.lastIngredient[this.numberOfIngredients]).remove();
+          this.lastIngredient.pop();
+        }
+        return 0;
+      },
 
-    validateInformation : function ()
+    validateInformation : async function ()
     {
+      let recipeIngredients = document.getElementsByClassName("form-control ingredient");
+      for (var i=0;i<recipeIngredients.length;i++){
+        console.log(recipeIngredients[i].value);
+      }
+      if(this.recipeIngredients.length==0){
+        this.strRequestEstimatePrice='&ingredients=';
+      }else{
+        for (let i = 0; i < this.recipeIngredients.length; i++) {
+          this.strRequestEstimatePrice = this.strRequestEstimatePrice + '&ingredients='+ this.recipeIngredients[i];
+        }
+      }
+      await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
+        .then(response => (this.suggestedPrice = response.data.priceestimate));
       document.getElementById("validate").style.display = "none";
+      var url = "";
+      var list = document.getElementsByClassName("ingredient");
+      for (let item of list) {
+          console.log(item.value);
+          url+="&ingredients="+item.value;
+      }
+      await axios.get(urlAPI+'todo=estimatePrice&'+url).then(response => {
+        this.suggestedPriceMin = response.data.min;
+        this.suggestedPriceMax = response.data.max;
+        this.guessedTitle = response.data.title;
+        this.sellingPrice = (this.suggestedPriceMax+this.suggestedPriceMin)/2;
+      });
       this.show = 1;
+
     },
 
     backHome : function () {
@@ -330,6 +339,20 @@ export default {
     },
 
   },
+  async mounted() {
+    this.user = JSON.parse(sessionStorage.getItem("user"))
+      this.user = this.user.user;
+    await axios.get(urlAPI + 'todo=viewCuisines')
+        .then(response => (this.cuisines = response.data.preferenceTags));
+    await axios.get(urlAPI + 'todo=viewIngredients')
+        .then(response => (this.ingredients = response.data.preferenceTags));
+    await axios.get(urlAPI + 'todo=viewDiets')
+        .then(response => (this.diets = response.data.preferenceTags));
+    console.log(this.cuisines);
+    console.log(this.diets);
+    console.log(this.ingredients);
+
+  }
 }
 </script>
 
@@ -388,6 +411,14 @@ input[type=checkbox]:checked ~ div {
     margin-left: 20px;
 }
 
+.price{
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
 .successPublish{
     color: gray;
     float: center;
@@ -399,6 +430,12 @@ input[type=checkbox]:checked ~ div {
 input[type="checkbox"]{
     width: 100%;
     height: 100%;
+}
+
+.btn-danger{
+  margin-left: 15px;
+  background-color: brown;
+  font-size: 15px;
 }
 
 

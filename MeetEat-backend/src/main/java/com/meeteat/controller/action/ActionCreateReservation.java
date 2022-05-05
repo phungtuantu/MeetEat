@@ -30,8 +30,11 @@ public class ActionCreateReservation extends Action{
         Offer offer = service.findOfferById(offerId);
         Date reservationDate = new Date();
         Integer nbOfPortions = Integer.parseInt(request.getParameter("nbOfPortions"));
-        Reservation reservation=new Reservation(reservationDate, ReservationState.REQUEST, nbOfPortions, offer, customer);
-        service.createReservation(reservation);
+        Reservation reservation=null;
+        if (customer!=null){
+            reservation=new Reservation(reservationDate, ReservationState.REQUEST, nbOfPortions, offer, customer);
+            service.createReservation(reservation);
+        }
         request.setAttribute("reservation",reservation);
     }
     

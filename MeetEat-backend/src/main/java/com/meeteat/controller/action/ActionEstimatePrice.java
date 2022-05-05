@@ -23,16 +23,13 @@ import javax.servlet.http.HttpSession;
 public class ActionEstimatePrice extends Action{
     @Override
     public void executer(HttpServletRequest request){
-        System.out.println("Test");
         Service service = new Service();
-        List<Ingredient> ingredients = new LinkedList<>();
-        for (String ingredientId : request.getParameterValues("ingredients")){
-            System.out.println("Ingredients: " + ingredientId);
-            ingredients.add((Ingredient)(service.findPreferanceTagById(Long.parseLong(ingredientId))));
+        List<String> ingredients = new LinkedList<>();
+        for (String ingredientName : request.getParameterValues("ingredients")){
+            ingredients.add(ingredientName);
         }
 
-        PriceEstimate estimate = service.getMinMaxPrice(ingredients);
-        System.out.println(estimate.getMinPrice());
+        PriceEstimate estimate = service.getMinMaxPriceFromStrings(ingredients);
         request.setAttribute("priceestimate",estimate);
     }
 }

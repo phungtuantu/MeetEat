@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.lang.Math;
 
 /**
  *
@@ -66,7 +67,7 @@ public class Service {
     protected MessageDao messageDao = new MessageDao();
     protected CookRequestDao cookRequestDao = new CookRequestDao();
     protected RequestImageDao requestImageDao = new RequestImageDao();
-    public static String spoonacularKey = "a1e13fe317b54440bd2d6ed8bd8c34c0";
+    public static String spoonacularKey = "f6c1e678f19446c7bd67d810232c484d";
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
@@ -381,7 +382,9 @@ public class Service {
             Offer offer = reservation.getOffer();
             if (reservation.getNbOfPortion()<=offer.getRemainingPortions()){
                 reservation.setState(ReservationState.RESERVATION);
-                offer.setRemainingPortions(offer.getRemainingPortions()-reservation.getNbOfPortion());
+                offer.addReservation(reservation);
+            }else{
+                reservation.setState(ReservationState.REJECTED);
             }
             reservationDao.merge(reservation);
             offerDao.merge(offer);
@@ -1100,7 +1103,27 @@ public class Service {
         return json;
     }
     
-    private JsonObject getRequestAsJsonObject(String urlString){
+    public PriceEstimate getMinMaxPriceFromStrings(List<String> ingredients){
+        String urlString = "";
+        for(int i=0; i<ingredients.size(); i++){
+            urlString+=ingredients.get(i);
+            if(i<ingredients.size()-1){
+                urlString+=",+";
+            }
+        }
+        JsonObject json = getRequestAsJsonObject("https://api.spoonacular.com/recipes/findByIngredients?ingredients="
+                    +urlString+"&number=1&apiKey=0edfed31f0a340a9927395d2d566d6fb");
+        Long id = Long.parseLong(json.get("id").getAsString());
+        String title = json.get("title").getAsString();
+        JsonObject json2 = getRequestAsJsonObject("https://api.spoonacular.com/recipes/"
+                +id+"/priceBreakdownWidget.json?apiKey=0edfed31f0a340a9927395d2d566d6fb");
+        System.out.println(json2);
+        Double price = Double.parseDouble(json2.get("totalCostPerServing").getAsString())/100.0;
+        PriceEstimate estimate = new PriceEstimate(((int)(price.doubleValue()*100))/100.0, ((int)(price.doubleValue()*2*100))/100.0, title);
+        return estimate;
+    }
+    
+    public JsonObject getRequestAsJsonObject(String urlString){
         URL url;
         JsonObject json = null;
         try {

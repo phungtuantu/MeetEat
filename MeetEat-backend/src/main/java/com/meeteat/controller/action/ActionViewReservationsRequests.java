@@ -10,6 +10,7 @@ import com.meeteat.model.User.Cook;
 import com.meeteat.service.Service;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -19,9 +20,9 @@ public class ActionViewReservationsRequests extends Action{
     @Override
     public void executer(HttpServletRequest request){
         Service service = new Service();
-//        HttpSession session = request.getSession();
-//        Long userId = (Long)session.getAttribute("userId");
-        Long userId = Long.parseLong(request.getParameter("userId"));
+        HttpSession session = request.getSession();
+        Long userId = (Long)session.getAttribute("userId");
+//        Long userId = Long.parseLong(request.getParameter("userId"));
         Cook cook = service.findCookByUserId(userId);
         List<Reservation> reservations = service.viewReservationsRequests(cook);
         request.setAttribute("reservations",reservations);
