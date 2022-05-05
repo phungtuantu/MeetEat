@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author taha
  */
-public class ActionEvaluateMeal extends Action{
+public class ActionEvaluateGuest extends Action{
     
     @Override
     public void executer(HttpServletRequest request){
@@ -35,7 +35,7 @@ public class ActionEvaluateMeal extends Action{
         
         Review review = new Review(reservation, reviewedUser, reviewingUser, nbOfStars, comment);
         Long review_Id = service.createReview(review);
-        boolean updateRating = service.updateRating(offer.getCook(), nbOfStars);
         request.setAttribute("review",review);
     }
+    
 }

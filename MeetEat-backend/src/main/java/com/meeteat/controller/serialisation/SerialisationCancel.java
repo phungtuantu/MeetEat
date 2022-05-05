@@ -17,17 +17,17 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author taha
  */
-public class SerialisationCancelOffer extends Serialisation{
+public class SerialisationCancel extends Serialisation{
     
     @Override
     public void serialise(HttpServletRequest request, HttpServletResponse response) throws IOException{
         JsonObject container = new JsonObject();
         boolean canceled = (boolean) request.getAttribute("canceled");
         if(canceled == true){
-            container.addProperty("offerCanceled", true);
+            container.addProperty("Canceled", true);
         }else{
-            container.addProperty("offerCanceled", false);
-            container.addProperty("error","Something went wrong in canceling the offer");
+            container.addProperty("Canceled", false);
+            container.addProperty("error","Something went wrong in deleting the object");
         }
         try (PrintWriter out = this.getWriter(response)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
