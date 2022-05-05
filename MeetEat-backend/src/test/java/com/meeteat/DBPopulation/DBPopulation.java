@@ -56,6 +56,7 @@ public class DBPopulation {
     int nbProfilePictures = 20;
     int nbOfferPictures = 20;
     String apiPersonImagesEndpoint = "https://fakeface.rest/face/json";
+    String defaultImageURL = "https://thumbs.dreamstime.com/z/spoon-fork-icon-flat-vector-template-design-trendy-simple-isolated-illustration-signage-179491630.jpg";
     
     public DBPopulation(){
         
@@ -170,11 +171,11 @@ public class DBPopulation {
             //double price = number.randomDouble(2, 0, 20);
             int totalPortions = number.numberBetween(1, 30);
             String details = food.spice();
-            String specifications = faker.backToTheFuture().quote();
+            String specifications = food.vegetable();
             Offer offer = new Offer(cook, availableFrom, title, totalPortions,
                                   details, classifications, ingredients, specifications, address.streetAddress(), address.city(), 
                                     address.zipCode(), expDate, imagePath);
-            offer.setOfferPhotoPath("./Images/profile_images/meal" + (i%nbOfferPictures + 1));
+            offer.setOfferPhotoPath(generateFoodImage(ingredients));
             Long created = service.makeOffer(offer);
             if(created != null){
                 createdOfferList.add(created);
@@ -299,7 +300,16 @@ public class DBPopulation {
     
     private String generateImage(){
         JsonObject response = retrieveJson(apiPersonImagesEndpoint);
+        if(response == null){
+            return defaultImageURL;
+        }
         String imageURL = response.get("image_url").getAsString();
+        return imageURL;
+    }
+    
+    private String generateFoodImage(List<Ingredient> ingredients){
+        JsonObject json = service.getSpoonacularResponseByIngredients(ingredients);
+        String imageURL = json.get("image").getAsString();
         return imageURL;
     }
     
