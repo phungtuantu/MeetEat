@@ -39,11 +39,14 @@ export default {
     },
 
      login : async function() {
-
        await axios.get(urlAPI + 'todo=authenticate&mail=' + this.email+'&password='+this.password)
-           .then(response => (this.user = response.data));
+           .then(response => {
+             if(response.data.connection === true){
+               this.user = response.data;
+               console.log(this.user);
+             }
+          });
         if(this.user !== null){
-          console.log(this.user);
           sessionStorage.setItem("user", JSON.stringify(this.user));
           router.replace('/');
         }else{

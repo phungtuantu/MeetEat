@@ -123,26 +123,6 @@
         <label for="portions" class="col-sm-2 col-form-label">City </label>
             <input type="text" name="" placeholder="City" v-model="city">
         </div>
-
-        <div class="row">
-        <label for="portions" class="col-sm-2 col-form-label">Check one or both </label>
-            <article class="col-4">
-              <input type="checkbox"/>
-              <div>
-                <span>
-                  To take away
-                </span>
-              </div>
-            </article>
-            <article class="col-4">
-              <input type="checkbox"/>
-              <div>
-                <span>
-                  On site
-                </span>
-              </div>
-            </article>
-        </div>
         <br>
 
     </form>
