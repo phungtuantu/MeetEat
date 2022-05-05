@@ -66,6 +66,8 @@ public class SerialisationReservationsRequests extends Serialisation{
                 customer.addProperty("customerImage", res.getCustomer().getProfilePhotoPath());
                 customer.addProperty("customerLastImage", res.getCustomer().getLastName());
                 
+                jsonReservation.add("customer",customer);
+                
                 return jsonReservation;
             }
         }).forEachOrdered(jsonReservation -> {

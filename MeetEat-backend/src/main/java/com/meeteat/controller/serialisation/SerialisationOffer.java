@@ -119,7 +119,6 @@ public class SerialisationOffer extends Serialisation {
         });
         container.add("reviews",jsonReviewsList);
         
-        try (PrintWriter out = this.getWriter(response)) {
         container.addProperty("image", offer.getOfferPhotoPath());
         container.addProperty("state", offer.getState().name());
         container.addProperty("soldPortions", offer.getTotalPortions() - offer.getRemainingPortions());

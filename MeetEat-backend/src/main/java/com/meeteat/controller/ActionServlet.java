@@ -55,6 +55,7 @@ import com.meeteat.controller.serialisation.SerialisationPublishOffer;
 import com.meeteat.controller.serialisation.SerialisationPriceEstimate;
 import com.meeteat.controller.serialisation.SerialisationRejectRequest;
 import com.meeteat.controller.serialisation.SerialisationReservation;
+import com.meeteat.controller.serialisation.SerialisationReservationsRequests;
 import com.meeteat.controller.serialisation.SerialisationReview;
 import com.meeteat.controller.serialisation.SerialisationReviews;
 import com.meeteat.controller.serialisation.SerialisationUser;
