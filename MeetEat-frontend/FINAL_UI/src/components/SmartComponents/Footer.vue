@@ -137,6 +137,12 @@ export default {
     goHome : function(){
       router.replace('/');
     },
+    signin : function(){
+      router.replace('/login');
+    },
+    signup : function(){
+      router.replace('/signup');
+    },
     facebook : function(){
       router.replace('/');
     },
