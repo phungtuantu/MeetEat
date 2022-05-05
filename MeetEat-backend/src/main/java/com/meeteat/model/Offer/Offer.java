@@ -221,10 +221,14 @@ public class Offer implements Serializable {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
-        this.remainingPortions -= reservation.getNbOfPortion();
-        assert(this.remainingPortions>=0);
-        if(this.remainingPortions == 0){
-            this.state = offerState.SOLDOUT;
+    }
+    
+    public void validateReservation(Reservation reservation){
+        if (reservations.contains(reservation)){
+            this.remainingPortions -= reservation.getNbOfPortion();
+            if(this.remainingPortions == 0){
+                this.state = offerState.SOLDOUT;
+            }
         }
     }
     

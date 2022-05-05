@@ -31,9 +31,15 @@ public class ActionCreateReservation extends Action{
         Date reservationDate = new Date();
         Integer nbOfPortions = Integer.parseInt(request.getParameter("nbOfPortions"));
         Reservation reservation=null;
-        if (customer!=null){
+        if (customer!=null && nbOfPortions<=offer.getRemainingPortions()){
             reservation=new Reservation(reservationDate, ReservationState.REQUEST, nbOfPortions, offer, customer);
             service.createReservation(reservation);
+        } else if (customer==null){
+            //errorCode=1 -> not connected
+            request.setAttribute("errorCode", 1);
+        } else if (nbOfPortions>offer.getRemainingPortions()){
+            //errorCode=2 -> not enough remaining portions
+            request.setAttribute("errorCode", 2);
         }
         request.setAttribute("reservation",reservation);
     }
