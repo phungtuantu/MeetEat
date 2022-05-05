@@ -31,23 +31,13 @@
                       {{ing.name}}
                     </option>
                   </select>
-                <!--<div class="col-sm"  id="listIngredients">
-                  <select name="m" id="w" class="form-control inputs">
-                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
-                      {{ing.name}}
-                    </option>
-                  </select>
-                </div>
-
-                <input type="text" class="form-control" id="ingredients" v-model="ingredient">-->
               </div>
               <div class="col-sm"  id="listDeleteButton">
-                <button type="button" class="btn btn-success" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete</button>
               </div>
             </div>
             <br/>
               <button type="button" class="btn btn-success" @click='addIngredients()'>Add an ingredient</button>
-
+              <button type="button" class="btn btn-danger" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete last ingredient</button>
         </div>
         <div class="col-sm">
         </div>
@@ -466,6 +456,12 @@ input[type=checkbox]:checked ~ div {
 input[type="checkbox"]{
     width: 100%;
     height: 100%;
+}
+
+.btn-danger{
+  margin-left: 15px;
+  background-color: brown;
+  font-size: 15px;
 }
 
 

@@ -80,11 +80,11 @@
                 </select>
             </div>
             <div class="col-sm-3"  id="listDeleteButton">
-              <button type="button" class="btn btn-success"  @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete</button>
             </div>
           </div>
           <br/>
           <button type="button" class="btn btn-success"  @click='addIngredients'>Add an ingredient</button>
+          <button type="button" class="btn btn-danger"  @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete last ingredient</button>
 
         </div>
       </div>
@@ -335,4 +335,16 @@ input[type="checkbox"]{
   height: 100%;
 }
 
+.btn-danger{
+  margin-left: 15px;
+  background-color: brown;
+  font-size: 15px;
+}
+
+/*
+.btn-block{
+  margin-left: 25%;
+  width: 50%;
+}
+*/
 </style>
