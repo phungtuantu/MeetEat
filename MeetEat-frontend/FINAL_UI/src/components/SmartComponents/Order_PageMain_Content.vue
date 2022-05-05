@@ -61,7 +61,7 @@
         <button type="button" class="btn btn-dark" @click="seeBasket()">My basket</button>
       </div>
 
-      <p class="noOffer" id="noOffer">
+      <p class="noOffer" id="noOffer" style="display:none;">
             No offer
       </p>
 
