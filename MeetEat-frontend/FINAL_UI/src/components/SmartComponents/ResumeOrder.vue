@@ -26,7 +26,8 @@
           <div class="card-body" style="text-align: left;">
             <h5 class="card-title">{{order.order.title}}</h5>
             <p class="card-text">
-              <b>Delivery : {{order.order.availableFrom}}-{{order.order.expirationDate}} </b>
+              <b>Delivery  : {{order.order.availableFrom}}</b><br>
+              <b>Expire on : {{order.order.expirationDate}}</b>
             </p>
             <!--
             <p class="card-text" v-for="option in order.order.classifications" :key="option">
@@ -158,12 +159,22 @@ export default {
 
     pay : async function () {
       //createReservation
-      console.log('pay');
+      // console.log('pay');
+      var resultMessage = true;
       for(let i=0; i<this.orders.length; i++){
         let order = this.orders[i].order;
         let qty = this.orders[i].qty;
         await axios.get(urlAPI + 'todo=createReservation&offerId='+order.id+'&nbOfPortions='+qty)
-            .then(response => (response.data));
+            .then(response => (resultMessage = response.data));
+        if (!resultMessage.foundReservation){
+          if(resultMessage.errorCode === 1){
+            alert("your purchase of "+order.title+" failed, please log in before purchasing!");
+          } else if(resultMessage.errorCode === 2){
+            alert("your purchase of "+order.title+" failed, the number of remaining portions has changed!");
+          } else {
+            alert("your purchase of "+order.title+" failed, please try again later!");
+          }
+        }
       }
       sessionStorage.setItem("basket", JSON.stringify([]));
       router.replace('/orderPage');

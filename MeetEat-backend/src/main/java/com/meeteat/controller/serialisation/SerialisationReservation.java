@@ -33,6 +33,16 @@ public class SerialisationReservation extends Serialisation{
         JsonObject container = new JsonObject();
         Reservation reservation = (Reservation)request.getAttribute("reservation");
         if (reservation==null){
+            switch ((int)request.getAttribute("errorCode")){
+                    case 1 -> {
+                        container.addProperty("errorCode",1);
+                        break;
+                    }
+                    case 2 -> {
+                        container.addProperty("errorCode",2);
+                        break;
+                    }
+            }
             container.addProperty("foundReservation",false);
         } else{
             container.addProperty("foundReservation",true);
