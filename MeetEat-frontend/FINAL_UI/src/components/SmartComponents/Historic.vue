@@ -59,6 +59,8 @@
 
 <script>
 import router from "@/router";
+import {urlAPI} from "@/variables";
+import axios from "axios";
 
 export default {
   name: "Historic",
@@ -119,6 +121,8 @@ export default {
         },
       ],
 
+      user: null,
+
     }
   },
 
@@ -135,6 +139,16 @@ export default {
       router.replace('/reportcook');
 
     },
+  },
+
+  async mounted() {
+    this.user = JSON.parse(sessionStorage.getItem("user"));
+    this.user = this.user.user;
+    //viewOffersHistory
+    await axios.get(urlAPI + "todo=viewOffersHistory&userId=" + 3)//this.user.id)
+        .then(response => (this.orders = response.data));
+
+    console.log(this.orders);
   }
 
 

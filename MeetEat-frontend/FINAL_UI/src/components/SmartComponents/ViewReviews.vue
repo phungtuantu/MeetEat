@@ -84,10 +84,25 @@
 
 <script>
 import CardReview from '@/components/SmartComponents/CardReview.vue'
+import {urlAPI} from "@/variables";
+import axios from "axios";
 export default {
   name: "ViewReviews",
+  data(){
+    return {
+      user : null,
+    }
+  },
   components: {
     CardReview,
+  },
+  async mounted() {
+    //userId
+    //consultCooksReviews
+    this.user = JSON.parse(sessionStorage.getItem("user"));
+    this.user = this.user.user;
+    await axios.get(urlAPI+'todo=consultCooksReviews&userId='+this.user.id);
+
   }
 }
 </script>
