@@ -27,7 +27,7 @@
             <div class="row">
               <div class="col-sm"  id="listIngredients">
                 <select name="m" id="w" class="form-control inputs">
-                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
+                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.value">
                       {{ing.name}}
                     </option>
                   </select>
@@ -74,8 +74,8 @@
         <div class="col-sm-10">
           <div class="row">
             
-            <article class=" col-sm" v-for="die in diets" :key="die.id" v-bind:value="die.name">
-              <input id="die.name" type="checkbox"/>
+            <article class=" col-sm" v-for="die in diets" :key="die.id">
+              <input id="die.name" class="col-sm-diet" type="checkbox" v-bind:value="die.id"/>
               <div>
                 <span>
                   {{die.name}}
@@ -232,7 +232,7 @@ export default {
       address : '',
       saleDate : null,
       strRequestEstimatePrice : '',
-      //ingredients : [],
+      offer: null,
       lastIngredient : [],
 
     }
@@ -256,6 +256,10 @@ export default {
         }
 
         document.getElementById("listIngredients").appendChild(newInput);
+        this.recipeIngredients = document.getElementsByClassName("form-control inputs");
+        for (var i=0;i<this.recipeIngredients.length;i++){
+          console.log(this.recipeIngredients[i].value);
+        }
         /*
         var br = document.createElement("br");
         var newButton = document.createElement("button");
@@ -277,15 +281,18 @@ export default {
           document.getElementById(this.lastIngredient[this.numberOfIngredients]).remove();
           this.lastIngredient.pop();
         }
+        
+        this.recipeIngredients.splice((this.recipeIngredients.length)-1);
+        this.recipeIngredients = document.getElementsByClassName("form-control inputs");
+        for (var i=0;i<this.recipeIngredients.length;i++){
+          console.log(this.recipeIngredients[i].value);
+        }
         return 0;
       },
 
     validateInformation : async function ()
     {
-      let recipeIngredients = document.getElementsByClassName("form-control ingredient");
-      for (var i=0;i<recipeIngredients.length;i++){
-        console.log(recipeIngredients[i].value);
-      }
+      
       if(this.recipeIngredients.length==0){
         this.strRequestEstimatePrice='&ingredients=';
       }else{
@@ -293,21 +300,24 @@ export default {
           this.strRequestEstimatePrice = this.strRequestEstimatePrice + '&ingredients='+ this.recipeIngredients[i];
         }
       }
-      await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
-        .then(response => (this.suggestedPrice = response.data.priceestimate));
+      console.log(this.recipeIngredients[0].value)
+      console.log(this.recipeIngredients[0].id)
+
+     // await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
+       //  .then(response => (this.suggestedPrice = response.data.priceestimate));
       document.getElementById("validate").style.display = "none";
-      var url = "";
-      var list = document.getElementsByClassName("ingredient");
-      for (let item of list) {
-          console.log(item.value);
-          url+="&ingredients="+item.value;
-      }
-      await axios.get(urlAPI+'todo=estimatePrice&'+url).then(response => {
-        this.suggestedPriceMin = response.data.min;
-        this.suggestedPriceMax = response.data.max;
-        this.guessedTitle = response.data.title;
-        this.sellingPrice = (this.suggestedPriceMax+this.suggestedPriceMin)/2;
-      });
+      // var url = "";
+      // var list = document.getElementsByClassName("ingredient");
+      // for (let item of list) {
+      //     console.log(item.value);
+      //     url+="&ingredients="+item.value;
+      // }
+      // await axios.get(urlAPI+'todo=estimatePrice&'+url).then(response => {
+      //   this.suggestedPriceMin = response.data.min;
+      //   this.suggestedPriceMax = response.data.max;
+      //   this.guessedTitle = response.data.title;
+      //   this.sellingPrice = (this.suggestedPriceMax+this.suggestedPriceMin)/2;
+      // });
       this.show = 1;
 
     },
@@ -321,18 +331,30 @@ export default {
       console.log('delete');
     },
 
-    save : function () {
-      /**
-      var diet = ["dairyFree",
-        "glutenFree",
-        "noPork",
-        "vegan",
-        "Vegetarian",
-        "Pesco-vegetarian"]
-      **/
-
-
+    save : async function () {
+     
       console.log('save');
+      var makeOfferUrlIngredients='';
+      if(this.recipeIngredients.length==0){
+        makeOfferUrlIngredients='&ingredients=';
+      }else{
+        for (let i = 0; i < this.recipeIngredients.length; i++) {
+          makeOfferUrlIngredients = makeOfferUrlIngredients + '&ingredients='+ this.recipeIngredients[i];
+        }
+      }
+
+      var makeOfferUrlDiet=document.getElementsByClassName("col-sm-diet");
+      for(let i =0;i<makeOfferUrlDiet.length;i++){
+        if (makeOfferUrlDiet[i].checked){
+          console.log(makeOfferUrlDiet[i].value);
+        }
+      }
+      
+      
+
+      /*await axios.get(urlAPI + 'todo=makeOffer&fromDate='++'&title='+'&totalPortions='+'&details='+'&address='+'&city='+'&zipcode='+'&expDate='+'&photoPath='+'&ingredients=')
+        .then(response => (this.offer = response.data.offer));
+      */
       document.getElementById("saveBtn").style.display = "none";
       document.getElementById("cancelBtn").style.display = "none";
       this.show = 2;
