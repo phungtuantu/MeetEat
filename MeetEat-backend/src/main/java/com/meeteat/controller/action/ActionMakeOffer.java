@@ -49,7 +49,7 @@ public class ActionMakeOffer extends Action {
         for (String preferenceTagId : request.getParameterValues("preferences")){
             classifications.add(service.findPreferanceTagById(Long.parseLong(preferenceTagId)));
         }
-        String specifications = (String)session.getAttribute("specifications");
+        String specifications = request.getParameter("specifications");
         String address = request.getParameter("address");
         String city = request.getParameter("city");
         String zipCode = request.getParameter("zipcode");

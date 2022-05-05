@@ -46,14 +46,14 @@
       <div class="form-group row">
         <label for="description" class="col-sm-2 col-form-label">Description</label>
         <div class="col-sm">
-          <textarea id="description" class="form-control" rows="3" v-model="description"></textarea>
+          <textarea id="description" class="form-control" rows="3" v-model="details"></textarea>
         </div>
       </div>
 
       <div class="form-group row">
         <label for="specification" class="col-sm-2 col-form-label">More specifications :</label>
         <div class="col-sm-10">
-          <textarea id="specification" class="form-control" rows="3" v-model="specification"></textarea>
+          <textarea id="specification" class="form-control" rows="3" v-model="specifications"></textarea>
         </div>
       </div>
 
@@ -61,7 +61,7 @@
         <label for="typeOfCuisine" class="col-sm-2 col-form-label">Type of cuisine</label>
         <div class="col-sm">
           <select name="line" id="typeOfCuisine" class="form-select form-select-sm" aria-label=".form-select-sm" v-model="typeOfCuisine">
-            <option  v-for="cui in cuisines" :key="cui.id" v-bind:value="cui.name">
+            <option  v-for="cui in cuisines" :key="cui.id" v-bind:value="cui.id">
                     {{cui.name}}
             </option>
           </select>
@@ -91,7 +91,7 @@
       <div class="form-group row">
         <label for="portions" class="col-sm-2 col-form-label">Number of servings</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control-plaintext" id="portions" v-model="portions">
+          <input type="number" min="1" name="quantity" step="1" class="form-control-plaintext" id="portions" v-model="portions">
         </div>
       </div>
 
@@ -99,6 +99,13 @@
         <label for="portions" class="col-sm-2 col-form-label">Sale date</label>
         <div class="col-sm-10">
           <input type="date" class="form-control-plaintext" id="portion" v-model="saleDate">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="portions" class="col-sm-2 col-form-label">Expiration date</label>
+        <div class="col-sm-10">
+          <input type="date" class="form-control-plaintext" id="portionBis" v-model="expirationDate">
         </div>
       </div>
 
@@ -216,7 +223,7 @@ export default {
       diets : [],
       title : '',
       description : '',
-      specification : '',
+      specifications : '',
       typeOfCuisine : '',
       portions : 0,
       suggestedPriceMin : null,
@@ -231,6 +238,7 @@ export default {
       zipCode : '',
       address : '',
       saleDate : null,
+      expirationDate : null,
       strRequestEstimatePrice : '',
       offer: null,
       lastIngredient : [],
@@ -256,7 +264,7 @@ export default {
         }
 
         document.getElementById("listIngredients").appendChild(newInput);
-        this.recipeIngredients = document.getElementsByClassName("form-control inputs");
+        // this.recipeIngredients = document.getElementsByClassName("form-control inputs");
         // for (var i=0;i<this.recipeIngredients.length;i++){
         //   console.log(this.recipeIngredients[i].value);
         // }
@@ -282,8 +290,8 @@ export default {
           this.lastIngredient.pop();
         }
         
-        this.recipeIngredients.splice((this.recipeIngredients.length)-1);
-        this.recipeIngredients = document.getElementsByClassName("form-control inputs");
+        // this.recipeIngredients.splice((this.recipeIngredients.length)-1);
+        // this.recipeIngredients = document.getElementsByClassName("form-control inputs");
         // for (var i=0;i<this.recipeIngredients.length;i++){
         //   console.log(this.recipeIngredients[i].value);
         // }
@@ -292,23 +300,27 @@ export default {
 
     validateInformation : async function ()
     {
-      
+      this.recipeIngredients = document.getElementsByClassName("form-control inputs");
       if(this.recipeIngredients.length==0){
         this.strRequestEstimatePrice='&ingredients=';
       }else{
         for (let i = 0; i < this.recipeIngredients.length; i++) {
-          this.strRequestEstimatePrice = this.strRequestEstimatePrice + '&ingredients='+ this.recipeIngredients[i];
+          this.strRequestEstimatePrice += '&ingredients='+ this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].text;
         }
       }
-      this.recipeIngredients = document.getElementsByClassName("form-control inputs");
-      for (let i=0; i< this.recipeIngredients.length;i++){
-        console.log(this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].text)
-        console.log(this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].value)
-      }
+     
+      // for (let i=0; i< this.recipeIngredients.length;i++){
+      //   // console.log(this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].text)
+      //   // console.log(this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].value)
+      // }
       
+      var resultEstimate
 
-     // await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
-       //  .then(response => (this.suggestedPrice = response.data.priceestimate));
+      await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
+        .then(response => (resultEstimate = response.data));
+      
+      this.suggestedPriceMin=resultEstimate.min;
+      this.suggestedPriceMax=resultEstimate.max;
       document.getElementById("validate").style.display = "none";
       // var url = "";
       // var list = document.getElementsByClassName("ingredient");
@@ -339,26 +351,48 @@ export default {
      
       console.log('save');
       var makeOfferUrlIngredients='';
+      this.recipeIngredients = document.getElementsByClassName("form-control inputs");
       if(this.recipeIngredients.length==0){
         makeOfferUrlIngredients='&ingredients=';
       }else{
         for (let i = 0; i < this.recipeIngredients.length; i++) {
-          makeOfferUrlIngredients = makeOfferUrlIngredients + '&ingredients='+ this.recipeIngredients[i];
+          makeOfferUrlIngredients += '&ingredients='+ this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].value;
         }
       }
+      console.log(makeOfferUrlIngredients)
+      
 
-      var makeOfferUrlDiet=document.getElementsByClassName("col-sm-diet");
-      for(let i =0;i<makeOfferUrlDiet.length;i++){
-        if (makeOfferUrlDiet[i].checked){
-          console.log(makeOfferUrlDiet[i].value);
+      var makeOfferUrlDiets='';
+      var selectedDiets=document.getElementsByClassName("col-sm-diet");
+      for(let i =0;i<selectedDiets.length;i++){
+        if (selectedDiets[i].checked){
+            makeOfferUrlDiets += '&preferences='+ selectedDiets[i].value;
+            console.log(selectedDiets[i].value);
         }
       }
+      console.log(makeOfferUrlDiets)
+      
+      var expirationDateParsed = this.expirationDate.split('-');
+      var fromDateDateParsed = this.saleDate.split('-');
+      console.log(this.specifications);
+      await axios.get(urlAPI + 'todo=makeOffer&fromDate='+fromDateDateParsed[2]+'-'+fromDateDateParsed[1]+'-'+fromDateDateParsed[0]+
+                      '&title='+this.title+'&totalPortions='+this.portions+
+                      '&details='+this.details+'&address='+this.address+
+                      '&city='+this.city+'&zipcode='+this.zipCode+
+                      '&expDate='+expirationDateParsed[2]+'-'+expirationDateParsed[1]+
+                      '-'+expirationDateParsed[0]+'&photoPath='+makeOfferUrlIngredients+
+                      '&preferences='+this.typeOfCuisine+makeOfferUrlDiets+
+                      '&specifications='+this.specifications)
+        .then(response => (this.offer = response.data));
       
       
-
-      /*await axios.get(urlAPI + 'todo=makeOffer&fromDate='++'&title='+'&totalPortions='+'&details='+'&address='+'&city='+'&zipcode='+'&expDate='+'&photoPath='+'&ingredients=')
-        .then(response => (this.offer = response.data.offer));
-      */
+      await axios.get(urlAPI + 'todo=setPrice&offerId='+this.offer.id+
+                      '&price='+this.sellingPrice)
+        .then(response => (this.offer = response.data));
+      await axios.get(urlAPI + 'todo=publishOffer&offerId='+this.offer.id)
+        .then(response => (this.offer = response.data));
+      
+      
       document.getElementById("saveBtn").style.display = "none";
       document.getElementById("cancelBtn").style.display = "none";
       this.show = 2;
