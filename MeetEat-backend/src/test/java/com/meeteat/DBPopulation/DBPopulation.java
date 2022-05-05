@@ -265,7 +265,8 @@ public class DBPopulation {
     }
     private List<Ingredient> getIngredientsForOffer(){
         int min = 0;
-        int max = ingredientsList.size();
+        int max = 10;
+        assert(ingredientsList.size() >= max );
         Number number = faker.number();
         int lower = number.numberBetween(min, max);
         int upper = number.numberBetween(lower, max);
@@ -309,6 +310,9 @@ public class DBPopulation {
     
     private String generateFoodImage(List<Ingredient> ingredients){
         JsonObject json = service.getSpoonacularResponseByIngredients(ingredients);
+        if(json == null){
+            return defaultImageURL;
+        }
         String imageURL = json.get("image").getAsString();
         return imageURL;
     }
