@@ -3,7 +3,6 @@
 
   <div class="container-fluid px-1 py-5 mx-auto">
 
-
     <template v-if="reviews.hasReviews">
       <div class="row justify-content-center">
         <div class="col-xl-7 col-lg-8 col-md-10 col-12 text-center mb-5">
@@ -76,7 +75,7 @@
           <div class="" v-for="review in reviews.reviews" :key="review.id">
             <div class="card">
               <div class="row d-flex">
-                <div class=""> <img class="profile-pic" src="https://i.imgur.com/V3ICjlm.jpg"> </div>
+                <div class=""> <img class="profile-pic" v-bind:src="review.reviewingUser_photo"> </div>
                 <div class="">
                   <h3 class="mt-2 mb-0">{{ review.reviewingUser_firstName }} {{ review.reviewingUser_lastName }}</h3>
                   <br/>
@@ -92,7 +91,7 @@
 
               </div>
               <div class="row text-left">
-                <h4 class="blue-text mt-3">{{ remarks[review.nbOfStars] }}</h4>
+                <h4 class="blue-text mt-3">{{ remarks[review.nbOfStars-1] }}</h4>
 
               </div>
               <div class="row text-left">
@@ -128,7 +127,7 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem("user"));
     this.user = this.user.user;
     console.log(this.user);
-    await axios.get(urlAPI+'todo=consultCooksReviews&userId='+7)
+    await axios.get(urlAPI+'todo=consultCooksReviews&userId='+this.user.id)
     .then(response =>(this.reviews = response.data))
     console.log(this.reviews)
 

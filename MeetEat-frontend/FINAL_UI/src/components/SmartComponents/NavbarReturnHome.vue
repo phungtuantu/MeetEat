@@ -8,7 +8,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-        <h1 class="display-5">MeetEat</h1>
+        <h1 class="display-5"> MeetEat </h1>
           <a><img src="../../assets/MeetEat_logo.jpg" width="35px" @click="goHome()"></a>
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
           </ul>
@@ -60,6 +60,7 @@
                 <a @click="modifyAccount()">MODIFY ACCOUNT</a>
                 <a @click="editPreferences()">EDIT MY PREFERENCES</a>
                 <a @click="orders()">MY ORDERS</a>
+                <a @click="viewReviews()">VIEW REVIEWS</a>
                 <a @click="logOut()">LOG OUT</a>
               </div>
             </div>
@@ -107,6 +108,9 @@ export default {
     },
     editPreferences : function(){
       router.replace('/selectpreferences');
+    },
+    viewReviews : function(){
+      router.replace('/viewreviews');
     },
     orders : function(){
       router.replace('/history');
@@ -207,6 +211,11 @@ display: block;
 background-color: black;
 /*border: thick double green ;*/
 margin: 5px;
+}
+
+h1{
+ margin-right: 10px;
+ color: #2ecc71;
 }
 /*.dropdown:hover .dropdown-child {
 display: block;

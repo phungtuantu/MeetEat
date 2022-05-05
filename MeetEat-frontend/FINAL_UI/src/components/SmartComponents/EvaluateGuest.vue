@@ -49,7 +49,10 @@
                 "How did the meal or meeting go (punctuality, politeness, etc.)? Would you recommend this member to the community?" 
                 rows="4"></textarea> 
             </div>
-            <div class="pull-right"> 
+            <div class="pull-right">
+                    <button class="btn btn-danger send btn-sm" @click="history()">Cancel 
+                        <i class="fa fa-long-arrow-right ml-1"></i>
+                    </button>
                     <button class="btn btn-success send btn-sm">Send 
                         <i class="fa fa-long-arrow-right ml-1"></i>
                     </button> 
@@ -60,8 +63,14 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
-  name: "EvaluateGuest"
+  name: "EvaluateGuest",
+  methods: {
+    history : function(){
+      router.replace('/history');
+    }
+  },
 }
 </script>
 
@@ -175,6 +184,9 @@ figure {
 
 .rating:hover>input:checked~label:before {
     opacity: 0.4
+}
+.btn-danger{
+    margin-right: 20px;
 }
 
 </style>

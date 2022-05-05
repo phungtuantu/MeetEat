@@ -55,10 +55,13 @@
                 "How did the meal or meeting go (punctuality, politeness, etc.)? Would you recommend this member to the community?" 
                 rows="4" v-model="comment"></textarea>
             </div>
-            <div class="pull-right"> 
-                    <button class="btn btn-success send btn-sm" @click="send()">Send
-                        <i class="fa fa-long-arrow-right ml-1"></i>
-                    </button> 
+            <div class="pull-right">
+                <button class="btn btn-danger send btn-sm" @click="history()">Cancel
+                    <i class="fa fa-long-arrow-right ml-1"></i>
+                </button>
+                <button class="btn btn-success send btn-sm" @click="send()">Send
+                    <i class="fa fa-long-arrow-right ml-1"></i>
+                </button> 
             </div>
         </div>
     </div>
@@ -83,6 +86,9 @@ export default {
   },
 
   methods: {
+    history : function(){
+      router.replace('/history');
+    },
     send : async function () {
 
       var max = 0;
@@ -235,6 +241,10 @@ figure {
 
 .rating:hover>input:checked~label:before {
     opacity: 0.4
+}
+
+.btn-danger{
+    margin-right: 20px;
 }
 
 </style>
