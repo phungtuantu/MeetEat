@@ -166,6 +166,7 @@ public class DBPopulation {
             List<Ingredient> ingredients = getIngredientsForOffer();
             List<PreferenceTag> classifications = getPreferenceTagForOffer();
             Cook cook = service.findCookById(cookIdList.get(number.numberBetween(min, cookIdList.size())));
+            assert(cook != null);
             Food food = faker.food();
             dat = faker.date();
             String title = food.dish();
@@ -195,6 +196,7 @@ public class DBPopulation {
         for(int i = 0; i<nbOffersToPublish; i++){
             int chosenOffer = number.numberBetween(0, createdOfferList.size());
             Offer offerToPublish = service.getOfferById(createdOfferList.get(chosenOffer));
+            assert(offerToPublish.getCook() != null);
             try{
                 offerToPublish = service.publishOffer(offerToPublish.getId());
             }catch(Exception e){
