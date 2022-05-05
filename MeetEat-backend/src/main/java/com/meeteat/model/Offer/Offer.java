@@ -255,7 +255,7 @@ public class Offer implements Serializable {
     }
     
     public boolean expired(Date date){
-        if(this.expirationDate.after(date)){
+        if(this.expirationDate.before(date)){
             this.state = offerState.UNAVAILABLE;
             return true;
         }
