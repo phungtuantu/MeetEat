@@ -27,7 +27,7 @@
             <div class="row">
               <div class="col-sm"  id="listIngredients">
                 <select name="m" id="w" class="form-control inputs">
-                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.value">
+                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
                       {{ing.name}}
                     </option>
                   </select>
@@ -241,7 +241,7 @@ export default {
 
     addIngredients : function () {
 
-        console.log('add');
+        // console.log('add');
         this.numberOfIngredients ++;
         var newInput = document.createElement("select");
         newInput.setAttribute("class", "form-control inputs");
@@ -257,9 +257,9 @@ export default {
 
         document.getElementById("listIngredients").appendChild(newInput);
         this.recipeIngredients = document.getElementsByClassName("form-control inputs");
-        for (var i=0;i<this.recipeIngredients.length;i++){
-          console.log(this.recipeIngredients[i].value);
-        }
+        // for (var i=0;i<this.recipeIngredients.length;i++){
+        //   console.log(this.recipeIngredients[i].value);
+        // }
         /*
         var br = document.createElement("br");
         var newButton = document.createElement("button");
@@ -284,9 +284,9 @@ export default {
         
         this.recipeIngredients.splice((this.recipeIngredients.length)-1);
         this.recipeIngredients = document.getElementsByClassName("form-control inputs");
-        for (var i=0;i<this.recipeIngredients.length;i++){
-          console.log(this.recipeIngredients[i].value);
-        }
+        // for (var i=0;i<this.recipeIngredients.length;i++){
+        //   console.log(this.recipeIngredients[i].value);
+        // }
         return 0;
       },
 
@@ -300,8 +300,12 @@ export default {
           this.strRequestEstimatePrice = this.strRequestEstimatePrice + '&ingredients='+ this.recipeIngredients[i];
         }
       }
-      console.log(this.recipeIngredients[0].value)
-      console.log(this.recipeIngredients[0].id)
+      this.recipeIngredients = document.getElementsByClassName("form-control inputs");
+      for (let i=0; i< this.recipeIngredients.length;i++){
+        console.log(this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].text)
+        console.log(this.recipeIngredients[i].options[this.recipeIngredients[i].selectedIndex].value)
+      }
+      
 
      // await axios.get(urlAPI + 'todo=estimatePrice' + this.strRequestEstimatePrice)
        //  .then(response => (this.suggestedPrice = response.data.priceestimate));
