@@ -19,6 +19,7 @@ import com.meeteat.dao.JpaTool;
 import com.meeteat.model.Offer.Offer;
 import com.meeteat.model.Offer.Reservation;
 import com.meeteat.model.Offer.ReservationState;
+import com.meeteat.model.Offer.Review;
 import com.meeteat.model.Preference.Cuisine;
 import com.meeteat.model.Preference.Diet;
 import com.meeteat.model.Preference.Ingredient;
@@ -252,11 +253,27 @@ public class DBPopulation {
     }
     
     public void createReviews(int nbReviews){
-        
+        for(int i =0; i<nbReviews; i++){
+            Number number = faker.number();
+            int reservationId = number.numberBetween(0, reservationList.size()-1);
+            Reservation reservation = service.findReservationById(reservationList.get(reservationId));
+            assert(reservation != null);
+            User user1 = reservation.getOffer().getCook().getUser();
+            User user2 = reservation.getCustomer();
+            int nbStars = number.numberBetween(0, 5);
+            String comment = faker.harryPotter().spell();
+            if(i%2==0){
+                Review review = new Review(reservation, user1, user2, nbStars, comment);
+                service.createReview(review);
+            }else{
+                Review review = new Review(reservation, user2, user1, nbStars, comment);
+                service.createReview(review);
+            }    
+        }
     }
     
     public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, 
-                                 int nbOffers, int nbOffersToPublish, int nbReservations){
+                                 int nbOffers, int nbOffersToPublish, int nbReservations, int nbReviews){
         JpaTool.init();
         createUsers(nbUsers);
         createCooks(nbCooks);
@@ -266,10 +283,12 @@ public class DBPopulation {
         createOffers(nbOffers);
         publishOffers(nbOffersToPublish);
         createReservations(nbReservations);
+        createReviews(nbReviews);
         int expired = service.checkOffersExpirationDate();
         System.out.println(expired + " offers expired today");
         JpaTool.destroy();
     }
+    
     private List<Ingredient> getIngredientsForOffer(){
         int min = 0;
         int max = 10;
@@ -356,7 +375,7 @@ public class DBPopulation {
     
     public static void main(String [] args){
         DBPopulation dbp = new DBPopulation();
-        dbp.populateDatabase(100, 30, 200, 20, 50, 30, 20);
+        dbp.populateDatabase(100, 30, 200, 20, 50, 30, 20, 40);
         //public void populateDatabase(int nbUsers, int nbCooks, int nbIngredients, int nbCuisines, 
         //                         int nbOffers, int nbOffersToPublish, int nbReservations){
     }

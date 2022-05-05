@@ -345,7 +345,25 @@ public class Service {
             JpaTool.validateTransaction();
             canceled = true;
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling setPrice", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling cancelOffer", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return canceled;
+    }
+    
+    public boolean cancelReservation(Long reservationId) {
+        JpaTool.createPersistenceContext();
+        boolean canceled = false;
+        try {
+            JpaTool.openTransaction();
+            Reservation reservation = reservationDao.searchById(reservationId);
+            reservationDao.delete(reservation);
+            JpaTool.validateTransaction();
+            canceled = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling cancelReservation", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -537,6 +555,24 @@ public class Service {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling createReview", ex);
             JpaTool.cancelTransaction();
             result = null;
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public boolean updateRating(Cook cook, int reviewNote) {
+        boolean result = false;
+        JpaTool.createPersistenceContext(); 
+        try {
+            JpaTool.openTransaction();
+            cook.updateRating(reviewNote);
+            cookDao.merge(cook);
+            JpaTool.validateTransaction();
+            result = true;
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling updateRating", ex);
+            JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
         }
@@ -900,6 +936,22 @@ public class Service {
         }
         return reservationsList;
     }
+    
+    public List<Reservation> viewReservationsRequests(Cook cook) {
+        //view the reservations requests made by users for offers of a cook
+        List<Reservation> reservationsList = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            reservationsList = reservationDao.getReservationsRequests(cook.getId());
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewReservationsList", ex);
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return reservationsList;
+    }
 
     public Long becomeCook(CookRequest cookRequest) {
         Long result = null;
@@ -925,6 +977,9 @@ public class Service {
         try {
             JpaTool.openTransaction();
             List <Offer> madeOffers = offerDao.getOffers(cookId);
+            System.out.println("cook: "+cookId);
+            System.out.println(madeOffers.get(0).getId());
+
             for (Offer offer : madeOffers){
                 if (result==null){
                     result = reviewDao.getOffersReviews(offer.getId());
@@ -935,6 +990,22 @@ public class Service {
             JpaTool.validateTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewCooksReviews", ex);
+            JpaTool.cancelTransaction();
+        } finally {
+            JpaTool.closePersistenceContext();
+        }
+        return result;
+    }
+    
+    public List<Review> viewGuestReviews(User user){
+        List<Review> result = null;
+        JpaTool.createPersistenceContext();
+        try {
+            JpaTool.openTransaction();
+            result = reviewDao.getGuestReviews(user);
+            JpaTool.validateTransaction();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception in calling viewGuestsReviews", ex);
             JpaTool.cancelTransaction();
         } finally {
             JpaTool.closePersistenceContext();
@@ -957,6 +1028,7 @@ public class Service {
         }
         return offersList;
     }
+    
     public List<Diet> viewDiets() {
         List<Diet> dietsList = null;
         JpaTool.createPersistenceContext();
@@ -971,6 +1043,7 @@ public class Service {
         }
         return dietsList;
     }
+    
     public List<Cuisine> viewCuisines() {
         List<Cuisine> cuisinesList = null;
         JpaTool.createPersistenceContext();

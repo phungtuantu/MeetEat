@@ -38,4 +38,13 @@ public class ReservationDao extends AbstractDao<Reservation> {
         List<Reservation> reservations = query.getResultList();
         return reservations;
     }
+    public List<Reservation> getReservationsRequests(Long cookId){
+        EntityManager em = JpaTool.obtainPersistenceContext();
+        String jpql="select r from Reservation r where r.offer.cook.id= :cookId AND r.state = :state";
+        TypedQuery query=em.createQuery(jpql, Reservation.class);
+        query.setParameter("cookId",cookId);
+        query.setParameter("state",ReservationState.REQUEST);
+        List<Reservation> reservations = query.getResultList();
+        return reservations;
+    }
 }
