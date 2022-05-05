@@ -57,9 +57,7 @@
 
 
     <div class="col-8">
-      <div style="text-align: right; margin-bottom: 30px;">
-        <button type="button" class="btn btn-dark" @click="seeBasket()">My basket</button>
-      </div>
+    
       <h1 class="noOffer" id="noOffer" style="display:none;">No offer</h1>
 
       <div class="card" v-for="offer in orders" :key="offer.id">
@@ -145,17 +143,31 @@ export default {
       }
 
       // console.log(searchOffersUrl)
-
+      var resultsearchOffer;
       await axios.get(searchOffersUrl)
-        .then(response => (this.orders = response.data));
+        .then(response => (resultsearchOffer = response.data));
+      
+      this.orders = resultsearchOffer.offers
 
-      if (!this.orders.hasResults){
-          document.getElementById("noOffer").style.display="block";
-      } else{
-          document.getElementById("noOffer").style.display="none";
+      if (resultsearchOffer.hasResults){
+        for (let i=this.orders.length-1; i>=0;i--){
+          this.orders[i].distanceToUser=Math.round(this.orders[i].distanceToUser)
+          if (this.orders[i].distanceToUser>2000){
+            this.orders.splice(i,1);
+          }
+        }
+
+        if (this.orders.length!==0){
+            document.getElementById("noOffer").style.display="none";
+        } else{
+            document.getElementById("noOffer").style.display="block";
+        }
+      } else {
+        document.getElementById("noOffer").style.display="block";
       }
 
-      this.orders = this.orders.offers
+      
+
     },
 
   },
@@ -164,25 +176,32 @@ export default {
     var resultConsultOffer;
     await axios.get(urlAPI + 'todo=consultOffers&address=' + this.city)
         .then(response => (resultConsultOffer = response.data));
-    this.orders = resultConsultOffer.offers;
-    for (let i=this.orders.length-1; i>=0;i--){
-      this.orders[i].distanceToUser=Math.round(this.orders[i].distanceToUser)
-      if (this.orders[i].distanceToUser>2000){
-        this.orders.splice(i,1);
-      }
-    }
-    await axios.get(urlAPI + 'todo=viewDiets')
-        .then(response => (this.diets = response.data.preferenceTags));
-    await axios.get(urlAPI + 'todo=viewCuisines')
-        .then(response => (this.cuisines = response.data.preferenceTags));
     
-    if (this.orders.length!==0){
-      document.getElementById("noOffer").style.display="none";
-    } else{
+    this.orders = resultConsultOffer.offers;
+
+    if (resultConsultOffer.hasResults){
+      for (let i=this.orders.length-1; i>=0;i--){
+        this.orders[i].distanceToUser=Math.round(this.orders[i].distanceToUser)
+        if (this.orders[i].distanceToUser>2000){
+          this.orders.splice(i,1);
+        }
+      }
+      await axios.get(urlAPI + 'todo=viewDiets')
+          .then(response => (this.diets = response.data.preferenceTags));
+      await axios.get(urlAPI + 'todo=viewCuisines')
+          .then(response => (this.cuisines = response.data.preferenceTags));
+      
+      if (this.orders.length!==0){
+        document.getElementById("noOffer").style.display="none";
+      } else{
+        document.getElementById("noOffer").style.display="block";
+      }
+    } else {
       document.getElementById("noOffer").style.display="block";
     }
+    
 
-    console.log(this.orders);
+    // console.log(this.orders);
     // console.log(this.city);
   }
 }
