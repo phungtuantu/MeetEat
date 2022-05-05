@@ -31,26 +31,31 @@ public class SerialisationReviews extends Serialisation{
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         
         JsonArray jsonReviewList = new JsonArray();
-        reviews.stream().map(review->{
-            JsonObject jsonReview = new JsonObject();
-            
-            jsonReview.addProperty("comment",review.getComment());
-        
-            jsonReview.addProperty("nbOfStars",review.getNbOfStars());
-            jsonReview.addProperty("reviewedUser_firstName", review.getReviewedUser().getFirstName());
-            jsonReview.addProperty("reviewedUser_lastName", review.getReviewedUser().getLastName());
-            jsonReview.addProperty("reviewingUser_firstName", review.getReviewingUser().getFirstName());
-            jsonReview.addProperty("reviewingUser_lastName", review.getReviewingUser().getLastName());
-            jsonReview.addProperty("reviewingUser_photo", review.getReviewingUser().getProfilePhotoPath());
-            jsonReview.addProperty("orderName", review.getSource().getOffer().getTitle());
-            jsonReview.addProperty("reversationDate", df.format(review.getSource().getReservationDate()));
-            
-            return jsonReview;
-        }).forEachOrdered(jsonReview -> {
-            jsonReviewList.add(jsonReview);
-        });
-        
-        container.add("reviews",jsonReviewList);
+        if (reviews==null || reviews.isEmpty()){
+            container.addProperty("hasReviews",false);
+        } else{
+            container.addProperty("hasReviews",true);
+            reviews.stream().map(review->{
+                JsonObject jsonReview = new JsonObject();
+
+                jsonReview.addProperty("comment",review.getComment());
+
+                jsonReview.addProperty("nbOfStars",review.getNbOfStars());
+                jsonReview.addProperty("reviewedUser_firstName", review.getReviewedUser().getFirstName());
+                jsonReview.addProperty("reviewedUser_lastName", review.getReviewedUser().getLastName());
+                jsonReview.addProperty("reviewingUser_firstName", review.getReviewingUser().getFirstName());
+                jsonReview.addProperty("reviewingUser_lastName", review.getReviewingUser().getLastName());
+                jsonReview.addProperty("reviewingUser_photo", review.getReviewingUser().getProfilePhotoPath());
+                jsonReview.addProperty("orderName", review.getSource().getOffer().getTitle());
+                jsonReview.addProperty("reversationDate", df.format(review.getSource().getReservationDate()));
+
+                return jsonReview;
+            }).forEachOrdered(jsonReview -> {
+                jsonReviewList.add(jsonReview);
+            });
+
+            container.add("reviews",jsonReviewList);
+        }
         
         try (PrintWriter out = this.getWriter(response)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
