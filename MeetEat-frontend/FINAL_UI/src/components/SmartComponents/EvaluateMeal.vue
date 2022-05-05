@@ -1,5 +1,5 @@
 <template>
-<div class="container mt-5 d-flex justify-content-center">
+<div class="container mt-5 d-flex justify-content-center" v-if="reservation !== null">
     <div class="card p-4 mt-3">
         <div class = "container-fluid">
          <h4 class="heading">Evaluate your order</h4>
@@ -11,14 +11,14 @@
             </div>
             <div class = "col-sm-8">
                 <div class="row">
-                    <div class="col-7"><h6 class="heading">Peruvian Ceviche</h6></div>
-                    <div class="date"><img src="../../assets/calendar.png" width="20px">23 September</div>
+                    <div class="col-7"><h6 class="heading">{{reservation.offer.title}}</h6></div>
+                    <div class="date"><img src="../../assets/calendar.png" width="20px">{{reservation.reservationDate}}</div>
                 </div>
-                <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                <p class="">{{reservation.offer.details}}</p>
                 <div class="row">
-                    <div class="col-4">1 portion</div>
+                    <div class="col-4"> {{reservation.nbOfPortion}}portion</div>
                     <div class="col-1"> <img src="../../assets/point.png" width="10px"> </div>
-                    <div class="col-3">6€</div>
+                    <div class="col-3">{{reservation.offer.price * reservation.nbOfPortion}}$</div>
                 </div>
             </div>
             <div class = "col-sm-1">
@@ -36,15 +36,15 @@
             <br/>
             <h4 class="heading">Rate your order out of 5</h4>
             <div class="rating"> 
-                <input type="radio" name="rating" value="5" id="5">
+                <input type="radio" name="rating" value="5" id="5" class="star">
                 <label for="5">☆</label> 
-                <input type="radio" name="rating" value="4" id="4">
+                <input type="radio" name="rating" value="4" id="4" class="star">
                 <label for="4">☆</label> 
-                <input type="radio" name="rating" value="3" id="3">
+                <input type="radio" name="rating" value="3" id="3" class="star">
                 <label for="3">☆</label> 
-                <input type="radio" name="rating" value="2" id="2">
+                <input type="radio" name="rating" value="2" id="2" class="star">
                 <label for="2">☆</label> 
-                <input type="radio" name="rating" value="1" id="1">
+                <input type="radio" name="rating" value="1" id="1" class="star">
                 <label for="1">☆</label> 
             </div>
             <br/> <br/>
@@ -53,10 +53,10 @@
             <div class="comment-area">
                 <textarea class="form-control" placeholder=
                 "How did the meal or meeting go (punctuality, politeness, etc.)? Would you recommend this member to the community?" 
-                rows="4"></textarea> 
+                rows="4" v-model="comment"></textarea>
             </div>
             <div class="pull-right"> 
-                    <button class="btn btn-success send btn-sm">Send 
+                    <button class="btn btn-success send btn-sm" @click="send()">Send
                         <i class="fa fa-long-arrow-right ml-1"></i>
                     </button> 
             </div>
@@ -66,8 +66,63 @@
 </template>
 
 <script>
+import axios from "axios";
+import {urlAPI} from "@/variables";
+
 export default {
-  name: "EvaluateMeal"
+  name: "EvaluateMeal",
+  data(){
+    return {
+      idReservation : 258,
+      reservation : null,
+      cook : null,
+      comment : '',
+      nbStars : 0,
+    }
+  },
+
+  methods: {
+    send : async function () {
+
+      var max = 0;
+      var arr = document.getElementsByClassName("star");
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].checked) {
+          if(arr[i].value > max){
+            max = arr[i].value;
+          }
+        }
+      }
+      this.nbStars = max;
+
+      if(this.comment ===''){
+        this.comment = 'No comment'
+      }
+
+      console.log(arr);
+
+      console.log(urlAPI + "todo=evaluateMeal&userId="+this.reservation.customerId+"&nbOfStars="+this.nbStars+"&comment="+this.comment+"&reservation_Id="+this.reservation.id);
+      await axios.get(urlAPI + "todo=evaluateMeal&userId="+this.reservation.customerId+"&nbOfStars="+this.nbStars+"&comment="+this.comment+"&reservation_Id="+this.reservation.id);
+      /**
+       * evaluateMeal
+       * Long userId = (Long)session.getAttribute("userId");
+       *         int nbOfStars = Integer.parseInt(request.getParameter("nbOfStars"));
+       *         String comment = request.getParameter("comment");
+       *         Long sourceReservation_id = Long.parseLong(request.getParameter("reservation_Id"));
+       */
+    }
+  },
+  async mounted() {
+    //viewReservationsList
+    await axios.get(urlAPI+'todo=viewReservationDetails&reservationId='+this.idReservation)
+    .then(response => (this.reservation = response.data))
+
+    console.log(this.reservation);
+
+
+
+
+  }
 }
 </script>
 

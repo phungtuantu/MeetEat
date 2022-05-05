@@ -1,11 +1,104 @@
 <template>
-<div>
-  <div class="form-row justify-content-md-left">
-      <div class="left">
-        <h1>Diet</h1>
-      </div>
-  </div>
+<div style="padding:30px;">
 
+  <form align="center">
+    <h1>Diet</h1>
+    <div class="form-group" style="text-align: center">
+      <div class="row">
+        <div class="col-sm-10">
+          <div class="row">
+            <article class=" col-sm">
+              <input id="dairyFree" type="checkbox" v-bind:value="diaryFreeID"/>
+              <div>
+                  <span>
+                    Dairy free
+                  </span>
+              </div>
+            </article>
+
+            <article class=" col-sm">
+              <input id="glutenFree" type="checkbox" v-bind:value="glutenFreeID"/>
+              <div>
+                  <span>
+                    Gluten free
+                  </span>
+              </div>
+            </article>
+
+            <article class=" col-sm">
+              <input id="noPork" type="checkbox" v-bind:value="noPorkID"/>
+              <div>
+                  <span>
+                    No pork
+                  </span>
+              </div>
+            </article>
+
+            <article class=" col-sm">
+              <input id="vegan" type="checkbox" v-bind:value="veganID"/>
+              <div>
+                  <span>
+                    Vegan
+                  </span>
+              </div>
+            </article>
+
+            <article class=" col-sm">
+              <input id="Vegetarian" type="checkbox" v-bind:value="vegetarianID"/>
+              <div>
+                  <span>
+                    Vegetarian
+                  </span>
+              </div>
+            </article>
+
+            <article class=" col-sm">
+              <input id="Pesco-vegetarian" type="checkbox" v-bind:value="pescoID"/>
+              <div>
+                  <span>
+                    Pesco-vegetarian
+                  </span>
+              </div>
+            </article>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+      <h1>Preferences</h1>
+      <h4>Besides special diets, are there any ingredients you don't like ?</h4>
+      <div class="form-group row" style="padding-left: 30%;">
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm"  id="listIngredients">
+                <select name="m" id="w" class="form-control inputs">
+                  <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
+                    {{ing.name}}
+                  </option>
+                </select>
+            </div>
+            <div class="col-sm-3"  id="listDeleteButton">
+              <button type="button" class="btn btn-success"  @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete</button>
+            </div>
+          </div>
+          <br/>
+          <button type="button" class="btn btn-success"  @click='addIngredients'>Add an ingredient</button>
+
+        </div>
+      </div>
+
+
+
+    <button type="button" class="btn btn-success btn-block btn-lg" @click="save()">Save</button>
+
+
+
+
+  </form>
+
+  <!--
     <section class="menu">
         <div class="left">
             <figure>
@@ -23,26 +116,26 @@
             <figure>
                 <a href="">
                     <img src="../../assets/icons8-no-pork-50.png" alt="no-pork" width="70px">
-                </a>  
-                <figcaption>No pork</figcaption>      
+                </a>
+                <figcaption>No pork</figcaption>
             </figure>
             <figure>
                 <a href="">
                     <img src="../../assets/icons8-vegan-mark-50.png" alt="vegan-mark" width="70px">
-                </a>  
-                <figcaption>Vegan</figcaption>      
+                </a>
+                <figcaption>Vegan</figcaption>
             </figure>
             <figure>
                 <a href="">
                     <img src="../../assets/icons8-carrot-50.png" alt="vegetarian-carrot" width="70px">
-                </a>  
-                <figcaption>Vegetarian</figcaption>      
+                </a>
+                <figcaption>Vegetarian</figcaption>
             </figure>
             <figure>
                 <a href="">
                     <img src="../../assets/icons8-whole-fish-50.png" alt="pesco-vegetarian" width="70px">
-                </a>  
-                <figcaption>Pesco-vegetarian</figcaption>      
+                </a>
+                <figcaption>Pesco-vegetarian</figcaption>
             </figure>
         </div>
     </section>
@@ -89,20 +182,140 @@
             <button class="button_validate" type="button">Validate</button>
         </div>
     </div>
-    
+
     <div class="form-row justify-content-md-left">
         <button class="button_save" type="button">Save</button>
     </div>
+    -->
 
 </div>
 </template>
 
 <script>
 
+import axios from "axios";
+import {urlAPI} from "@/variables";
+
 export default {
     name: "SelectPreferences",
+  data(){
+    return {
+      ingredient : null,
+      numberOfIngredients : 1,
+      vegetarianID : 201,
+      veganID : 202,
+      pescoID : 203,
+      diaryFreeID : 204,
+      glutenFreeID : 205,
+      noPorkID : 206,
+      user : null,
+      ingredients : [],
+    }
+  },
     methods: {
-        myFunction: function(id)
+      save : function (){
+
+        var ingredients = document.getElementsByClassName("inputs");
+        var arr = [];
+        for(var i =0; i < ingredients.length; i++){
+          if(ingredients[i].value !== '' && ingredients[i].value !== null){
+            arr.push(ingredients[i].value);
+          }
+        }
+        console.log('ARR');
+
+        console.log(arr);
+        var diet = ["dairyFree",
+          "glutenFree",
+          "noPork",
+          "vegan",
+          "Vegetarian",
+          "Pesco-vegetarian"];
+
+        var dietChecked = [];
+        for(var j=0; j<diet.length; j++){
+          if(document.getElementById(diet[j]).checked){
+            dietChecked.push(document.getElementById(diet[j]).value);
+            console.log(document.getElementById(diet[j]))
+          }
+        }
+
+
+        var atLeastOne = 0;
+        console.log(dietChecked);
+        var request = urlAPI+'todo=specifiyPreferences&userId='+this.user.id+'&requestPreferences=';
+        for(let k = 0; k<dietChecked.length; k++){
+          if(atLeastOne === 1){
+            request += ','+dietChecked[k];
+          }else{
+            request += dietChecked[k];
+            atLeastOne = 1;
+          }
+        }
+
+        var atLeastOne2 = 0;
+        for(let k = 0; k<arr.length; k++){
+          if(atLeastOne2 === 1 || (atLeastOne2===0 && atLeastOne===1)){
+            request += ','+arr[k];
+          }else{
+            request += arr[k];
+            atLeastOne2 = 1;
+          }
+        }
+
+        console.log(this.user);
+        console.log(request);
+        var resp;
+        axios.get(request).then(response => (resp = response.data));
+        console.log(resp);
+
+
+        //specifiyPreferences
+        //userId
+      },
+      addIngredients : function () {
+
+        console.log('add');
+        this.numberOfIngredients ++;
+        var newInput = document.createElement("select");
+        newInput.setAttribute("class", "form-control inputs");
+        newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
+
+        for(let i=0; i<this.ingredients.length; i++){
+          var option = document.createElement("option");
+          option.setAttribute("value", this.ingredients[i].id);
+          option.innerText = this.ingredients[i].name;
+          newInput.appendChild(option);
+        }
+
+        document.getElementById("listIngredients").appendChild(newInput);
+
+        var br = document.createElement("br");
+
+        var newButton = document.createElement("button");
+        newButton.setAttribute("type", "button");
+        newButton.setAttribute("class", "btn btn-success");
+        newButton.setAttribute("id", "button"+this.numberOfIngredients);
+        newButton.setAttribute("@click", this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients));
+
+        newButton.innerText = "Delete";
+        document.getElementById("listDeleteButton").appendChild(br);
+        document.getElementById("listDeleteButton").appendChild(newButton);
+
+      },
+
+      deleteIngredients : function (ingredient, index)
+      {
+        console.log(ingredient + ' ' + index);
+
+        //document.getElementById("button"+index).remove();
+        //document.getElementById("ingredients"+index).remove();
+
+
+        return 0;
+      },
+
+      myFunction: function(id)
         {
           document.getElementById("myDropdown"+id.toString()).classList.toggle("show");
         },
@@ -122,62 +335,19 @@ export default {
                 }
             }
         },
-        /**addIngredients : function () {
-            var newDropDown = document.createElement("div");
-            newDropDown.setAttribute("class", "dropdown");
-            
-            // Button
-            var button_drop = document.createElement("button");
-            button_drop.setAttribute("class", "dropbtn");
-            button_drop.setAttribute("type", "button");
-            button_drop.innerHTML = "Find an ingredient";
-            button_drop.style.position = "relative";
-            button_drop.style.display = "inline-block";
-            button_drop.style.marginTop = "10px";
-            button_drop.style.width = "200px";
-            button_drop.style.background = "white";
-            button_drop.style.textAlign = "center";
-            button_drop.style.border = "2px solid black";
-            button_drop.style.color = "black";
-            button_drop.style.textTransform = "uppercase";
-            button_drop.style.borderRadius = "5px";
 
-            // dropdown-content = input_text + p
-            var dropdown_content = document.createElement("div");
-            dropdown_content.setAttribute("id", "myDropdown2");
-            var input_text = document.createElement("input");
-            input_text.setAttribute("type", "text");
-            input_text.setAttribute("placeholder", "Search..");
-            var p1 = document.createElement("p");
-            p1.setAttribute("value", "peanut");
-            p1.innerHTML = "Peanut";
-            var p2 = document.createElement("p");
-            p2.setAttribute("value", "garlic");
-            p2.innerHTML = "Garlic";
-            dropdown_content.appendChild(input_text);
-            dropdown_content.appendChild(p1);
-            dropdown_content.appendChild(p2);
+    },
 
-            dropdown_content.style.display = "None";
-            dropdown_content.style.position = "absolute";
-            dropdown_content.style.backgroundColor = "#f6f6f6";
-            dropdown_content.style.minWidth = "230px";
-            dropdown_content.style.overflow = "auto";
-            dropdown_content.style.border = "1px solid #ddd";
-            dropdown_content.style.zIndex = "1";
-            dropdown_content.style.textAlign = "center";
-            p1.style.color = "black";
-            p1.style.padding = "12px 16px";
-            p1.style.display = "block";
-            p2.style.color = "black";
-            p2.style.padding = "12px 16px";
-            p2.style.display = "block";
+    async mounted() {
+      this.user = JSON.parse(sessionStorage.getItem("user"))
+      this.user = this.user.user;
 
-            newDropDown.appendChild(button_drop);
-            newDropDown.appendChild(dropdown_content);
-            document.getElementById("dropdown-container").appendChild(newDropDown);
-            button_drop.addEventListener("click", this.myFunction(2));
-        },**/
+      await axios.get(urlAPI + 'todo=viewIngredients')
+          .then(response => (this.ingredients = response.data));
+
+      this.ingredients = this.ingredients.preferenceTags;
+
+      console.log(this.ingredients.preferenceTags);
     }
 }
 
@@ -185,6 +355,76 @@ export default {
 
 <style scoped>
 
+
+
+article {
+  position: relative;
+  margin: 5px;
+  float: left;
+  border: 2px solid black;
+  box-sizing: border-box;
+}
+
+article div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 25px;
+  transition: .5s ease;
+}
+
+article input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: 100px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+input[type=checkbox]:checked ~ div {
+  background-color: green;
+}
+
+.btn-dark, .btn-success2{
+  width: 50%;
+  height: 50px;
+  float: center;
+  font-size: 20px;
+}
+
+.btn-success2{
+  background-color: green;
+  color: white;
+}
+
+.btn-dark{
+  margin-left: 25%;
+}
+
+.btn-info{
+  background-color: grey;
+  margin-left: 20px;
+}
+
+.successPublish{
+  color: gray;
+  float: center;
+  margin-left: 100px;
+  margin-top: 30px;
+  font-size: 20px;
+}
+
+input[type="checkbox"]{
+  width: 100%;
+  height: 100%;
+}
+
+
+/**
 #myInput {
   box-sizing: border-box;
   background-position: 14px 12px;
@@ -309,6 +549,6 @@ export default {
 
 .button_save:hover, .button_save:focus{
     background-color: #66CC00
-}
+}**/
 
 </style>

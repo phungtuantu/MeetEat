@@ -143,23 +143,23 @@
       <div class="form-group row">
         <label for="portions" class="col-sm-2 col-form-label">Sale date</label>
         <div class="col-sm-10">
-          <input type="date" class="form-control-plaintext" id="portions" v-model="portions">
+          <input type="date" class="form-control-plaintext" id="portion" v-model="saleDate">
         </div>
       </div>
 
       <div class="form-group row">
         <label for="portions" class="col-sm-2 col-form-label">Sales address</label>
-        <input type="text" name="" placeholder="Address">
+        <input type="text" name="" placeholder="Address" v-model="address">
         </div>
 
         <div class="form-group row">
         <label for="portions" class="col-sm-2 col-form-label">Zip code </label>
-        <input type="text" name="" placeholder="Zip code">
+        <input type="text" name="" placeholder="Zip code" v-model="zipCode">
         </div>
 
         <div class="form-group row">
         <label for="portions" class="col-sm-2 col-form-label">City </label>
-            <input type="text" name="" placeholder="City">
+            <input type="text" name="" placeholder="City" v-model="city">
         </div>
 
         <div class="row">
@@ -261,6 +261,10 @@ export default {
       show : 0,
       date : null,
       numberOfIngredients : 1,
+      city : '',
+      zipCode : '',
+      address : '',
+      saleDate : null,
 
     }
   },
@@ -295,7 +299,7 @@ export default {
 
     validateInformation : function ()
     {
-        document.getElementById("validate").style.display = "none";
+      document.getElementById("validate").style.display = "none";
       this.show = 1;
     },
 
@@ -309,6 +313,16 @@ export default {
     },
 
     save : function () {
+      /**
+      var diet = ["dairyFree",
+        "glutenFree",
+        "noPork",
+        "vegan",
+        "Vegetarian",
+        "Pesco-vegetarian"]
+      **/
+
+
       console.log('save');
       document.getElementById("saveBtn").style.display = "none";
       document.getElementById("cancelBtn").style.display = "none";

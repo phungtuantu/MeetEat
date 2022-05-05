@@ -3,7 +3,7 @@
     <NavbarReturnHome></NavbarReturnHome>
     <br/>
     <div class="container">
-      <button class="btn btn-success">
+      <button class="btn btn-success" @click="createButton()">
         Add an offer
       </button>
     </div>    
@@ -11,21 +11,6 @@
       <h2>My ongoing offers :</h2>
     </div>
     <OnGoingOffers></OnGoingOffers>
-    <div class="container">
-      <div class="row">
-        <div class="col-10">
-          <hr class="line-color">
-        </div>
-      </div>
-    </div>
-    <OnGoingOffers></OnGoingOffers>
-    <div class="container">
-      <div class="row">
-        <div class="col-10">
-          <hr class="line-color2">
-        </div>
-      </div>
-    </div>
     <div class="container">
       <h2>My previous offers :</h2>
     </div>
@@ -38,11 +23,21 @@ import NavbarReturnHome from "@/components/SmartComponents/NavbarReturnHome";
 import OnGoingOffers from "@/components/SmartComponents/OnGoingOffers";
 import PreviousOffers from "@/components/SmartComponents/PreviousOffers"//;
 //import Footer from "@/components/SmartComponents/Footer"
+import router from "@/router";
 
 export default {
   name: "CookOfferHistoryPage",
-  components: {NavbarReturnHome, OnGoingOffers, PreviousOffers,}
+  components: {NavbarReturnHome, OnGoingOffers, PreviousOffers,},
+
+  methods : {
+    createButton: function(){
+        router.replace('/CreateOfferPage');
+    },
+
+},
 }
+
+
 </script>
 
 <style scoped>

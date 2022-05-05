@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-2">
             <a href="">
-                <img src="https://i.imgur.com/xELPaag.jpg" width="100px" class=""> <!--class="rounded-circle mt-2"-->
+                <img src="https://i.imgur.com/xELPaag.jpg" width="100px" class="">
             </a>
         </div>
         <div class="col-6">

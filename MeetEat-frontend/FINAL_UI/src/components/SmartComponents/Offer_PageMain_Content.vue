@@ -8,13 +8,13 @@
       </div>
 
         <img class="card-img-top" id="mainPicture"
-           src="../../assets/lasagne.jpg"
-           alt="Card image cap">
+           v-bind:src="offer.image"
+           alt="Meal image">
       <div class="card-body" style="text-align: left;">
         <h5 class="card-title">{{offer.title}}</h5>
         <div class="row">
           <div class="col-4">
-            <img src="../../assets/ithan.jpg" alt="Ithan" width="120px"> <!--  height="100px" -->
+            <img v-bind:src="offer.cook.image" alt="cookImage" width="120px"> <!--  height="100px" -->
           </div>
           <div class="col-8">
             <div class="row">

@@ -66,6 +66,7 @@ public class Service {
     protected MessageDao messageDao = new MessageDao();
     protected CookRequestDao cookRequestDao = new CookRequestDao();
     protected RequestImageDao requestImageDao = new RequestImageDao();
+    public static String spoonacularKey = "443412ce4f244b78b911e6ad2edb85d9";
 
     public Long createPreferenceTag(PreferenceTag preferenceTag) {
         Long result = null;
@@ -750,7 +751,7 @@ public class Service {
         return sortedByDistanceOffers;
     }
 
-    public List<Offer> searchOffers(List<Long> requestPreferences, int priceLimit, User user) {
+    public List<Offer> searchOffers(List<Long> requestPreferences, int priceLimit, User user, String address) {
         //SearchOffers according to :diet, cuisine, user's preferences, price and location
 
         List<Offer> ongoingOffers;
@@ -762,6 +763,8 @@ public class Service {
                 return distance1.compareTo(distance2); //May be - instead
             }
         });
+        
+        LatLng location = getLatLng(address);
 
         JpaTool.createPersistenceContext();
         try {
@@ -774,12 +777,15 @@ public class Service {
             if(requestPreferences!=null){
                 preferences.addAll(requestPreferences); //cuisine and diets
             }
-            for (PreferenceTag preference : user.getPreferences()) {
-                if (!(preference instanceof Ingredient)) {
-                    preferences.add(preference.getId());
-                } else {
-                    ingredients.add(preference.getId());
-                }
+            //check if user is logged in yet
+            if (user!=null){
+                user.getPreferences().forEach(preference -> {
+                    if (!(preference instanceof Ingredient)) {
+                        preferences.add(preference.getId());
+                    } else {
+                        ingredients.add(preference.getId());
+                    }
+                });
             }
             //check the preferences in ongoingOffers + distance to User
             double distance;
@@ -790,8 +796,8 @@ public class Service {
                     offerClassifications.add(classification.getId());
                 });
                 if (offerClassifications.containsAll(preferences) && Collections.disjoint(offerClassifications, ingredients)) {
-                    if (offer.getLocation()!=null && user.getLocation()!=null){
-                        distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), user.getLocation());
+                    if (offer.getLocation()!=null && location!=null){
+                        distance = GeoNetApi.getFlightDistanceInKm(offer.getLocation(), location);
                     } else{
                         distance = Double.MAX_VALUE;
                     }
@@ -799,6 +805,7 @@ public class Service {
                     sortedByDistanceOffers.add(offer); // insertion on O(log(n))
                 }
             }
+            System.out.println(ongoingOffers.size());
             res = new ArrayList(sortedByDistanceOffers);
 
             JpaTool.validateTransaction();
@@ -1069,6 +1076,18 @@ public class Service {
     }
     
     public PriceEstimate getMinMaxPrice(List<Ingredient> ingredients){
+        JsonObject json = getSpoonacularResponseByIngredients(ingredients);
+        Long id = Long.parseLong(json.get("id").getAsString());
+        String title = json.get("title").getAsString();
+        JsonObject json2 = getRequestAsJsonObject("https://api.spoonacular.com/recipes/"
+                +id+"/priceBreakdownWidget.json?apiKey="+spoonacularKey);
+        System.out.println(json2);
+        Double price = Double.parseDouble(json2.get("totalCostPerServing").getAsString())/100.0;
+        PriceEstimate estimate = new PriceEstimate(price, price*2, title);
+        return estimate;
+    }
+    
+    public JsonObject getSpoonacularResponseByIngredients(List<Ingredient> ingredients){
         String urlString = "";
         for(int i=0; i<ingredients.size(); i++){
             urlString+=ingredients.get(i).getName();
@@ -1077,15 +1096,8 @@ public class Service {
             }
         }
         JsonObject json = getRequestAsJsonObject("https://api.spoonacular.com/recipes/findByIngredients?ingredients="
-                    +urlString+"&number=1&apiKey=86fb15aafb0d4d7486e024e094d9705d");
-        Long id = Long.parseLong(json.get("id").getAsString());
-        String title = json.get("title").getAsString();
-        JsonObject json2 = getRequestAsJsonObject("https://api.spoonacular.com/recipes/"
-                +id+"/priceBreakdownWidget.json?apiKey=86fb15aafb0d4d7486e024e094d9705d");
-        System.out.println(json2);
-        Double price = Double.parseDouble(json2.get("totalCostPerServing").getAsString())/100.0;
-        PriceEstimate estimate = new PriceEstimate(price, price*2, title);
-        return estimate;
+                    +urlString+"&number=1&apiKey="+spoonacularKey);
+        return json;
     }
     
     private JsonObject getRequestAsJsonObject(String urlString){
@@ -1097,7 +1109,7 @@ public class Service {
             con.setRequestMethod("GET");
             
             int status = con.getResponseCode();
-            
+            System.out.println(status);
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuffer content = new StringBuffer();
@@ -1114,6 +1126,8 @@ public class Service {
             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e){
+            
         }
         return json;
     }

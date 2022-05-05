@@ -45,7 +45,7 @@ export default {
         if(this.user !== null){
           console.log(this.user);
           sessionStorage.setItem("user", JSON.stringify(this.user));
-          router.replace('/orderPage');
+          router.replace('/');
         }else{
           document.getElementById("errorMessage").innerText= "Login or password incorrect";
         }
@@ -135,6 +135,9 @@ export default {
 .text-muted {
     margin-left : 30px;
     text-decoration: underline;
+}
+.p{
+  color:white;
 }
 
 
