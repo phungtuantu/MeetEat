@@ -19,7 +19,7 @@ public class ActionSetPrice extends Action {
     public void executer(HttpServletRequest request){
         Service service = new Service();
         Long offerId = Long.parseLong(request.getParameter("offerId"));
-        Long price = Long.parseLong(request.getParameter("price"));
+        double price = Double.parseDouble(request.getParameter("price"));
         Offer offer = service.setPrice(offerId, price);
         request.setAttribute("offer", offer);
     }
