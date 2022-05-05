@@ -4,9 +4,9 @@
   <form align="center">
     <h1>Diet</h1>
     <div class="form-group" style="text-align: center">
-      <div class="row">
+      <div class="row dietButton">
         <div class="col-sm-10">
-          <div class="row">
+          <div class="row dietButton2">
             <article class=" col-sm">
               <input id="dairyFree" type="checkbox" v-bind:value="diaryFreeID"/>
               <div>
@@ -115,6 +115,7 @@ export default {
       noPorkID : 206,
       user : null,
       ingredients : [],
+      lastIngredient : [],
     }
   },
     methods: {
@@ -185,7 +186,8 @@ export default {
         var newInput = document.createElement("select");
         newInput.setAttribute("class", "form-control inputs");
         newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
-
+        this.lastIngredient[this.numberOfIngredients-1] = newInput.getAttribute("id");
+        
         for(let i=0; i<this.ingredients.length; i++){
           var option = document.createElement("option");
           option.setAttribute("value", this.ingredients[i].id);
@@ -195,28 +197,27 @@ export default {
 
         document.getElementById("listIngredients").appendChild(newInput);
 
-        var br = document.createElement("br");
-
+        //var br = document.createElement("br");
+        /*
         var newButton = document.createElement("button");
         newButton.setAttribute("type", "button");
         newButton.setAttribute("class", "btn btn-success");
         newButton.setAttribute("id", "button"+this.numberOfIngredients);
-        newButton.setAttribute("@click", this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients));
-
-        newButton.innerText = "Delete";
-        document.getElementById("listDeleteButton").appendChild(br);
-        document.getElementById("listDeleteButton").appendChild(newButton);
+        //newButton.setAttribute("@click", this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients));
+        newButton.innerText = "Delete";*/
+        //document.getElementById("listDeleteButton").appendChild(br);
+        //document.getElementById("listDeleteButton").appendChild(newButton);
 
       },
 
       deleteIngredients : function (ingredient, index)
       {
         console.log(ingredient + ' ' + index);
-
-        //document.getElementById("button"+index).remove();
-        //document.getElementById("ingredients"+index).remove();
-
-
+        if (this.numberOfIngredients>1) {
+          this.numberOfIngredients--;
+          document.getElementById(this.lastIngredient[this.numberOfIngredients]).remove();
+          this.lastIngredient.pop();
+        }
         return 0;
       },
 
@@ -260,7 +261,13 @@ export default {
 
 <style scoped>
 
+.dietButton{
+  margin-left: 10%;
+}
 
+.dietButton2{
+  margin-bottom: 30px;
+}
 
 article {
   position: relative;
@@ -327,133 +334,5 @@ input[type="checkbox"]{
   width: 100%;
   height: 100%;
 }
-
-
-/**
-#myInput {
-  box-sizing: border-box;
-  background-position: 14px 12px;
-  background-repeat: no-repeat;
-  font-size: 16px;
-  padding: 14px 20px 12px 45px;
-  border: none;
-  border-bottom: 1px solid #ddd;
-}
-
-#myInput:focus {outline: 3px solid #ddd;}
-
-.dropbtn {
-  position: relative;
-  display: inline-block;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #DCDCDC;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f6f6f6;
-  min-width: 230px;
-  overflow: auto;
-  border: 1px solid #ddd;
-  z-index: 1;
-  text-align: center;
-}
-
-.dropdown-content p {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown p:hover {background-color: #ddd;}
-
-.show {display: block;}
-
-.left {
-    text-align: left;
-    margin-left: 20%;
-    margin-top: 50px;
-}
-
-.menu figure {
-    display: inline-block;
-    margin-right: 5%;
-}
-
-.figcaption{
-    text-align: center;
-}
-
-.dropbtn {
-    margin-top: 10px;
-    width: 200px;
-    background: white;
-    text-align: center;
-    border: 2px solid black;
-    color: black;
-    text-transform: uppercase;
-    border-radius: 5px;
-}
-
-.button_suppr, .button_add{
-    margin-left: 20px;
-    margin-top: 10px;
-    width: 100px;
-    background-color: green;
-    text-transform: none;
-    border: 0;
-    background: green;
-    text-align: center;
-    border: 2px solid black;
-    color: white;
-    text-transform: uppercase;
-    border-radius: 5px;
-}
-
-.button_suppr:hover, .button_suppr:focus{
-    background-color: #66CC00
-}
-
-.button_add:hover, .button_add:focus{
-    background-color: #66CC00
-}
-
-.button_validate{
-    margin-top: 10px;
-    width: 200px;
-    background-color: green;
-    background: green;
-    text-align: center;
-    border: 2px solid black;
-    color: white;
-    text-transform: uppercase;
-    border-radius: 5px;
-}
-
-.button_validate:hover, .button_validate:focus{
-    background-color: #66CC00
-}
-
-.button_save{
-    margin-left: 17%;
-    margin-top: 30px;
-    width: 800px;
-    Height: 50px;
-    background-color: green;
-    background: green;
-    text-align: center;
-    border: 2px solid black;
-    color: white;
-    text-transform: uppercase;
-    border-radius: 5px;
-}
-
-.button_save:hover, .button_save:focus{
-    background-color: #66CC00
-}**/
 
 </style>
