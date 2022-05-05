@@ -20,7 +20,7 @@
           <input type="text" class="form-control" id="title" v-model="title">
         </div>
       </div>
-
+      <!--
       <div class="form-group row">
         <label for="ingredients" class="col-sm-2 col-form-label">Ingredients</label>
         <div class="col-sm">
@@ -36,9 +36,9 @@
               <button type="button" class="btn btn-success" @click='addIngredients'>Add an ingredient</button>
 
         </div>
-        <div class="col-sm">
-        </div>
-      </div>
+       </div>
+        -->
+
 
       <div class="form-group row">
         <label for="description" class="col-sm-2 col-form-label">Description</label>
@@ -58,13 +58,8 @@
         <label for="typeOfCuisine" class="col-sm-2 col-form-label">Type of cuisine</label>
         <div class="col-sm">
           <select name="line" id="typeOfCuisine" class="form-select form-select-sm" aria-label=".form-select-sm" v-model="typeOfCuisine">
-            <option value="american">American</option>
-            <option value="cantoneese">Cantoneese</option>
-            <option value="chineese">Chineese</option>
-            <option value="french">French</option>
-            <option value="italian">Italian</option>
-            <option value="mexican">Mexican</option>
-            <option value="spanish">Spanish</option>
+            <option v-for="cuisine in typeOfCuisineList.preferenceTags" :key="cuisine.id" v-bind:value="cuisine.id">
+              {{ cuisine.name }}</option>
           </select>
         </div>
       </div>
@@ -74,62 +69,25 @@
         <label for="specification" class="col-sm-2 col-form-label">More specification</label>
         <div class="col-sm-10">
           <div class="row">
-            <article class=" col-sm">
-              <input id="dairyFree" type="checkbox"/>
-              <div>
+            <article class=" col-sm" v-for="diet in ig.preferenceTags" :key="diet.id">
+              <template v-if="diets.includes(diet.name)">
+                <input v-bind:id="diet.id" type="checkbox" class="check" v-bind:value="diet.id" checked/>
+                <div>
                 <span>
-                  Dairy free
+                  {{ diet.name }}
                 </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="glutenFree" type="checkbox"/>
-              <div>
+                </div>
+              </template>
+              <template v-if="!diets.includes(diet.name)">
+                <input  v-bind:id="diet.id"  type="checkbox" class="check" v-bind:value="diet.id"  />
+                <div>
                 <span>
-                  Gluten free
+                     {{ diet.name }}
                 </span>
-              </div>
+                </div>
+              </template>
             </article>
-
-            <article class=" col-sm">
-              <input id="noPork" type="checkbox"/>
-              <div>
-                <span>
-                  No pork
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="vegan" type="checkbox"/>
-              <div>
-                <span>
-                  Vegan
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="Vegetarian" type="checkbox"/>
-              <div>
-                <span>
-                  Vegetarian
-                </span>
-              </div>
-            </article>
-
-            <article class=" col-sm">
-              <input id="Pesco-vegetarian" type="checkbox"/>
-              <div>
-                <span>
-                  Pesco-vegetarian
-                </span>
-              </div>
-            </article>
-
           </div>
-
         </div>
       </div>
 
@@ -140,35 +98,17 @@
         </div>
       </div>
 
+      <div class="form-group row">
+        <label for="suggestedPrice" class="col-sm-2 col-form-label">Price</label>
+        <div class="col-sm-10">
+          <input type="number" readonly class="form-control-plaintext" id="suggestedPrice" v-bind:value="price" disabled>
+        </div>
+      </div>
+
+
+
+
     </form>
-
-    <button type="button" class="btn btn-success" @click='validateInformation'>Validate</button>
-    <template v-if="show === 1">
-      <form>
-        <div class="form-group row">
-          <label for="suggestedPrice" class="col-sm-2 col-form-label">Suggested price</label>
-          <div class="col-sm-10">
-            <input type="number" disabled readonly class="form-control-plaintext" id="suggestedPrice" v-model="suggestedPrice">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="sellingPrice" class="col-sm-2 col-form-label">Selling price</label>
-          <div class="col-sm-10">
-            <input type="number" step="0.01" class="form-control-plaintext" id="sellingPrice" v-model="sellingPrice">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="date" class="col-sm-2 col-form-label">Date</label>
-          <div class="col-sm-10">
-            <input type="date" class="form-control-plaintext" id="date" v-model="date">
-          </div>
-        </div>
-      </form>
-
-      <button type="button" class="btn btn-success" @click='save'>Save</button>
-    </template>
 
     <br/>
     <br/>
@@ -199,22 +139,31 @@
 
 <script>
 import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
 
 export default {
   name: "ModificationOffer",
   data() {
     return {
+
       title : '',
       description : '',
       specification : '',
       typeOfCuisine : '',
       portions : 0,
-      suggestedPrice : 5.50,
-      sellingPrice : 5.99,
-      ingredient : null,
+      ingredients : [],
       show : 0,
       date : null,
       numberOfIngredients : 1,
+      idOffer : 236,
+      offer : null,
+      totalPortions : 1,
+      diets : [],
+      tagId : [],
+      ig : [],
+      typeOfCuisineList : [],
+      price : '',
 
     }
   },
@@ -263,10 +212,50 @@ export default {
 
     save : function () {
       console.log('save');
+      for(let i =0; i<document.getElementsByClassName('check').length; i++){
+        if(document.getElementsByClassName('check')[i].checked){
+          console.log(document.getElementsByClassName('check')[i].value);
+        }
+      }
 
     },
-
   },
+
+  async mounted() {
+    //this.idOffer = localStorage.getItem("itemId");
+    await axios.get(urlAPI + 'todo=consultOffer&offerId=' + this.idOffer)
+        .then(response => (this.offer = response.data));
+
+    console.log(this.offer);
+
+    this.title = this.offer.title;
+    this.ingredients = this.offer.ingredients;
+    this.description = this.offer.details;
+    this.specification = this.offer.specifications;
+    this.typeOfCuisine = this.offer.cuisines[0].name;
+    this.totalPortions = this.offer.remainingPortions;
+    this.numberOfIngredients = this.offer.ingredients.length;
+    this.price = this.offer.price;
+
+    for(var i=0; i<this.offer.diets.length; i++){
+      this.diets.push(this.offer.diets[i].name);
+      this.tagId[this.offer.diets[i].name] = this.offer.diets[i].id;
+    }
+    console.log(this.tagId['Vegan'])
+
+    //viewIngredients
+    await axios.get(urlAPI + 'todo=viewDiets')
+        .then(response => (this.ig = response.data));
+
+    console.log(this.ig)
+
+    //viewCuisines
+    await axios.get(urlAPI + 'todo=viewCuisines')
+        .then(response => (this.typeOfCuisineList = response.data))
+
+    console.log(this.typeOfCuisineList);
+
+  }
 }
 </script>
 
