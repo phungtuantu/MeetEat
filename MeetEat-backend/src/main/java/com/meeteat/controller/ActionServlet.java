@@ -22,6 +22,7 @@ import com.meeteat.controller.action.ActionCookRequestDetails;
 import com.meeteat.controller.action.ActionCreateAccount;
 import com.meeteat.controller.action.ActionCreateReservation;
 import com.meeteat.controller.action.ActionEstimatePrice;
+import com.meeteat.controller.action.ActionEvaluateGuest;
 import com.meeteat.controller.action.ActionEvaluateMeal;
 import com.meeteat.controller.action.ActionMakeOffer;
 import com.meeteat.controller.action.ActionModifyAccount;
@@ -207,6 +208,10 @@ public class ActionServlet extends HttpServlet {
             }
             case "evaluateMeal" -> {
                 action = new ActionEvaluateMeal();
+                serialisation = new SerialisationReview();
+            }
+            case "evaluateGuest" -> {
+                action = new ActionEvaluateGuest();
                 serialisation = new SerialisationReview();
             }
             case "becomeCook"-> {
