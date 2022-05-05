@@ -26,14 +26,27 @@
         <div class="col-sm">
             <div class="row">
               <div class="col-sm"  id="listIngredients">
-                <input type="text" class="form-control ingredient" id="ingredients" v-model="ingredient">
+                <select name="m" id="w" class="form-control inputs">
+                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
+                      {{ing.name}}
+                    </option>
+                  </select>
+                <!--<div class="col-sm"  id="listIngredients">
+                  <select name="m" id="w" class="form-control inputs">
+                    <option  v-for="ing in ingredients" :key="ing.id" v-bind:value="ing.id">
+                      {{ing.name}}
+                    </option>
+                  </select>
+                </div>
+
+                <input type="text" class="form-control" id="ingredients" v-model="ingredient">-->
               </div>
               <div class="col-sm"  id="listDeleteButton">
                 <button type="button" class="btn btn-success" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete</button>
               </div>
             </div>
             <br/>
-              <button type="button" class="btn btn-success" @click='addIngredients'>Add an ingredient</button>
+              <button type="button" class="btn btn-success" @click='addIngredients()'>Add an ingredient</button>
 
         </div>
         <div class="col-sm">
@@ -272,36 +285,52 @@ export default {
       address : '',
       saleDate : null,
       ingredients : [],
+      lastIngredient : [],
+
     }
   },
   methods: {
+
     addIngredients : function () {
-      console.log('add');
-      this.numberOfIngredients ++;
-      var newInput = document.createElement("input");
-      newInput.setAttribute("class", "form-control ingredient");
-      newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
-      newInput.setAttribute("type", "text");
 
-      document.getElementById("listIngredients").appendChild(newInput);
+        console.log('add');
+        this.numberOfIngredients ++;
+        var newInput = document.createElement("select");
+        newInput.setAttribute("class", "form-control inputs");
+        newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
+        this.lastIngredient[this.numberOfIngredients-1] = newInput.getAttribute("id");
 
-      var br = document.createElement("br");
+        for(let i=0; i<this.ingredients.length; i++){
+          var option = document.createElement("option");
+          option.setAttribute("value", this.ingredients[i].id);
+          option.innerText = this.ingredients[i].name;
+          newInput.appendChild(option);
+        }
 
-      var newButton = document.createElement("button");
-      newButton.setAttribute("type", "button");
-      newButton.setAttribute("class", "btn btn-success");
-      newButton.innerText = "Delete";
-      newButton.onclick = this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients);
-      document.getElementById("listDeleteButton").appendChild(br);
-      document.getElementById("listDeleteButton").appendChild(newButton);
+        document.getElementById("listIngredients").appendChild(newInput);
+        /*
+        var br = document.createElement("br");
+        var newButton = document.createElement("button");
+        newButton.setAttribute("type", "button");
+        newButton.setAttribute("class", "btn btn-success");
+        newButton.setAttribute("id", "button"+this.numberOfIngredients);
+        //newButton.setAttribute("@click", this.deleteIngredients("ingredients"+this.numberOfIngredients, this.numberOfIngredients));
+        newButton.innerText = "Delete";
+        document.getElementById("listDeleteButton").appendChild(br);
+        document.getElementById("listDeleteButton").appendChild(newButton);*/
 
-    },
+      },
 
     deleteIngredients : function (ingredient, index)
-    {
-      console.log(ingredient + ' ' + index);
-      return 0;
-    },
+      {
+        console.log(ingredient + ' ' + index);
+        if (this.numberOfIngredients>1) {
+          this.numberOfIngredients--;
+          document.getElementById(this.lastIngredient[this.numberOfIngredients]).remove();
+          this.lastIngredient.pop();
+        }
+        return 0;
+      },
 
     validateInformation : async function ()
     {
@@ -348,6 +377,18 @@ export default {
     },
 
   },
+
+  async mounted() {
+      this.user = JSON.parse(sessionStorage.getItem("user"))
+      this.user = this.user.user;
+
+      await axios.get(urlAPI + 'todo=viewIngredients')
+          .then(response => (this.ingredients = response.data));
+
+      this.ingredients = this.ingredients.preferenceTags;
+
+      console.log(this.ingredients.preferenceTags);
+    }
 }
 </script>
 

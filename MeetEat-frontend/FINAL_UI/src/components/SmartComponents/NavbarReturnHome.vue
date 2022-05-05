@@ -114,8 +114,8 @@ export default {
 
 <style scoped>
 
-.btn .btn-outline-secondary{
-  margin: 15px;
+.btn-outline-secondary{
+  margin-right: 15px;
 }
 
 a{
@@ -124,7 +124,7 @@ a{
   cursor: pointer;
 }
 
-.btn-nav, {
+.btn-nav {
     color: whitesmoke;
     border: 0;
     padding: 0;
