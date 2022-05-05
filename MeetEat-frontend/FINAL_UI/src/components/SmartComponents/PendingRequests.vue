@@ -1,36 +1,94 @@
 <template>
-<div class="container">
-    <div class="row">
-        <div class="col-2">
-            <a href="">
-                <img src="https://i.imgur.com/xELPaag.jpg" width="100px" class="">
-            </a>
-        </div>
-        <div class="col-6">
-            <h4>Rosine</h4>
-            <h6>22 years old</h6>
-            20 avenue Albert Einstein, Villeurbanne, 69100, FRANCE
-        </div>
-        <div class="col-2">
-            <button type="button" class="btn btn-dark">View Request</button>
+<div class="container" >
+    <div class = "card" v-for="request in requests" :key="request.id">
+        <div class="row">
+                <div class="col-2">
+                    <a href="">
+                        <img v-bind:src= "request.offerImage"  width="100px" class="">
+                    </a>
+                </div>
+                <div class="col-3">
+                    <!-- <div class="column"> -->
+                        <label style="font-weight: bold; font-size: 20px">{{request.offerTitle}}</label><br>
+                        <label style="font-weight: bold"> {{request.offerPortionsLeft}} portions left</label><br>
+                    <!-- </div> -->
+                </div>
+                <div class="col-sm">
+                    <!-- <div class="column"> -->
+                       <a href="">
+                         <img v-bind:src= "request.customer.customerImage"  width="40px" class="">
+                        </a>
+                    <!-- </div> -->
+                     <!-- <div class="column"> -->
+                        <label style="font-weight: bold; font-size: 20px">{{request.customer.customerFirstName}}&nbsp;{{request.customer.customerLastName}} </label><br>
+                        <label style=""> Number of portions :{{request.nbOfPortion}} </label><br>
+                        <label style="font-weight: bold"> Total Price :{{request.totalPrice}}€</label><br>
+                    <!-- </div> -->
+                </div>
+                <div class="col-2">
+                    <div class="column">
+                        <button class="btn btn-success" @click="acceptButton(request.id)">
+                            Accept
+                        </button>
+                        <button class="btn btn-danger" @click="rejectButton(request.id)">
+                            Reject
+                        </button> 
+                    </div>
+                </div>
         </div>
     </div>
-
 </div>
 </template>
 
 <script>
-//import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
+
 export default {
   name: "PendingRequests",
-  methods: {
-  },
+
+    data(){
+      return{
+          requests: [],
+          requestAccepted: false,
+          requestRejected: false,
+      }
+    },
+
+   methods : {
+        acceptButton: async function(requestId){
+            await axios.get(urlAPI + 'todo=acceptRequest&requestId='+requestId)
+                .then(response => (this.requestAccepted = response.requestAccepted));
+                console.log(this.requestAccepted );
+        },
+
+        rejectButton: async function(requestId){
+            await axios.get(urlAPI + 'todo=rejectRequest&requestId='+requestId)
+                .then(response => (this.requestRejected = response.requestRejected));
+                console.log(this.requestRejected);
+        },
+   },
+
+    async mounted() {
+
+        await axios.get(urlAPI + 'todo=viewReservationsRequests')
+            .then(response => (this.requests = response.data.reservations));
+
+        console.log(this.requests);
+
+    }
 }
 </script>
 
 <style scoped>
 .container {
-    width: 70%;
+    width: 60%;
+}
+
+.col-sm{
+    padding: 0;
+    float: left;
+    text-align: left;
 }
 
 .row{
@@ -47,11 +105,15 @@ export default {
   margin-top: 10px;
 }
 
-.btn-dark{
+.btn-success{
     float: center;
-    margin-top: 40px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     border-radius: 15px;
-    background-color: black;
+}
+
+.btn-danger{
+    border-radius: 15px;
 }
 
 </style>
