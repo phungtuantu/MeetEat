@@ -26,7 +26,7 @@
         <div class="col-sm">
             <div class="row">
               <div class="col-sm"  id="listIngredients">
-                <input type="text" class="form-control" id="ingredients" v-model="ingredient">
+                <input type="text" class="form-control ingredient" id="ingredients" v-model="ingredient">
               </div>
               <div class="col-sm"  id="listDeleteButton">
                 <button type="button" class="btn btn-success" @click='deleteIngredients(ingredient, numberOfIngredients)'>Delete</button>
@@ -195,10 +195,12 @@
     <template v-if="show === 1">
       <form>
         <div class="form-group row">
-          <label for="suggestedPrice" class="col-sm-2 col-form-label">Price suggestion</label>
-          <div class="col-sm-10">
-            <input type="number" disabled readonly class="form-control-plaintext" id="suggestedPrice" v-model="suggestedPrice">
+          <label for="suggestedPriceMin" class="col-sm-2 col-form-label">Suggested price range</label>
+          <input type="number" disabled readonly class="form-control-plaintext col-sm-1 price" id="suggestedPriceMin" v-model="suggestedPriceMin"> 
+          <div class="form-control-plaintext col-1 price">
+          -
           </div>
+          <input type="number" disabled readonly class="form-control-plaintext col-sm-1 price" id="suggestedPriceMax" v-model="suggestedPriceMax">
         </div>
 
         <div class="form-group row">
@@ -245,6 +247,8 @@
 
 <script>
 import router from "@/router";
+import axios from "axios";
+import {urlAPI} from "@/variables";
 
 export default {
   name: "ModificationOffer",
@@ -255,8 +259,10 @@ export default {
       specification : '',
       typeOfCuisine : '',
       portions : 0,
-      suggestedPrice : 5.50,
+      suggestedPriceMin : 5.50,
+      suggestedPriceMax : 11.00,
       sellingPrice : 5.99,
+      guessedTitle : '',
       ingredient : null,
       show : 0,
       date : null,
@@ -265,7 +271,7 @@ export default {
       zipCode : '',
       address : '',
       saleDate : null,
-
+      ingredients : [],
     }
   },
   methods: {
@@ -273,7 +279,7 @@ export default {
       console.log('add');
       this.numberOfIngredients ++;
       var newInput = document.createElement("input");
-      newInput.setAttribute("class", "form-control");
+      newInput.setAttribute("class", "form-control ingredient");
       newInput.setAttribute("id", "ingredients"+this.numberOfIngredients);
       newInput.setAttribute("type", "text");
 
@@ -297,10 +303,22 @@ export default {
       return 0;
     },
 
-    validateInformation : function ()
+    validateInformation : async function ()
     {
-      document.getElementById("validate").style.display = "none";
+      var url = "";
+      var list = document.getElementsByClassName("ingredient");
+      for (let item of list) {
+          console.log(item.value);
+          url+="&ingredients="+item.value;
+      }
+      await axios.get(urlAPI+'todo=estimatePrice&'+url).then(response => {
+        this.suggestedPriceMin = response.data.min;
+        this.suggestedPriceMax = response.data.max;
+        this.guessedTitle = response.data.title;
+        this.sellingPrice = (this.suggestedPriceMax+this.suggestedPriceMin)/2;
+      });
       this.show = 1;
+
     },
 
     backHome : function () {
@@ -386,6 +404,14 @@ input[type=checkbox]:checked ~ div {
 .btn-info{
     background-color: grey;
     margin-left: 20px;
+}
+
+.price{
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
 }
 
 .successPublish{
