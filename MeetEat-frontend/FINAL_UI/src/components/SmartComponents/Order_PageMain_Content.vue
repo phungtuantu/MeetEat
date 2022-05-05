@@ -2,29 +2,9 @@
   <div class="row">
 
     <div class="col-3 border-right " style="text-align: left; margin-left: 25px;">
-      <h2>Sort</h2>
-
-      <form>
-      <div class="form-check">
-        <input id="flexRadioDefault1" checked class="form-check-input" name="flexRadioDefault" type="radio">
-        <label class="form-check-label" for="flexRadioDefault1">
-          Most popular
-        </label>
-      </div>
-      <div class="form-check">
-        <input id="flexRadioDefault2" class="form-check-input" name="flexRadioDefault" type="radio">
-        <label class="form-check-label" for="flexRadioDefault2">
-          Rating
-        </label>
-      </div>
-      </form>
-      <br/>
-
 
       <div class="input-group">
-        <input id="form1" class="form-control" placeholder="Keyword" type="search"/>
-        <!-- <button class="btn btn-primary" type="button"> -->
-        <button class="btn btn-primary" type="button" @click="searchOffers()">
+        <button class="btn btn-success" type="button" @click="searchOffers()">
           Search
         </button>
       </div>
@@ -305,5 +285,16 @@ input[type="checkbox"]{
 
 .btn{
   margin-left: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
+
+.btn-success{
+  width: 90%;
+}
+
+.form-check-label .lbl { /* input[type="checkbox"] */
+  margin-right: 10px;
+}
+
 </style>
