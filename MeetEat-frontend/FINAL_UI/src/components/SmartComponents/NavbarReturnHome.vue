@@ -38,11 +38,11 @@
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
           </ul>
           <div class="form-inline my-2 my-lg-0">
+            <!--<button type="button" class="btn2 btn-nav">
+              <img src="../../assets/mailbox.png" alt="mail" width="40px"  >
+            </button>-->
             <button type="button" class="btn2 btn-nav">
-              <img src="../../assets/mailbox.png" alt="basket" width="40px">
-            </button>
-            <button type="button" class="btn2 btn-nav">
-              <img src="../../assets/basket.png" alt="basket" width="40px">
+              <img src="../../assets/basket.png" alt="basket" width="40px" @click="basket()">
             </button>
             <div class="dropdown">
               <button type="button" class="btn2 btn-nav"> <!-- menuDeroulant -->
@@ -76,6 +76,9 @@ export default {
   methods: {
     goHome : function(){
       router.replace('/');
+    },
+    basket : function(){
+      router.replace('/myBasket');
     },
     becomeCook : function(){
       router.replace('/becomeCook');
