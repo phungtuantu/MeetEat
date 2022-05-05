@@ -15,6 +15,8 @@
       <h2>My previous offers :</h2>
     </div>
     <PreviousOffers></PreviousOffers>
+    <br/>
+    <Footer/>
   </div>
 </template>
 
@@ -22,12 +24,12 @@
 import NavbarReturnHome from "@/components/SmartComponents/NavbarReturnHome";
 import OnGoingOffers from "@/components/SmartComponents/OnGoingOffers";
 import PreviousOffers from "@/components/SmartComponents/PreviousOffers"//;
-//import Footer from "@/components/SmartComponents/Footer"
+import Footer from "@/components/SmartComponents/Footer"
 import router from "@/router";
 
 export default {
   name: "CookOfferHistoryPage",
-  components: {NavbarReturnHome, OnGoingOffers, PreviousOffers,},
+  components: {NavbarReturnHome, OnGoingOffers, PreviousOffers,Footer},
 
   methods : {
     createButton: function(){
