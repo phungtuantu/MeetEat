@@ -24,7 +24,7 @@ public class ReservationDao extends AbstractDao<Reservation> {
     public List<Reservation> searchPurchasedMeals(User user){
         EntityManager em = JpaTool.obtainPersistenceContext();
         // a changer mais on a ajoute aussi les reservations a l etat reservation (acceptée)
-        String jpql="select r from Reservation r where r.customer= :customer and r.state = :purchasedState OR r.state = :reservationState";
+        String jpql="select r from Reservation r where r.customer= :customer and (r.state = :purchasedState OR r.state = :reservationState)";
         TypedQuery query=em.createQuery(jpql, Reservation.class);
         query.setParameter("customer",user);
         query.setParameter("purchasedState",ReservationState.PURCHASEDMEAL);
